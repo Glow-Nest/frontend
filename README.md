@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GlowNest Beauty Salon Web App - Feature Checklist
 
-## Getting Started
+## ✅ User Login and Account Management
 
-First, run the development server:
+### Must Have
+- [ ] Clients can **create an account** using email and password.
+- [ ] Clients must **log in** before booking appointments, purchasing products, or leaving reviews.
+- [ ] Salon owners can **log in** to view daily bookings.
+- [ ] Clients can **reset their password** if forgotten.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Could Have
+- [ ] Clients can **update personal information**.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ✅ Appointment Booking & Management
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Must Have
+- [ ] Clients can **view real-time available appointment slots**.
+- [ ] Clients can **schedule appointments online**.
+- [ ] Salon owners can **book appointments on behalf of clients**.
+- [ ] Salon owners can **block off specific times** in the schedule.
+- [ ] Clients can **view upcoming and past bookings** in their account.
+- [ ] Salon owners can **view all upcoming appointments**.
+- [ ] Clients receive **email confirmation** for appointment bookings.
 
-## Learn More
+### Could Have
+- [ ] Salon owners can **specify time slots based on service type**.
+- [ ] Clients receive **email reminders** about upcoming appointments.
+- [ ] Clients can **reschedule appointments online**.
+- [ ] Clients can **cancel appointments online**.
+- [ ] Clients receive **email confirmation for appointment modifications**.
+- [ ] Salon owners receive **email notifications for appointment modifications**.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ✅ Service Showcase
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Must Have
+- [ ] Clients can **browse services** without logging in, with descriptions, pricing, images, and videos.
+- [ ] Salon owners can **update service details** easily.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ✅ Product Sales and Inventory
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Must Have
+- [ ] Clients can **view available products** without logging in.
+- [ ] Clients can **purchase salon products online**.
+- [ ] Salon owners can **manage product listings** (add, update, remove).
+- [ ] Clients can **search for products** by name or category.
+- [ ] Clients can **add items to a shopping cart**.
+- [ ] Clients receive **email confirmation** after purchasing a product.
+- [ ] Clients receive **email receipts** after a purchase.
+- [ ] Salon owners can **integrate secure payment gateways**.
+
+### Could Have
+- [ ] Salon owners can **mark orders as "Shipped" or "Delivered"**.
+- [ ] Clients can **view order status** (Processing, Shipped, Delivered).
+- [ ] Clients can **view purchase history** in their account.
+- [ ] Salon owners can **track all transactions via a sales dashboard**.
+
+---
+
+## ✅ Customer Feedback
+
+### Must Have
+- [ ] Clients can **rate services**.
+- [ ] Clients can **read customer reviews**.
+- [ ] Clients can **write, edit, and delete reviews**.
+
+### Could Have
+- [ ] Salon owners can **view and respond to reviews**.
+
+---
+
+## ✅ Multilingual Support
+
+### Must Have
+- [ ] Clients can **switch between Danish and English** on the website.
