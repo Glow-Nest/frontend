@@ -16,14 +16,13 @@ export default function SignUpBox() {
                 h-[90vh] sm:h-[80vh] md:h-[75vh] lg:h-[80vh] 
                 w-[90vw] sm:w-[70vw] md:w-[50vw] lg:w-[35vw] 
                 m-auto mt-10 
-                flex flex-col gap-5 items-center 
+                flex flex-col gap-1 items-center 
                 p-6 sm:p-8 overflow-hidden">
 
-            <span className="text-2xl sm:text-3xl font-semibold text-center">
+            <span className="text-2xl sm:text-3xl font-semibold text-center mb-5">
                 Create Your Account
             </span>
 
-            <hr className="border-t border-gray-300 w-full mb-4" />
 
             <AnimatePresence mode="wait">
                 {showEmailForm ? (
@@ -51,7 +50,6 @@ export default function SignUpBox() {
                             and that you are responsible for your activity on the platform.
                         </p>
 
-                        <hr className="border-t border-gray-300 w-full my-4" />
 
                         <ContinueWithButton onEmailClick={() => setShowEmailForm(true)} />
                     </motion.div>
