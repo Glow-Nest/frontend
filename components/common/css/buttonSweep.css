@@ -1,0 +1,21 @@
+.btn-sweep {
+    position: relative;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.btn-sweep::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background-color: #d1d5db;
+    z-index: -1;
+    transition: width 0.3s ease;
+}
+
+.btn-sweep:hover::before {
+    width: 100%;
+}
