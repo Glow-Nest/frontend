@@ -2,10 +2,13 @@
 
 import React, { useState } from 'react';
 import "../common/css/hoverUnderline.css";
-import { useCreateClientMutation } from '@/store/api/clientApi';
+import { useCreateClientMutation, useSendOtpMutation } from '@/store/api/clientApi';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 function InputFields({ onEmailClick }: { onEmailClick: () => void }) {
     const [createClient, { isLoading, isSuccess, error }] = useCreateClientMutation();
+    const [sendOtp, { isLoading: isSending, isSuccess: otpSent, error: sendOtpError }] = useSendOtpMutation();
 
     const [form, setForm] = useState({
         firstName: '',
@@ -16,6 +19,8 @@ function InputFields({ onEmailClick }: { onEmailClick: () => void }) {
     });
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+    const router = useRouter();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -28,10 +33,12 @@ function InputFields({ onEmailClick }: { onEmailClick: () => void }) {
 
         try {
             await createClient(form).unwrap();
-            console.log("User created");
-        } catch (err: any) {
-            console.error("Failed to create user", err);
 
+            toast.success("User created. Enter the OTP sent to your email to verify your account.");
+
+            await sendOtp({ email: form.email, purpose: "Registration" }).unwrap();
+            router.push(`/otpVerify?email=${form.email}`);
+        } catch (err: any) {
             const fieldErrors: { [key: string]: string } = {};
 
             if (err.data.length) {
@@ -106,15 +113,13 @@ function InputField({
                 onChange={onChange}
                 type={type}
                 placeholder={placeholder}
-                className={`border-b h-8 focus:outline-none transition-colors duration-200 ${
-                    error ? 'border-red-500' : 'border-gray-400'
-                }`}
+                className={`border-b h-8 focus:outline-none transition-colors duration-200 ${error ? 'border-red-500' : 'border-gray-400'
+                    }`}
             />
 
             <div
-                className={`text-xs text-red-500 mt-1 h-5 transition-opacity duration-300 ${
-                    error ? 'opacity-100' : 'opacity-0'
-                }`}
+                className={`text-xs text-red-500 mt-1 h-5 transition-opacity duration-300 ${error ? 'opacity-100' : 'opacity-0'
+                    }`}
             >
                 {error || ' '}
             </div>

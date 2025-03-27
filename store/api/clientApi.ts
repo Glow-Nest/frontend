@@ -13,7 +13,21 @@ export const clientApi = createApi({
                 body: user
             }),
         }),
+        sendOtp: builder.mutation<void, { email: string, purpose: string }>({
+            query: (body) => ({
+                url: 'clients/otp/create',
+                method: 'POST',
+                body,
+            }),
+        }),
+        verifyOtp: builder.mutation<void, { email: string; otpCode: string }>({
+            query: (body) => ({
+                url: 'clients/otp/verify',
+                method: 'POST',
+                body,
+            }),
+        }),
     }),
 });
 
-export const { useCreateClientMutation } = clientApi;
+export const { useCreateClientMutation, useSendOtpMutation, useVerifyOtpMutation } = clientApi;
