@@ -32,12 +32,25 @@ function InputFields({ onEmailClick }: { onEmailClick: () => void }) {
         setErrors({});
 
         try {
-            await createClient(form).unwrap();
+            await toast.promise(
+                (async () => {
+                    await createClient(form).unwrap();
+                    await sendOtp({ email: form.email, purpose: "Registration" }).unwrap();
+                    router.push(`/otpVerify?email=${form.email}`);
+                })(),
+                {
+                    loading: 'Creating account and sending OTP...',
+                    success: 'User created. Enter the OTP sent to your email to verify your account.',
+                    error: (err) => {
+                        const fallback = "Something went wrong.";
+                        if (err?.data?.length) {
+                            return err.data.map((e: any) => e.message).join("\n");
+                        }
+                        return fallback;
+                    },
+                }
+            );
 
-            toast.success("User created. Enter the OTP sent to your email to verify your account.");
-
-            await sendOtp({ email: form.email, purpose: "Registration" }).unwrap();
-            router.push(`/otpVerify?email=${form.email}`);
         } catch (err: any) {
             const fieldErrors: { [key: string]: string } = {};
 
@@ -67,16 +80,16 @@ function InputFields({ onEmailClick }: { onEmailClick: () => void }) {
 
             <div className="flex justify-between items-center mt-4">
                 <button
-                    className={`px-5 py-2 rounded text-sm font-medium transition duration-200 cursor-pointer 
-                    ${allFieldsFilled
-                            ? 'bg-black text-white hover:bg-gray-800'
-                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    className={`px-5 py-2 rounded text-sm font-medium transition duration-200 cursor-pointer ${allFieldsFilled && !isLoading && !isSending
+                        ? 'bg-black text-white hover:bg-gray-800'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         }`}
-                    disabled={!allFieldsFilled}
+                    disabled={!allFieldsFilled || isLoading || isSending}
                     onClick={handleSubmit}
                 >
-                    CONTINUE
+                    {isLoading || isSending ? 'Processing...' : 'CONTINUE'}
                 </button>
+
 
                 <p className="hoverUnderline text-sm cursor-pointer relative inline-block" onClick={onEmailClick}>
                     BACK

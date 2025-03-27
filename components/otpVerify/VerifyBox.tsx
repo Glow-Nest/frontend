@@ -62,43 +62,51 @@ function VerifyBox() {
 
     const handleVerifyClick = async () => {
         const joinedOtp = otp.join("");
-
+    
         if (joinedOtp.length !== 4) {
             toast.error("Please enter the complete 4-digit OTP.");
             return;
         }
-
+    
+        if (!email) {
+            toast.error("Email is missing. Please return to sign-up.");
+            return;
+        }
+    
         try {
-            if (!email) {
-                toast.error("Email is missing. Please return to sign-up.");
-                return;
-            }
-
-            await verifyOtp({ email: email, otpCode: joinedOtp }).unwrap();
-
-            toast.success("OTP verified successfully!");
+            await toast.promise(
+                verifyOtp({ email: email, otpCode: joinedOtp }).unwrap(),
+                {
+                    loading: "Verifying OTP...",
+                    success: "OTP verified successfully!",
+                    error: (err: any) => err?.data?.[0]?.message || "Failed to verify OTP. Please try again.",
+                }
+            );
+    
             router.push("/login");
-
-        } catch (err: any) {
-            const message = err?.data?.[0]?.message || "Failed to verify OTP. Please try again.";
-            toast.error(message);
+        } catch {
         }
     };
+    
 
     const handleResendClick = async () => {
-        try {
-            if (!email) {
-                toast.error("Email is missing. Please return to sign-up.");
-                return;
-            }
-
-            await sendOtp({ email: email, purpose: "Registration" }).unwrap();
-            toast.success("OTP has been resent.");
-        } catch (err: any) {
-            const message = err?.data?.[0]?.message || "Failed to resend OTP.";
-            toast.error(message);
+        if (!email) {
+            toast.error("Email is missing. Please return to sign-up.");
+            return;
         }
+
+        setSecondsLeft(2*60);
+    
+        await toast.promise(
+            sendOtp({ email: email, purpose: "Registration" }).unwrap(),
+            {
+                loading: "Resending OTP...",
+                success: "OTP has been resent.",
+                error: (err: any) => err?.data?.[0]?.message || "Failed to resend OTP.",
+            }
+        );
     };
+    
 
 
     const handleCancelClick = () => {
