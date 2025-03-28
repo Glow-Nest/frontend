@@ -171,3 +171,4 @@ next-env.d.ts
 
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains,visualstudiocode,nextjs
 /.vscode
+/.env
