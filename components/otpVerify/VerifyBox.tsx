@@ -107,8 +107,6 @@ function VerifyBox() {
         );
     };
     
-
-
     const handleCancelClick = () => {
         router.push("/signup");
     }
