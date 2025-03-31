@@ -142,3 +142,4 @@ function InputField({
 
 
 export default InputFields;
+export { InputField }; 

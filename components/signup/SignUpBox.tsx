@@ -51,7 +51,7 @@ export default function SignUpBox() {
                         </p>
 
 
-                        <ContinueWithButton onEmailClick={() => setShowEmailForm(true)} />
+                        <ContinueWithButton showEmailOption={true} onEmailClick={() => setShowEmailForm(true)} />
                     </motion.div>
                 )}
             </AnimatePresence>
