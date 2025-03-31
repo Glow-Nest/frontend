@@ -54,7 +54,7 @@ function InputFields() {
     const allFieldsFilled = Object.values(form).every(val => val.trim() !== '');
 
     return (
-        <div className="flex flex-col gap-4 max-w-md mx-auto mt-10 p-6 ">
+        <div className="flex flex-col gap-4 max-w-md mx-auto mt-10 ">
             {/* <h2 className="text-xl font-semibold text-center">Login</h2> */}
             <InputField label="EMAIL ADDRESS" name="email" placeholder="name@gmail.com" type="email" value={form.email} onChange={handleChange} error={errors.email} />
             <InputField label="PASSWORD" name="password" placeholder="Password" type="password" value={form.password} onChange={handleChange} error={errors.password} />

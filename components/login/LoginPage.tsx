@@ -2,41 +2,46 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import InputFields from '../login/InputFields';
-import ContinueWithButton from '../common/ContinueWithButton';
+import ContinueWithButton from '../signup/ContinueWithButton';
+import logo from '@/public/logo.svg';
+import Link from 'next/link';
 
 function LoginPage() {
     const router = useRouter();
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen px-6">
-            {/* 🔹 Header */}
-            <h2 className="text-2xl font-bold mb-6">Log In with GlowNest</h2>
+        <div className="flex flex-col items-center min-h-screen px-4 w-full overflow-hidden">
+            <div className="flex justify-center mb-4">
+                <div className="relative w-[120px] sm:w-[150px] h-[120px] sm:h-[150px]"> 
+                    <Image src={logo} alt="Logo" />
+                </div>
+            </div>
 
-            {/* 🔹 Main Login Section */}
-            <div className="flex items-center justify-center w-full max-w-2xl">
-                {/* 🟢 Left Side: Input Fields */}
-                <div className="w-1/2 pr-6">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-center mb-6">
+                Log into GlowNest
+            </h2>
+
+            <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-3xl gap-6 md:gap-12">
+                <div className="w-full md:w-1/2">
                     <InputFields />
                 </div>
 
-                {/* 🟡 Middle Divider */}
-                <div className="flex flex-col items-center w-10">
-                    <div className="h-24 border-r border-gray-400"></div>
-                    <span className="text-gray-500 text-sm my-2">OR</span>
-                    <div className="h-24 border-r border-gray-400"></div>
+                <div className="hidden md:flex flex-col items-center">
+                    <div className="h-28 border-r border-gray-200"></div>
+                    <span className="text-gray-500 text-sm my-3">OR</span>
+                    <div className="h-28 border-r border-gray-200"></div>
                 </div>
 
-                {/* 🔵 Right Side: Continue With Box */}
-                <div className=" pl-6 flex flex-col items-center space-y-4">
+                <div className="w-full md:w-1/2 flex flex-col items-center space-y-4">
                     <ContinueWithButton showEmailOption={false} onEmailClick={() => {}} />
                 </div>
             </div>
 
-            {/* 🔹 "Can't log in?" Text */}
-            <p className="mt-4 text-sm text-gray-500 cursor-pointer hover:underline">
-                Can't log in?
-            </p>
+            <Link href="/signup" className="hoverUnderline text-sm uppercase cursor-pointer relative mt-10 inline-block">
+                Can't log In?
+            </Link>
         </div>
     );
 }

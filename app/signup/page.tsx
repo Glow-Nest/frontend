@@ -1,13 +1,13 @@
 
 import React from 'react'
 
-import LoginSignUpNavbar from '@/components/common/SignUpNavbar';
+import LoginSignUpNavbar from '@/components/common/SignUpLoginNavbar';
 import SignUpBox from '@/components/signup/SignUpBox';
 
 function SignUp() {
     return (
         <>
-            <LoginSignUpNavbar/>
+            <LoginSignUpNavbar type='signup'/>
 
             <SignUpBox/>
         </>
