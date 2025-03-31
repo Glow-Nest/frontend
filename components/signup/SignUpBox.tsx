@@ -5,8 +5,8 @@ import '../common/css/buttonSweep.css';
 
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import ContinueWithButton from '../common/ContinueWithButton';
 import InputFields from './InputFields';
+import ContinueWithButton from './ContinueWithButton';
 
 export default function SignUpBox() {
     const [showEmailForm, setShowEmailForm] = useState(false);
