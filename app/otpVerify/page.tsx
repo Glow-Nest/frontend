@@ -1,6 +1,5 @@
-'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import LoginSignUpNavbar from '@/components/common/LoginSignUpNavbar';
 
 import "../../components/common/css/hoverUnderline.css"
@@ -11,7 +10,9 @@ function OTPVerify() {
         <>
             <LoginSignUpNavbar />
 
-            <VerifyBox/>
+            <Suspense fallback={<div>Loading OTP screen...</div>}>
+                <VerifyBox />
+            </Suspense>
         </>
     );
 }
