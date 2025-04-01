@@ -1,12 +1,22 @@
+"use client";
+
+import { motion } from 'framer-motion';
+
+const variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+};
+
+
 export default function TextBox({ text, className }: { text: string; className?: string }) {
   return (
-    <div
-      className={` 
-        flex flex-col items-center justify-center space-y-3
-        rounded-3xl p-8
-        ${className}
-      `}
-    >
+    <motion.div
+      variants={variants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      className={` flex flex-col items-center justify-center space-y-3 rounded-3xl p-8 ${className} `}>
+
       <p className="text-3xl font-bold text-[#dba052] text-center leading-relaxed drop-shadow-md tracking-wide">
         {text}
       </p>
@@ -23,6 +33,6 @@ export default function TextBox({ text, className }: { text: string; className?:
       <button className="mt-2 px-5 py-2 cursor-pointer rounded-full border border-[#dba052] text-[#dba052] hover:bg-[#dba052] hover:text-black transition">
         Explore Our Services
       </button>
-    </div>
+    </motion.div>
   );
 }

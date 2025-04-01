@@ -21,7 +21,7 @@ export default function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="overflow-hidden relative py-5 px-10">
+      <section className="overflow-hidden relative py-5 px-10 mt-15">
 
         {/* Small screen */}
         <div className="block md:hidden space-y-4">
@@ -48,8 +48,6 @@ export default function Home() {
 
       {/* Testimonials Section */}
       <Testimonials/>
-
-
 
     </div>
   );
