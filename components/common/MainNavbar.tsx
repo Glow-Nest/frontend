@@ -16,7 +16,7 @@ function Navbar() {
     return (
         <nav className="flex justify-between items-center px-10 py-4 bg-white shadow-md z-90 ">
             {/* Left nav items (hidden on mobile) */}
-            <div className="hidden lg:flex w-full justify-center gap-16 items-center text-lg">
+            <div className="hidden lg:flex w-full justify-center gap-16 items-center text-md">
                 <div className="hoverUnderline cursor-pointer relative inline-block y">HOME</div>
                 <div className="hoverUnderline cursor-pointer relative inline-block">SERVICES</div>
                 <div className="hoverUnderline cursor-pointer relative inline-block">PRODUCTS</div>
@@ -28,7 +28,7 @@ function Navbar() {
             </div>
 
             {/* Right nav */}
-            <div className="hidden lg:flex w-full justify-end gap-10 items-center text-lg">
+            <div className="hidden lg:flex w-full justify-end gap-10 items-center text-md">
                 <button className="btn-sweep border p-2 cursor-pointer flex items-center gap-2">BOOK APPOINTMENT <FontAwesomeIcon icon={faArrowRight} /></button>
                 <div className="flex gap-5">
                     <FontAwesomeIcon icon={faUser} />
