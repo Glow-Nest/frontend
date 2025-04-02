@@ -12,6 +12,18 @@ jobs:
       repository-projects: write
     steps:
       - uses: actions/checkout@v2
+
+      - uses: dkershner6/vercel-set-env-action@v1
+        with:
+          token: ${{ secrets.VERCEL_TOKEN }}
+          teamId: ${{ secrets.ORG_ID }}
+          projectName: glownest
+          envVariableKeys: CLIENT_EMAIL,PRIVATE_KEY,SPREADSHEET_ID
+        env:
+          NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
+          TARGET_NEXT_PUBLIC_BACKEND_URL: preview,development,production
+          TYPE_NEXT_PUBLIC_BACKEND_URL: encrypted
+
       - uses: amondnet/vercel-action@v20
         id: vercel-deploy
         with:
@@ -19,6 +31,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           vercel-org-id: ${{ secrets.ORG_ID}}
           vercel-project-id: ${{ secrets.PROJECT_ID}}
+          scope: ${{ secrets.ORG_ID }}
       - name: preview-url
         run: |
           echo ${{ steps.vercel-deploy.outputs.preview-url }}
