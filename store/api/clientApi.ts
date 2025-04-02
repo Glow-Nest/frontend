@@ -1,9 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-// Check that the backend URL exists
-if (!process.env.NEXT_PUBLIC_BACKEND_URL) {
-    throw new Error("Environment variable BACKEND_URL is not defined! Make sure it's set in .env or via deployment.");
-}
 
 export const clientApi = createApi({
     reducerPath: 'clientApi',
