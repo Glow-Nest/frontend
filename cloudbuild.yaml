@@ -1,7 +1,9 @@
 substitutions:
   _REGION: "europe-north2"
   _SERVICE_NAME: "frontend"
-  _BACKEND_URL: "https://beauty-salon-backend-249299946185.europe-north2.run.app/api"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
 
 steps:
   # Step 1: Build Docker Image with build-arg for Next.js
