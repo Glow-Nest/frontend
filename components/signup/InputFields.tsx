@@ -78,7 +78,7 @@ function InputFields({ onEmailClick }: { onEmailClick: () => void }) {
             <InputField label="Email Address" name="email" placeholder="example@gmail.com" type="email" value={form.email} onChange={handleChange} error={errors.email} />
             <InputField label="Password" name="password" placeholder="Password" type="password" value={form.password} onChange={handleChange} error={errors.password} />
 
-            <div className="flex justify-between items-center mt-4">
+            <div className="flex justify-between items-center">
                 <button
                     className={`px-5 py-2 rounded text-sm font-medium transition duration-200 cursor-pointer ${allFieldsFilled && !isLoading && !isSending
                         ? 'bg-black text-white hover:bg-gray-800'
@@ -126,7 +126,7 @@ function InputField({
                 onChange={onChange}
                 type={type}
                 placeholder={placeholder}
-                className={`border-b h-8 focus:outline-none transition-colors duration-200 ${error ? 'border-red-500' : 'border-gray-400'
+                className={`border-b h-6 focus:outline-none transition-colors duration-200 ${error ? 'border-red-500' : 'border-gray-400'
                     }`}
             />
 
