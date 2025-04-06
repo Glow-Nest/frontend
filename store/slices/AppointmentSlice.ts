@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { stat } from "fs";
 
 const initialState: AppointmentState = {
     selectedServices: [],
@@ -45,6 +44,7 @@ const appointmentSlice = createSlice({
                 state.totalPrice += parsePrice(action.payload.price);
                 state.totalDuration += parseDuration(action.payload.duration);
             }
+
         }
     }
 });

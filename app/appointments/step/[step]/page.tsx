@@ -1,12 +1,13 @@
-// /app/appointments/step/[step]/page.tsx
 import { notFound } from 'next/navigation';
 import AppointmentContent from '@/components/appointments/SelectService';
 
 const steps = ['services', 'datetime', 'confirmation'] as const;
 type Step = typeof steps[number];
 
-export default function StepPage({ params }: { params: { step: string } }) {
+export default async function StepPage(props: { params: Promise<{ step: string }> }) {
+    const params = await props.params;
     const currentStep = params.step as Step;
+    
 
     if (!steps.includes(currentStep)) return notFound();
 

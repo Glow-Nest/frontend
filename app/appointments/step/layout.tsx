@@ -1,8 +1,24 @@
+"use client";
+
 import AppointmentSummary from '@/components/appointments/AppointmentSummary';
 import Navbar from '@/components/common/MainNavbar';
-import React from 'react';
+import React, { useEffect } from 'react';
+
+// @ts-ignore
+import cookie from 'cookie-cutter';
+import toast from 'react-hot-toast';
 
 export default function StepLayout({ children }: { children: React.ReactNode }) {
+
+    useEffect(() => {
+        const reason = cookie.get('redirectReason');
+
+        if (reason === 'missing-services') {
+            toast.error('Please select a service before continuing.');
+            cookie.set('redirectReason', '', { expires: new Date(0) })
+        }
+    }, []);
+
     return (
         <>
             <Navbar />
