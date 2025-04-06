@@ -9,10 +9,13 @@ import { faArrowRight, faBars, faCartShopping, faUser, faXmark } from "@fortawes
 
 import "../common/css/hoverUnderline.css";
 import "../common/css/buttonSweep.css";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+
+    const router = useRouter();
 
     // Scroll Shrink Effect
     useEffect(() => {
@@ -24,13 +27,12 @@ export default function Navbar() {
     }, []);
 
     return (
-        <nav
-            className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? "py-1 shadow-sm bg-white" : "py-3 bg-white"
+        <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? "py-1 shadow-sm bg-white" : "py-3 bg-white"
                 } flex justify-between items-center px-8`}
         >
             {/* Left */}
             <div className="hidden lg:flex w-full justify-center gap-14 items-center text-[15px]">
-                <div className="hoverUnderline cursor-pointer relative inline-block">HOME</div>
+                <div onClick={() => router.push("/")} className="hoverUnderline cursor-pointer relative inline-block">HOME</div>
                 <div className="hoverUnderline cursor-pointer relative inline-block">SERVICES</div>
                 <div className="hoverUnderline cursor-pointer relative inline-block">PRODUCTS</div>
             </div>
@@ -48,7 +50,7 @@ export default function Navbar() {
 
             {/* Right */}
             <div className="hidden lg:flex w-full justify-end gap-8 items-center text-[15px]">
-                <button className="btn-sweep border cursor-pointer flex items-center justify-center gap-2 px-4 h-[38px] min-w-[170px] whitespace-nowrap leading-none text-sm">
+                <button onClick={() =>  router.push("/appointments")} className="btn-sweep border cursor-pointer flex items-center justify-center gap-2 px-4 h-[38px] min-w-[170px] whitespace-nowrap leading-none text-sm" >
                     BOOK APPOINTMENT
                     <FontAwesomeIcon icon={faArrowRight} className="w-[14px] h-[14px]" />
                 </button>
