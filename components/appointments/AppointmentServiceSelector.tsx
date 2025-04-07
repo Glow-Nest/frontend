@@ -15,7 +15,7 @@ const services: Service[] = [
     { serviceId: "5", serviceName: "Service5", price: "150 DKK", duration: "30 min" },
 ];
 
-function SelectService() {
+function AppointmentServiceSelector() {
     const dispatch = useDispatch();
     const selectedServices = useSelector((state: RootState) => state.appointment.selectedServices);
 
@@ -72,4 +72,4 @@ function ServiceCard({
     );
 }
 
-export default SelectService;
+export default AppointmentServiceSelector;

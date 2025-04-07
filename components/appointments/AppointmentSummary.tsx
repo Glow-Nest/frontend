@@ -2,7 +2,7 @@
 
 import { RootState } from '@/store';
 import { toggleService } from '@/store/slices/AppointmentSlice';
-import { faArrowLeft, faArrowRight, faTrash, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faArrowRight, faCalendar, faCalendarDay, faTrash, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getNextStep, getPrevStep, Step } from 'libs/stepUtils';
 import { usePathname, useRouter } from 'next/navigation';
@@ -46,21 +46,46 @@ function AppointmentSummary() {
         <div className="lg:w-full md:w-[45%]">
             <p className="text-2xl font-bold mb-4 text-center md:text-left">Appointment Summary</p>
 
-            <div className="bg-white w-full md:w-[350px] rounded-2xl shadow-md border border-gray-200 p-6">
+            <div className="bg-white w-full md:w-[350px] rounded-2xl shadow-md border border-gray-200 p-2 px-6">
                 {/* Header */}
-                <div className="flex items-center gap-4 mb-5">
-                    <div className="bg-gray-100 rounded-full p-3">
-                        <FontAwesomeIcon icon={faUsers} className="text-xl text-gray-700" />
+                {(selected.selectedServices.length > 0 || selected.selectedDate || selected.selectedTime) && (
+                    <div className="bg-[#fff3e0] w-full rounded-xl px-5 py-4 shadow-sm border border-[#ffe0b2] mb-2">
+                        <div className="flex items-center gap-4">
+                            {selected.selectedDate && (
+                                <div className="bg-white p-3 rounded-lg shadow-sm flex items-center justify-center">
+                                    <FontAwesomeIcon icon={faCalendarDay} className="text-[#1f2937] text-lg" />
+                                </div>
+                            )}
+
+                            <div className="flex flex-col justify-center text-sm text-gray-700">
+                                {selected.selectedDate && (
+                                    <span className="font-semibold text-[15px] text-gray-900 mb-1">
+                                        {new Date(selected.selectedDate).toLocaleDateString("en-US", {
+                                            weekday: "long",
+                                            month: "short",
+                                            day: "numeric",
+                                        })}
+                                    </span>
+                                )}
+
+                                {selected.selectedServices.length > 0 && (
+                                    <span className="text-gray-600 font-medium">
+                                        Total Price: <span className="font-semibold">{selected.totalPrice} DKK</span>
+                                        {selected.totalDuration > 0 && (
+                                            <> · <span className="font-semibold">{selected.totalDuration} min</span></>
+                                        )}
+                                    </span>
+                                )}
+
+                                {selected.selectedTime && (
+                                    <span className="text-xs text-gray-500 mt-1">
+                                        {selected.selectedTime} EDT
+                                    </span>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex flex-col">
-                        <span className="text-lg font-semibold text-gray-900">
-                            {selected.selectedServices.length} services
-                        </span>
-                        <span className="text-sm text-gray-500">
-                            {selected.totalPrice} DKK · {selected.totalDuration} min
-                        </span>
-                    </div>
-                </div>
+                )}
 
                 <hr className="border-gray-300 mb-4" />
 
@@ -80,12 +105,11 @@ function AppointmentSummary() {
     );
 }
 
-
 function NavigationButtons({ currentStep, canProceed, onNext, onBack }: { currentStep: Step; canProceed: boolean; onNext: () => void; onBack: () => void }) {
     return (
         <div className="mt-6 flex flex-col md:flex-row md:items-center md:justify-start gap-4 just lg:justify-between">
             {/* Next Button */}
-            <button className={`w-3xl cursor-pointer md:w-auto px-8 flex items-center justify-center gap-2 text-base font-semibold py-3 rounded-lg transition duration-200 shadow ${canProceed
+            <button className={`cursor-pointer md:w-auto px-8 flex items-center justify-center gap-2 text-base font-semibold py-3 rounded-lg transition duration-200 shadow ${canProceed
                 ? 'bg-[#1f2937] hover:bg-[#111827] text-white'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
