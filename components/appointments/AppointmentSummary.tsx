@@ -6,7 +6,7 @@ import { faArrowLeft, faArrowRight, faCalendar, faCalendarDay, faTrash, faUsers 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getNextStep, getPrevStep, Step } from 'libs/stepUtils';
 import { usePathname, useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // @ts-ignore
@@ -16,6 +16,7 @@ function AppointmentSummary() {
     const selected = useSelector((state: RootState) => state.appointment);
     const router = useRouter();
     const pathName = usePathname();
+
 
     const currentStep = pathName.split('/').pop() as Step;
     const nextStep = getNextStep(currentStep);
@@ -29,7 +30,7 @@ function AppointmentSummary() {
             // Update cookie just before navigation
             cookie.set(
                 'selectedServices',
-                JSON.stringify(selected.selectedServices.map(s => s.serviceId))
+                JSON.stringify(selected.selectedServices)
             );
 
             router.push(`/appointments/step/${nextStep}`);

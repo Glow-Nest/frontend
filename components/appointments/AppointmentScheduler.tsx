@@ -3,6 +3,7 @@
 import React from "react";
 
 import DatePicker from "./DatePicker";
+import TimeSelector from "./TimeSelector";
 
 function AppointmentScheduler() {
   return (
@@ -13,8 +14,6 @@ function AppointmentScheduler() {
   );
 }
 
-function TimeSelector() {
-  return <div>TimeSelector</div>;
-}
+
 
 export default AppointmentScheduler;

@@ -48,10 +48,14 @@ const appointmentSlice = createSlice({
 
         addSelectedDate(state, action: PayloadAction<string | null>) {
             state.selectedDate = action.payload;
-            console.log(action.payload);
+        },
+
+        addSelectedTime(state, action: PayloadAction<string | null>) {
+            state.selectedTime = action.payload;
         }
+        
     }
 });
 
-export const { toggleService, clearServices, addSelectedDate } = appointmentSlice.actions;
+export const { toggleService, clearServices, addSelectedDate, addSelectedTime } = appointmentSlice.actions;
 export default appointmentSlice.reducer;

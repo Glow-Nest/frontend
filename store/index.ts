@@ -1,16 +1,27 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { clientApi } from "./api/clientApi";
 
-import appointmentReducer from './slices/AppointmentSlice';;
+import appointmentReducer from './slices/AppointmentSlice';
+import storageSession from 'redux-persist/lib/storage/session';
+import { persistReducer } from 'redux-persist';
+
+const persistAppointmentConfig = {
+    key: "appointment",
+    version: 1,
+    storage: storageSession}
+
+const reducer = combineReducers({
+    [clientApi.reducerPath]: clientApi.reducer,
+    appointment: appointmentReducer,
+})
+
+const persistedReducer = persistReducer(persistAppointmentConfig, reducer);
 
 export const store = configureStore({
-    reducer: {
-        [clientApi.reducerPath]: clientApi.reducer,
-        appointment: appointmentReducer,
-    },
+    reducer: persistedReducer,
 
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(clientApi.middleware),
+        getDefaultMiddleware({ serializableCheck: false, }).concat(clientApi.middleware),
 });
 
 

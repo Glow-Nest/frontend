@@ -30,6 +30,7 @@
     "react-hot-toast": "^2.5.2",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.4.0",
+    "redux-persist": "^6.0.0",
     "swiper": "^11.2.6"
   },
   "devDependencies": {
@@ -37,6 +38,7 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/redux-persist": "^4.0.0",
     "@types/webpack": "^5.28.5",
     "tailwindcss": "^4",
     "typescript": "^5"
