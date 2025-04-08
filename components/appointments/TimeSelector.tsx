@@ -3,6 +3,8 @@
 import { RootState } from "@/store";
 import { addSelectedTime } from "@/store/slices/AppointmentSlice";
 import { useDispatch, useSelector } from "react-redux";
+import toast from 'react-hot-toast';
+import { useEffect } from "react";
 
 const timeSlots = {
     Morning: ["10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM"],
@@ -14,7 +16,18 @@ function TimeSelector() {
     const dispatch = useDispatch();
     const selected = useSelector((state: RootState) => state.appointment);
 
+    useEffect(() => {
+        if (selected.selectedDate && !selected.selectedTime) {
+            const firstTimeSlot = Object.values(timeSlots).flat()[0];
+            dispatch(addSelectedTime(firstTimeSlot));
+        }
+    }, []);
+
     const handleTimeClick = (time: string) => {
+        if (!selected.selectedDate) {
+            toast.error("Please select date before choosing time!!");
+            return;
+        };
         dispatch(addSelectedTime(time));
     };
 
@@ -42,15 +55,18 @@ function TimeSelector() {
                             return (
                                 <button
                                     key={time}
-                                    onClick={() => handleTimeClick(time)}
+                                    disabled={!selected.selectedDate}
                                     className={`py-2 px-4 rounded-lg font-medium transition text-sm cursor-pointer
-                                        ${isSelected
-                                            ? "bg-[#dba052] text-white shadow"
-                                            : "bg-gray-100 text-gray-800 hover:bg-[#f3e0ca]"
+        ${!selected.selectedDate ? "bg-gray-200 cursor-not-allowed" :
+                                            isSelected
+                                                ? "bg-[#dba052] text-white shadow"
+                                                : "bg-gray-100 text-gray-800 hover:bg-[#f3e0ca]"
                                         }`}
+                                    onClick={() => handleTimeClick(time)}
                                 >
                                     {time}
                                 </button>
+
                             );
                         })}
                     </div>

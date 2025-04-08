@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import AppointmentContent from '@/components/appointments/AppointmentServiceSelector';
 import AppointmentScheduler from '@/components/appointments/AppointmentScheduler';
+import AppointmentConfirmation from '@/components/appointments/AppointmentConfirmation';
 
 const steps = ['services', 'datetime', 'confirmation'] as const;
 type Step = typeof steps[number];
@@ -18,8 +19,7 @@ export default async function StepPage(props: { params: Promise<{ step: string }
         case 'datetime':
             return <AppointmentScheduler />;
         case 'confirmation':
-            return <h1>confirmation</h1>
-        // return <Confirmation />;
+            return <AppointmentConfirmation />;
         default:
             return notFound();
     }

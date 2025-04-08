@@ -1,11 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { calculateEndTime } from "libs/helpers";
 
 const initialState: AppointmentState = {
     selectedServices: [],
     totalPrice: 0,
     totalDuration: 0,
     selectedDate: null,
-    selectedTime: null
+    selectedTime: null,
+    startTime: null,
+    endTime: null
 };
 
 function parsePrice(priceString: string): number {
@@ -44,6 +47,15 @@ const appointmentSlice = createSlice({
                 state.totalPrice += parsePrice(action.payload.price);
                 state.totalDuration += parseDuration(action.payload.duration);
             }
+
+            // Recalculate endTime if a time is already selected
+            if (state.selectedTime && state.totalDuration > 0) {
+                state.startTime = state.selectedTime;
+                state.endTime = calculateEndTime(state.selectedTime, state.totalDuration);
+            } else {
+                state.startTime = null;
+                state.endTime = null;
+            }
         },
 
         addSelectedDate(state, action: PayloadAction<string | null>) {
@@ -52,8 +64,16 @@ const appointmentSlice = createSlice({
 
         addSelectedTime(state, action: PayloadAction<string | null>) {
             state.selectedTime = action.payload;
+
+            if (action.payload && state.totalDuration > 0) {
+                state.startTime = action.payload;
+                state.endTime = calculateEndTime(action.payload, state.totalDuration);
+            } else {
+                state.startTime = null;
+                state.endTime = null;
+            }
         }
-        
+
     }
 });
 

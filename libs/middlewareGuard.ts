@@ -11,6 +11,7 @@ export function protectAppointmentSteps(request: NextRequest): NextResponse | vo
         const selected = cookie ? JSON.parse(cookie) : [];
 
         if (!Array.isArray(selected) || selected.length === 0) {
+            console.log(selected)
             url.pathname = '/appointments/step/services';
             const response = NextResponse.redirect(url);
             response.cookies.set('redirectReason', 'missing-services', {

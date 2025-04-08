@@ -17,7 +17,6 @@ function AppointmentSummary() {
     const router = useRouter();
     const pathName = usePathname();
 
-
     const currentStep = pathName.split('/').pop() as Step;
     const nextStep = getNextStep(currentStep);
     const prevStep = getPrevStep(currentStep);
@@ -44,7 +43,7 @@ function AppointmentSummary() {
     };
 
     return (
-        <div className="lg:w-full md:w-[45%]">
+        <div className="lg:w-full md:w-[45%] sticky top-12 self-start z-10">
             <p className="text-2xl font-bold mb-4 text-center md:text-left">Appointment Summary</p>
 
             <div className="bg-white w-full md:w-[350px] rounded-2xl shadow-md border border-gray-200 p-2 px-6">
@@ -60,7 +59,7 @@ function AppointmentSummary() {
 
                             <div className="flex flex-col justify-center text-sm text-gray-700">
                                 {selected.selectedDate && (
-                                    <span className="font-semibold text-[15px] text-gray-900 mb-1">
+                                    <span className="font-semibold text-[15px] text-gray-900">
                                         {new Date(selected.selectedDate).toLocaleDateString("en-US", {
                                             weekday: "long",
                                             month: "short",
@@ -68,6 +67,13 @@ function AppointmentSummary() {
                                         })}
                                     </span>
                                 )}
+
+                                {selected.startTime && selected.endTime && (
+                                    <span className="font-semibold text-[15px] text-gray-900 mb-1">
+                                        {selected.startTime} – {selected.endTime} EDT
+                                    </span>
+                                )}
+
 
                                 {selected.selectedServices.length > 0 && (
                                     <span className="text-gray-600 font-medium">
@@ -78,11 +84,7 @@ function AppointmentSummary() {
                                     </span>
                                 )}
 
-                                {selected.selectedTime && (
-                                    <span className="text-xs text-gray-500 mt-1">
-                                        {selected.selectedTime} EDT
-                                    </span>
-                                )}
+
                             </div>
                         </div>
                     </div>
@@ -107,19 +109,39 @@ function AppointmentSummary() {
 }
 
 function NavigationButtons({ currentStep, canProceed, onNext, onBack }: { currentStep: Step; canProceed: boolean; onNext: () => void; onBack: () => void }) {
+
+    const handleBookingConfirmed = () => {
+        alert("Confirmed!!!");
+    }
+
     return (
         <div className="mt-6 flex flex-col md:flex-row md:items-center md:justify-start gap-4 just lg:justify-between">
             {/* Next Button */}
-            <button className={`cursor-pointer md:w-auto px-8 flex items-center justify-center gap-2 text-base font-semibold py-3 rounded-lg transition duration-200 shadow ${canProceed
-                ? 'bg-[#1f2937] hover:bg-[#111827] text-white'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
-                onClick={onNext}
-                disabled={!canProceed}
-            >
-                Next
-                <FontAwesomeIcon icon={faArrowRight} className="text-sm" />
-            </button>
+            {currentStep === 'confirmation' ? (
+                <button
+                    className={`cursor-pointer w-full md:w-auto px-6 py-3 flex items-center justify-center gap-2 text-base font-semibold rounded-lg transition duration-200 shadow ${canProceed
+                        ? 'bg-[#1f2937] hover:bg-[#111827] text-white'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        }`}
+                    onClick={handleBookingConfirmed}
+                >
+                    <FontAwesomeIcon icon={faCalendar} className="text-sm" />
+                    Confirm
+                </button>
+            ) : (
+                <button
+                    className={`cursor-pointer w-full md:w-auto px-6 py-3 flex items-center justify-center gap-2 text-base font-semibold rounded-lg transition duration-200 shadow ${canProceed
+                        ? 'bg-[#1f2937] hover:bg-[#111827] text-white'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        }`}
+                    onClick={onNext}
+                    disabled={!canProceed}
+                >
+                    Next
+                    <FontAwesomeIcon icon={faArrowRight} className="text-sm" />
+                </button>
+            )}
+
 
             {/* Back Button */}
             {currentStep !== 'services' && (
