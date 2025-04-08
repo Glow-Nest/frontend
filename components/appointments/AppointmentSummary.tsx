@@ -2,11 +2,11 @@
 
 import { RootState } from '@/store';
 import { toggleService } from '@/store/slices/AppointmentSlice';
-import { faArrowLeft, faArrowRight, faCalendar, faCalendarDay, faTrash, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faArrowRight, faCalendar, faCalendarDay, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getNextStep, getPrevStep, Step } from 'libs/stepUtils';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // @ts-ignore
