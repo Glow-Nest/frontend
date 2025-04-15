@@ -4,9 +4,13 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import {InputField} from '../signup/InputFields';
+import { useLoginClientMutation } from '@/store/api/clientApi';
+import { useAppDispatch } from '@/store/hook';
+import { setCredentials } from '@/store/slice/AuthSlice';
 
 function InputFields() {
-    //const [login, { isLoading }] = useLoginMutation();
+    const [login, { isLoading }] = useLoginClientMutation();
+    const dispatch = useAppDispatch();
     const router = useRouter();
 
     const [form, setForm] = useState({
@@ -28,7 +32,9 @@ function InputFields() {
         try {
             await toast.promise(
                 (async () => {
-                    router.push(`/dashboard`);
+                    const res = await login(form).unwrap();
+                    dispatch(setCredentials({firstName : res.username, email : res.email, role : res.role, token : res.token}));
+                    router.push(`/`);
                 })(),
                 {
                     loading: 'Logging in...',
