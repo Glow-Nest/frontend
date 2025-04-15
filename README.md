@@ -3,7 +3,7 @@
 ## ✅ User Login and Account Management
 
 ### Must Have
-- [ ] Clients can **create an account** using email and password.
+- [*] Clients can **create an account** using email and password.
 - [ ] Clients must **log in** before booking appointments, purchasing products, or leaving reviews.
 - [ ] Salon owners can **log in** to view daily bookings.
 - [ ] Clients can **reset their password** if forgotten.
