@@ -39,9 +39,12 @@ function LoginPage() {
                 </div>
             </div>
 
-            <Link href="/signup" className="hoverUnderline text-sm uppercase cursor-pointer relative mt-10 inline-block">
+            <span
+                onClick={() => router.push('/signup')}
+                className="hoverUnderline text-sm uppercase cursor-pointer relative mt-10 inline-block"
+            >
                 Can't log In?
-            </Link>
+            </span>
         </div>
     );
 }
