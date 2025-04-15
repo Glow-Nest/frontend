@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import InputFields from '../login/InputFields';
 import ContinueWithButton from '../signup/ContinueWithButton';
-import logo from '@/public/logo.svg';
 import Link from 'next/link';
+import logo from 'public/logo.svg';
 
 function LoginPage() {
     const router = useRouter();

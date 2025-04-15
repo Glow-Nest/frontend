@@ -1,7 +1,7 @@
 
 import React from 'react'
 
-import LoginSignUpNavbar from '@/components/common/SignUpLoginNavbar';
+import LoginSignUpNavbar from '@/components/common/LoginSignUpNavbar';
 import SignUpBox from '@/components/signup/SignUpBox';
 
 function SignUp() {

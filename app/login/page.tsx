@@ -1,4 +1,4 @@
-import LoginNavbar from '@/components/common/SignUpLoginNavbar'
+import LoginNavbar from '@/components/common/LoginSignUpNavbar'
 import LoginPage from '@/components/login/LoginPage'
 import React from 'react'
 

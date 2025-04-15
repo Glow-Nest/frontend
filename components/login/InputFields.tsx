@@ -30,30 +30,51 @@ function InputFields() {
         setErrors({});
 
         try {
-            await toast.promise(
-                (async () => {
-                    const res = await login(form).unwrap();
-                    dispatch(setCredentials({firstName : res.username, email : res.email, role : res.role, token : res.token}));
-                    router.push(`/`);
-                })(),
-                {
-                    loading: 'Logging in...',
-                    success: 'Login successful! Redirecting...',
-                    error: (err) => {
-                        const fallback = "Invalid credentials. Please try again.";
-                        return err?.data?.message || fallback;
-                    },
-                }
-            );
+            const res = await login(form).unwrap();
+            dispatch(setCredentials({
+                firstName: res.username,
+                email: res.email,
+                role: res.role,
+                token: res.token
+            }));
+            toast.success("Login successful! Redirecting...");
+            router.push(`/`);
         } catch (err: any) {
-            const fieldErrors: { [key: string]: string } = {};
-            if (err?.data?.errors) {
-                err.data.errors.forEach((e: any) => {
+            const errorsArray = err?.data;
+    
+            if (Array.isArray(errorsArray)) {
+                const notVerifiedError = errorsArray.find((e: any) => e.errorId === "Client.NotVerified");
+                const invalidCredentialsError = errorsArray.find((e: any) => e.errorId === "Credentials.Invalid");
+                const clientNotFoundError = errorsArray.find((e: any) => e.errorId === "Client.NotFound");
+
+                if (notVerifiedError) {
+                    toast.success("Please verify your account via OTP");
+                    router.push(`/otpVerify?email=${form.email}`);
+                    return;
+                }
+
+                if (invalidCredentialsError) {
+                    toast.error("Invalid credentials. Please try again.");
+                    return;
+                }
+
+                if (clientNotFoundError) {
+                    toast.error("User not found. Please sign up.");
+                    router.push(`/signup`);
+                    return;
+                }
+    
+                const fieldErrors: { [key: string]: string } = {};
+                errorsArray.forEach((e: any) => {
                     if (e.errorId?.startsWith("Email")) fieldErrors.email = e.message;
                     if (e.errorId?.startsWith("Password")) fieldErrors.password = e.message;
                 });
+    
+                setErrors(fieldErrors);
+            } else {
+                toast.error("Something went wrong. Please try again.");
+                console.error("Unexpected error format:", err);
             }
-            setErrors(fieldErrors);
         }
     };
 
