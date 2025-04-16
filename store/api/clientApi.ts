@@ -40,6 +40,28 @@ export const clientApi = createApi({
         body: credentials,
       }),
     }),
+    initiatePasswordReset: builder.mutation<void, { email: string }>({
+      query: ({ email }) => ({
+        url: "/api/client/initiate-password-reset",
+        method: "POST",
+        body: { email },
+      }),
+    }),
+    resetPassword: builder.mutation<
+      void,
+      {
+        email: string;
+        newPassword: string;
+        confirmPassword: string;
+        otpCode: string;
+      }
+    >({
+      query: (body) => ({
+        url: "clients/password/reset",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -48,4 +70,6 @@ export const {
   useSendOtpMutation,
   useVerifyOtpMutation,
   useLoginClientMutation,
+  useInitiatePasswordResetMutation,
+  useResetPasswordMutation,
 } = clientApi;
