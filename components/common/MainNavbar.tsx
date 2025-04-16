@@ -1,5 +1,6 @@
 "use client";
 
+
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
@@ -9,10 +10,13 @@ import { faArrowRight, faBars, faCartShopping, faUser, faXmark } from "@fortawes
 
 import "../common/css/hoverUnderline.css";
 import "../common/css/buttonSweep.css";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const user = useSelector((state: RootState) => state.auth.firstName);
 
     // Scroll Shrink Effect
     useEffect(() => {
@@ -52,8 +56,12 @@ export default function Navbar() {
                     BOOK APPOINTMENT
                     <FontAwesomeIcon icon={faArrowRight} className="w-[14px] h-[14px]" />
                 </button>
-                <div className="flex gap-4">
+                <div className="flex gap-4 items-center">
+                {user ? (
+                    <span className="font-semibold">HI, {user}</span>
+                ) : (
                     <FontAwesomeIcon icon={faUser} className="w-[14px] h-[14px]" />
+                )}
                     <FontAwesomeIcon icon={faCartShopping} className="w-[14px] h-[14px]" />
                 </div>
             </div>

@@ -1,8 +1,13 @@
+import LoginNavbar from '@/components/common/LoginSignUpNavbar'
+import LoginPage from '@/components/login/LoginPage'
 import React from 'react'
 
 function Login() {
   return (
-    <div>Login</div>
+    <>
+      <LoginNavbar type='login'/>
+      <LoginPage/>
+    </>
   )
 }
 
