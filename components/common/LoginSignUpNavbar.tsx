@@ -1,7 +1,9 @@
+'use client';
+
 import React from 'react';
 import BackIcon from '@/components/common/BackIcon';
 import "../common/css/hoverUnderline.css";
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 
 interface NavbarProps {
@@ -9,19 +11,22 @@ interface NavbarProps {
 }
 
 function LoginSignUpNavbar({ type }: NavbarProps) {
+    const router = useRouter();
+
+    const handleNavigate = () => {
+        router.push(type === 'login' ? '/signup' : '/login');
+    };
+
     return (
         <div className="p-5 m-4 flex justify-between items-center">
             <BackIcon />
 
-            {type === 'login' ? (
-                <Link href="/signup" className="hoverUnderline text-sm uppercase cursor-pointer relative inline-block">
-                    Create Account
-                </Link>
-            ) : (
-                <Link href="/login" className="hoverUnderline text-sm uppercase cursor-pointer relative inline-block">
-                    Login
-                </Link>
-            )}
+            <span
+                onClick={handleNavigate}
+                className="hoverUnderline text-sm uppercase cursor-pointer relative inline-block"
+            >
+                {type === 'login' ? 'Create Account' : 'Login'}
+            </span>
         </div>
     );
 }
