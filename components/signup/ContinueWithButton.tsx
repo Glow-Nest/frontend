@@ -5,7 +5,7 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
-function ContinueWithButton({ onEmailClick }: { onEmailClick: () => void }) {
+function ContinueWithButton({ showEmailOption ,onEmailClick }: { showEmailOption: boolean, onEmailClick: () => void }) {
     const buttonData = [
         {
             icon: faGoogle,
@@ -13,11 +13,6 @@ function ContinueWithButton({ onEmailClick }: { onEmailClick: () => void }) {
             onClick: () => {
                 console.log('Google sign-in clicked');
             },
-        },
-        {
-            icon: faEnvelope,
-            text: 'Continue with Email',
-            onClick: onEmailClick,
         },
         {
             icon: faApple,
@@ -28,6 +23,13 @@ function ContinueWithButton({ onEmailClick }: { onEmailClick: () => void }) {
         },
     ];
 
+    if (showEmailOption) {
+        buttonData.push({
+            icon: faEnvelope,
+            text: 'Continue with Email',
+            onClick: onEmailClick,
+        });
+    }
 
     return (
         <>

@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { clientApi } from "./api/clientApi";
+import authReducer from "./slice/AuthSlice";
 
 import appointmentReducer from './slices/AppointmentSlice';
 import storageSession from 'redux-persist/lib/storage/session';
@@ -13,6 +14,8 @@ const persistAppointmentConfig = {
 const reducer = combineReducers({
     [clientApi.reducerPath]: clientApi.reducer,
     appointment: appointmentReducer,
+      auth: authReducer,
+
 })
 
 const persistedReducer = persistReducer(persistAppointmentConfig, reducer);
@@ -23,7 +26,6 @@ export const store = configureStore({
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({ serializableCheck: false, }).concat(clientApi.middleware),
 });
-
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

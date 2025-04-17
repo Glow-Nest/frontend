@@ -1,26 +1,34 @@
-import React from 'react'
+'use client';
 
+import React from 'react';
 import BackIcon from '@/components/common/BackIcon';
-import "../common/css/hoverUnderline.css"
-
+import "../common/css/hoverUnderline.css";
+import { useRouter } from 'next/navigation';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 
-function LoginSignUpNavbar() {
-
-    return (
-        <>
-            <div className="p-5 m-4 flex justify-between items-center">
-                <BackIcon/>
-
-                <div className="hoverUnderline text-sm uppercase cursor-pointer relative inline-block">
-                    Log in
-                </div>
-
-            </div>
-           
-        </>
-
-    )
+interface NavbarProps {
+    type: 'login' | 'signup';
 }
 
-export default LoginSignUpNavbar
+function LoginSignUpNavbar({ type }: NavbarProps) {
+    const router = useRouter();
+
+    const handleNavigate = () => {
+        router.push(type === 'login' ? '/signup' : '/login');
+    };
+
+    return (
+        <div className="p-5 m-4 flex justify-between items-center">
+            <BackIcon />
+
+            <span
+                onClick={handleNavigate}
+                className="hoverUnderline text-sm uppercase cursor-pointer relative inline-block"
+            >
+                {type === 'login' ? 'Create Account' : 'Login'}
+            </span>
+        </div>
+    );
+}
+
+export default LoginSignUpNavbar;
