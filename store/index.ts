@@ -1,14 +1,30 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { clientApi } from "./api/clientApi";
 import authReducer from "./slice/AuthSlice";
 
-export const store = configureStore({
-  reducer: {
-    auth: authReducer,
+import appointmentReducer from './slices/AppointmentSlice';
+import storageSession from 'redux-persist/lib/storage/session';
+import { persistReducer } from 'redux-persist';
+
+const persistAppointmentConfig = {
+    key: "appointment",
+    version: 1,
+    storage: storageSession}
+
+const reducer = combineReducers({
     [clientApi.reducerPath]: clientApi.reducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(clientApi.middleware),
+    appointment: appointmentReducer,
+      auth: authReducer,
+
+})
+
+const persistedReducer = persistReducer(persistAppointmentConfig, reducer);
+
+export const store = configureStore({
+    reducer: persistedReducer,
+
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({ serializableCheck: false, }).concat(clientApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
