@@ -61,7 +61,7 @@ export default function Navbar() {
                 </button>
                 <div className="flex gap-4 items-center">
                 {user ? (
-                    <span className="font-semibold">HI, {user}</span>
+                    <span className="font-semibold">Hi, {user}</span>
                 ) : (
                     <FontAwesomeIcon icon={faUser} className="w-[14px] h-[14px]" />
                 )}

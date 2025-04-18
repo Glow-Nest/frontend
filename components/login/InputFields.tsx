@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import {InputField} from '../signup/InputFields';
 import { useLoginClientMutation } from '@/store/api/clientApi';
 import { useAppDispatch } from '@/store/hook';
-import { setCredentials } from '@/store/slice/AuthSlice';
+import { setCredentials } from '@/store/slices/AuthSlice';
+
+import Cookies from 'js-cookie';
 
 function InputFields() {
     const [login, { isLoading }] = useLoginClientMutation();
@@ -17,6 +19,15 @@ function InputFields() {
         email: '',
         password: ''
     });
+
+    useEffect(() => {
+        const reason = Cookies.get("redirectReason");
+    
+        if (reason === "login-required") {
+          toast.error("Please login to access this page.");
+          Cookies.remove("redirectReason");
+        }
+      }, []);
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -35,10 +46,12 @@ function InputFields() {
                 firstName: res.username,
                 email: res.email,
                 role: res.role,
-                token: res.token
             }));
+            
+            Cookies.set("token", res.token, {secure: true, sameSite: "Lax"});
+
             toast.success("Login successful! Redirecting...");
-            router.push(`/`);
+            router.push(`/owner`);
         } catch (err: any) {
             const errorsArray = err?.data;
     

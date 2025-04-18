@@ -1,8 +1,10 @@
 type Service = {
     serviceId: string;
     serviceName: string;
+    description: string;
     price: string;
     duration: string;
+    mediaUrlList: string[];
 };
 
 interface AppointmentState {

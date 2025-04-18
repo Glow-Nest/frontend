@@ -4,18 +4,17 @@ import AppointmentSummary from '@/components/appointments/AppointmentSummary';
 import Navbar from '@/components/common/MainNavbar';
 import React, { useEffect } from 'react';
 
-// @ts-ignore
-import cookie from 'cookie-cutter';
 import toast from 'react-hot-toast';
+import Cookies from 'js-cookie';
 
 export default function StepLayout({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
-        const reason = cookie.get('redirectReason');
+        const reason = Cookies.get("redirectReason");
 
         if (reason === 'missing-services') {
             toast.error('Please select a service before continuing.');
-            cookie.set('redirectReason', '', { expires: new Date(0) })
+            Cookies.set("redirectReason", "", { expires: new Date(0)});
         }
     }, []);
 

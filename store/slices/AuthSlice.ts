@@ -1,6 +1,5 @@
 interface AuthState {
   firstName: string | null;
-  token: string | null;
   email: string | null;
   role: string | null;
 }
@@ -9,7 +8,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: AuthState = {
   firstName: null,
-  token: null,
   email: null,
   role: null,
 };
@@ -20,13 +18,11 @@ const authSlice = createSlice({
   reducers: {
     setCredentials: (state, action: PayloadAction<AuthState>) => {
       state.firstName = action.payload.firstName;
-      state.token = action.payload.token;
       state.email = action.payload.email;
       state.role = action.payload.role;
     },
     logout: (state) => {
       state.firstName = null;
-      state.token = null;
       state.email = null;
       state.role = null;
     },

@@ -1,20 +1,23 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { clientApi } from "./api/clientApi";
-import authReducer from "./slice/AuthSlice";
+import authReducer from "./slices/AuthSlice";
 
 import appointmentReducer from './slices/AppointmentSlice';
 import storageSession from 'redux-persist/lib/storage/session';
 import { persistReducer } from 'redux-persist';
+import { serviceApi } from "./api/serviceApi";
 
 const persistAppointmentConfig = {
     key: "appointment",
     version: 1,
-    storage: storageSession}
+    storage: storageSession
+}
 
 const reducer = combineReducers({
     [clientApi.reducerPath]: clientApi.reducer,
+    [serviceApi.reducerPath]: serviceApi.reducer,
     appointment: appointmentReducer,
-      auth: authReducer,
+    auth: authReducer,
 
 })
 
