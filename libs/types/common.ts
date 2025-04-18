@@ -7,7 +7,7 @@ type Service = {
     mediaUrlList: string[];
 };
 
-interface AppointmentState {
+interface AppointmentBookingState {
     selectedServices: Service[];
     totalPrice: number;
     totalDuration: number;

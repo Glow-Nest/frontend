@@ -2,7 +2,7 @@
 
 import { RootState } from '@/store';
 import { useGetServicesMutation } from '@/store/api/serviceApi';
-import { toggleService } from '@/store/slices/AppointmentSlice';
+import { toggleService } from '@/store/slices/CreateAppointmentSlice';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';

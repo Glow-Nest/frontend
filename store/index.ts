@@ -2,7 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { clientApi } from "./api/clientApi";
 import authReducer from "./slices/AuthSlice";
 
-import appointmentReducer from './slices/AppointmentSlice';
+import appointmentReducer from './slices/CreateAppointmentSlice';
 import storageSession from 'redux-persist/lib/storage/session';
 import { persistReducer } from 'redux-persist';
 import { serviceApi } from "./api/serviceApi";

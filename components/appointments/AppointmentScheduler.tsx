@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import DatePicker from "./DatePicker";
 import TimeSelector from "./TimeSelector";
 import { useDispatch } from "react-redux";
-import { addSelectedDate } from "@/store/slices/AppointmentSlice";
+import { addSelectedDate } from "@/store/slices/CreateAppointmentSlice";
 import { format } from "date-fns";
 
 function AppointmentScheduler() {

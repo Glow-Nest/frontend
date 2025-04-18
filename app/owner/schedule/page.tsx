@@ -1,65 +1,3 @@
-// "use client";
-
-// import DatePicker from '@/components/appointments/DatePicker';
-// import UpcomingAppointmentsList from '@/components/owner/schedule/UpcomingAppointmentsList';
-// import NextAppointmentCard, { AppointmentCardProps } from '@/components/owner/schedule/UpcomingAppointmentsList';
-// import { format } from 'path';
-// import React, { useState } from 'react';
-
-// const upcomingAppointments: AppointmentCardProps[] = [
-//   {
-//     startTime: "11:00",
-//     endTime: "12:00",
-//     clientName: "Suhani Pandey",
-//     service: "Haircut & Styling",
-//     avatarUrl: `https://avatar.iran.liara.run/public/boy?username=${encodeURIComponent("Suhani Pandey")}`,
-//   },
-//   {
-//     startTime: "13:00",
-//     endTime: "14:30",
-//     clientName: "Sadixa Baral",
-//     service: "Hair Spa",
-//     avatarUrl: `https://avatar.iran.liara.run/public/boy?username=${encodeURIComponent("Sadixa Bista")}`,
-//   },
-//   {
-//     startTime: "14:00",
-//     endTime: "16:00",
-//     clientName: "Kushum Poudel",
-//     service: "Facial",
-//     avatarUrl: `https://avatar.iran.liara.run/public/boy?username=${encodeURIComponent("Kushum Poudel")}`,
-//   },
-// ];
-
-// function Schedule() {
-//   const today = new Date();
-
-//   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-
-
-//   const handleSelectedDate = (date: Date) => {
-//     setSelectedDate(date);
-//   }
-
-//   return (
-//     <div className="w-full h-full min-h-screen grid grid-cols-6 grid-rows-6 gap-4 p-4 bg-neutral-100">
-//       {/* Date Picker */}
-//       <div className="col-span-3 row-span-3 bg-amber-200 rounded-lg p-4 shadow">1</div>
-
-//       {/* Block Time */}
-//       <div className="col-span-3 row-span-3 col-start-1 row-start-4 bg-green-300 rounded-lg p-4 shadow">2</div>
-
-//       {/* Date Picker */}
-//       <div className="col-span-3 row-span-6 col-start-4 row-start-1 rounded-lg">
-//         <UpcomingAppointmentsList appointments={upcomingAppointments} date={selectedDate} />
-
-//         <DatePicker expanded={false} showMonthToggle={false} initialDate={today} onSelect={handleSelectedDate} />
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Schedule;
-
 "use client"
 
 import DatePicker from '@/components/appointments/DatePicker';
@@ -94,29 +32,45 @@ const upcomingAppointments: AppointmentCardProps[] = [
   },
 ];
 
+const demoAppointments = [
+  {
+    startTime: "12:00",
+    endTime: "13:00",
+    label: "Kushum Sharma - Manicure"
+  }
+];
+
+const demoBlockedTimes = [
+  {
+    startTime: "15:00",
+    endTime: "15:30",
+    label: "Lunch Break"
+  }
+];
+
 function Schedule() {
   const today = new Date();
-
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-
 
   const handleSelectedDate = (date: Date | null) => {
     setSelectedDate(date || undefined);
   }
 
   return (
-    <div className="grid grid-cols-8 grid-rows-7 gap-2 w-full min-h-screen h-screen overflow-hidden p-4 bg-neutral-100 rounded-md">
+    <div className="flex flex-col gap-4 w-full min-h-screen p-4 bg-neutral-100 rounded-md lg:grid lg:grid-cols-8 lg:grid-rows-7 lg:gap-2 lg:h-screen lg:overflow-hidden">
 
-      {/* weekly overview */}
-      <div className="col-span-2 row-span-3 bg-amber-300 h-full">1</div>
+      {/* 1 - weekly overview */}
+      <div className="bg-amber-300 h-full lg:col-span-2 lg:row-span-3">
+        1
+      </div>
 
-      {/* upcoming appointments */}
-      <div className="col-span-2 row-span-4 col-start-1 row-start-4 h-full">
+      {/* 2 - upcoming appointments */}
+      <div className="h-full lg:col-span-2 lg:row-span-4 lg:col-start-1 lg:row-start-4">
         <UpcomingAppointmentsList appointments={upcomingAppointments} />
       </div>
 
-      {/* week schedule */}
-      <div className="col-span-6 row-span-2 col-start-3 row-start-1 h-full">
+      {/* 3 - week schedule (date picker) */}
+      <div className="h-full lg:col-span-6 lg:row-span-2 lg:col-start-3 lg:row-start-1">
         <DatePicker
           expanded={false}
           showMonthToggle={false}
@@ -125,11 +79,12 @@ function Schedule() {
         />
       </div>
 
-      <div className="col-span-6 row-span-5 col-start-3 row-start-3">
-        <DaySchedule date={selectedDate}/>
+      {/* 4 - day schedule */}
+      <div className="h-full lg:col-span-6 lg:row-span-5 lg:col-start-3 lg:row-start-3">
+        <DaySchedule date={selectedDate} appointments={demoAppointments} blockedTimes={demoBlockedTimes} />
       </div>
     </div>
-
   )
 }
-export default Schedule
+
+export default Schedule;
