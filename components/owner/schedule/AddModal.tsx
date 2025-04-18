@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { CalendarDays, Clock, Mail, Pen, Scissors } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { useAddBlockedTimeMutation } from "@/store/api/scheduleApi";
+import { useAppDispatch } from "@/store/hook";
 
 // Interfaces for appointment and block inputs
 export interface AppointmentInput {
@@ -51,7 +54,6 @@ export default function AddModal({
     const [email, setEmail] = useState("");
     const [services, setServices] = useState<string[]>([]);
     const [note, setNote] = useState("");
-    const [reason, setReason] = useState("");
     const [startTime, setStartTime] = useState(defaultStartTime);
     const [endTime, setEndTime] = useState(defaultEndTime);
 
@@ -60,7 +62,7 @@ export default function AddModal({
         if (mode === "appointment") {
             onCreateAppointment({ email, startTime, endTime, services, note });
         } else {
-            onCreateBlock({ startTime, endTime, reason });
+            onCreateBlock({ startTime, endTime });
         }
         onClose();
     };
@@ -90,7 +92,6 @@ export default function AddModal({
     const isValid = mode === "appointment"
         ? email.trim() !== "" && services.length > 0 && startTime && endTime
         : startTime && endTime;
-
 
     return (
         <Dialog open={isOpen} onClose={onClose} className="relative z-50">
@@ -156,11 +157,6 @@ export default function AddModal({
                             note={note}
                             setNote={setNote}
                         />
-                    )}
-
-                    {/* Render BlockForm if mode is "block" */}
-                    {mode === "block" && (
-                        <BlockForm reason={reason} setReason={setReason} />
                     )}
 
                     {/* Action buttons */}
@@ -239,25 +235,4 @@ function AppointmentForm({
             </div>
         </>
     )
-}
-
-function BlockForm({
-    reason,
-    setReason,
-}: {
-    reason: string;
-    setReason: React.Dispatch<React.SetStateAction<string>>;
-}) {
-    return (
-        <div className="mb-4">
-            <label className="flex items-center gap-1 text-sm mb-1">
-                <Pen className="w-4 h-4 text-gray-500" /> Reason
-            </label>
-            <textarea
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm"
-            />
-        </div>
-    );
 }

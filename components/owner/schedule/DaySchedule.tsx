@@ -2,7 +2,10 @@
 
 import React, { useState } from "react";
 import { format } from "date-fns";
-import AddModal from "./AddModal";
+import AddModal, { BlockInput } from "./AddModal";
+import { useAppDispatch } from "@/store/hook";
+import { useAddBlockedTimeMutation } from "@/store/api/scheduleApi";
+import toast from "react-hot-toast";
 
 const workingHours = Array.from({ length: 9 }, (_, i) => 10 + i);
 
@@ -50,8 +53,48 @@ export default function DaySchedule({
     appointments = [],
     blockedTimes = [],
 }: DayScheduleProps) {
+    const dispatch = useAppDispatch();
+    const [addBlockedTime, { isLoading }] = useAddBlockedTimeMutation();
+
     const [modalOpen, setModalOpen] = useState(false);
     const formattedDate = format(date, "EEEE, MMMM d, yyyy");
+
+    const handleBlockTimeSave = async (blockedTime: BlockInput) => {
+        try {
+            toast.loading('Saving blocked time...');
+
+            const formattedScheduleDate = format(date, 'yyyy-MM-dd');
+
+            await addBlockedTime({ scheduleDate: formattedScheduleDate, startTime: blockedTime.startTime, endTime: blockedTime.endTime }).unwrap();
+
+            toast.dismiss();
+            toast.success(`Time blocked from ${blockedTime.startTime} to ${blockedTime.endTime}.`);
+
+            setModalOpen(false);
+        } catch (error: any) {
+            toast.dismiss();
+
+            const errorCode = error?.data?.[0]?.errorId;
+
+            switch (errorCode) {
+                case "BlockTimeSlot.Overlap":
+                    toast.error(error?.data?.[0]?.message);
+                    break;
+                case "BlockTimeSlot.OverlapsExistingAppointment":
+                    toast.error(error?.data?.[0]?.message);
+                    break;
+                case "TimeSlot.EndTimeStart":
+                    toast.error(error?.data?.[0]?.message);
+                    break;
+                default:
+                    toast.error("Failed to block time. Please try again later.");
+                    break;
+            }
+
+            console.error("Error blocking time:", error);
+        }
+    };
+
 
     return (
         <div className="flex flex-col w-full h-full rounded-xl shadow bg-white border border-gray-200">
@@ -64,7 +107,7 @@ export default function DaySchedule({
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
                 onCreateAppointment={() => { }}
-                onCreateBlock={() => { }}
+                onCreateBlock={handleBlockTimeSave}
                 serviceOptions={["Haircut", "Facial", "Manicure"]}
             />
         </div>
