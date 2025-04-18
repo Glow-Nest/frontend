@@ -1,13 +1,6 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { addSelectedDate } from "@/store/slices/AppointmentSlice";
-import {
-    faArrowLeft,
-    faArrowRight,
-    faChevronUp,
-    faChevronDown,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     addWeeks,
     subWeeks,
@@ -21,19 +14,34 @@ import {
     endOfDay,
     isSameDay,
 } from "date-fns";
+import {
+    faArrowLeft,
+    faArrowRight,
+    faChevronUp,
+    faChevronDown,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function DatePicker() {
-    const dispatch = useDispatch();
+interface DatePickerProps {
+    initialDate?: Date;
+    onSelect?: (date: Date) => void;
+    showMonthToggle?: boolean;
+    expanded?: boolean;
+    weeksToShow?: number;
+}
 
+function DatePicker({
+    initialDate = new Date(),
+    onSelect,
+    showMonthToggle = true,
+    expanded = false,
+    weeksToShow = 1
+}: DatePickerProps) {
     const today = new Date();
 
-    const [currentDate, setCurrentDate] = useState(new Date());
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(today);
-
-    useEffect(() => {
-        dispatch(addSelectedDate(format(today, "yyyy-MM-dd")));
-    }, []);
+    const [currentDate, setCurrentDate] = useState(initialDate);
+    const [isExpanded, setIsExpanded] = useState(expanded);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate);
 
     const maxDate = addWeeks(today, 13);
     const fullWeekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -54,7 +62,7 @@ function DatePicker() {
     const handleSelectedDate = (date: Date) => {
         if (isSelectable(date)) {
             setSelectedDate(date);
-            dispatch(addSelectedDate(format(date, "yyyy-MM-dd")));
+            onSelect?.(date);
         }
     };
 
@@ -67,13 +75,11 @@ function DatePicker() {
             const firstDayOfMonth = start.getDay();
             const adjustedStartIndex = (firstDayOfMonth + 6) % 7;
 
-            return [
-                ...Array(adjustedStartIndex).fill(null),
-                ...days,
-            ];
+            return [...Array(adjustedStartIndex).fill(null), ...days];
         } else {
+            const weeks = weeksToShow ?? 1;
             const start = startOfWeek(currentDate, { weekStartsOn: 1 });
-            const end = endOfWeek(currentDate, { weekStartsOn: 1 });
+            const end = addWeeks(endOfWeek(currentDate, { weekStartsOn: 1 }), weeks - 1);
             return eachDayOfInterval({ start, end });
         }
     };
@@ -81,18 +87,20 @@ function DatePicker() {
     const displayedDates = getDisplayedDates();
 
     return (
-        <div className="w-full mx-auto p-6 mb-2 bg-white shadow-lg rounded-xl">
+        <div
+            className={`w-full rounded-xl mx-auto p-6 mb-2 bg-white shadow-lg rounded-x}`}
+        >
             {/* Header */}
             <div className="flex justify-between items-center mb-3">
                 <div className="flex items-center gap-5">
-                    <p className="text-2xl font-semibold">
-                        {format(currentDate, "MMMM yyyy")}
-                    </p>
-                    <FontAwesomeIcon
-                        icon={isExpanded ? faChevronUp : faChevronDown}
-                        className="cursor-pointer bg-gray-200 rounded-full p-1.5 w-4 h-5"
-                        onClick={() => setIsExpanded(!isExpanded)}
-                    />
+                    <p className="text-2xl font-semibold">{format(currentDate, "MMMM yyyy")}</p>
+                    {showMonthToggle && (
+                        <FontAwesomeIcon
+                            icon={isExpanded ? faChevronUp : faChevronDown}
+                            className="cursor-pointer bg-gray-200 rounded-full p-1.5 w-4 h-5"
+                            onClick={() => setIsExpanded(!isExpanded)}
+                        />
+                    )}
                 </div>
                 <div className="flex items-center space-x-4">
                     <FontAwesomeIcon
@@ -116,7 +124,10 @@ function DatePicker() {
             </div>
 
             {/* Dates Grid */}
-            <div className={`grid grid-cols-7 gap-1 text-center ${isExpanded ? "h-[40vh]" : "grid-rows-1"}`}>
+            <div
+                className={`grid grid-cols-7 gap-1 text-center ${isExpanded ? "h-[40vh]" : "grid-rows-1"
+                    }`}
+            >
                 {displayedDates.map((date, index) => {
                     if (!date) return <div key={index} />;
 
@@ -129,11 +140,11 @@ function DatePicker() {
                             key={index}
                             onClick={() => handleSelectedDate(date)}
                             className={`w-10 h-12 flex items-center justify-center mx-auto rounded-md transition-all duration-150
-                                ${selected ? "bg-[#dba052] text-white font-bold" : ""}
-                                ${!selected && todayMatch ? "border border-[#dba052] font-bold text-black" : ""}
-                                ${selectable && !selected && !todayMatch ? "hover:bg-[#f3e0ca] cursor-pointer" : ""}
-                                ${!selectable ? "text-gray-400 line-through cursor-default" : ""}
-                            `}
+                ${selected ? "bg-[#dba052] text-white font-bold" : ""}
+                ${!selected && todayMatch ? "border border-[#dba052] font-bold text-black" : ""}
+                ${selectable && !selected && !todayMatch ? "hover:bg-[#f3e0ca] cursor-pointer" : ""}
+                ${!selectable ? "text-gray-400 line-through cursor-default" : ""}
+              `}
                         >
                             {format(date, "d")}
                         </div>

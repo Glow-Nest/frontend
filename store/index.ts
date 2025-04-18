@@ -27,7 +27,7 @@ export const store = configureStore({
     reducer: persistedReducer,
 
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({ serializableCheck: false, }).concat(clientApi.middleware),
+        getDefaultMiddleware({ serializableCheck: false, }).concat(clientApi.middleware, serviceApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
