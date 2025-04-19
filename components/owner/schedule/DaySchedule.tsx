@@ -65,7 +65,10 @@ export default function DaySchedule({
 
             const formattedScheduleDate = format(date, 'yyyy-MM-dd');
 
-            await addBlockedTime({ scheduleDate: formattedScheduleDate, startTime: blockedTime.startTime, endTime: blockedTime.endTime }).unwrap();
+            await addBlockedTime({
+                scheduleDate: formattedScheduleDate, startTime: blockedTime.startTime, endTime: blockedTime.endTime,
+                blockReason: blockedTime.reason
+            }).unwrap();
 
             toast.dismiss();
             toast.success(`Time blocked from ${blockedTime.startTime} to ${blockedTime.endTime}.`);
@@ -84,6 +87,12 @@ export default function DaySchedule({
                     toast.error(error?.data?.[0]?.message);
                     break;
                 case "TimeSlot.EndTimeStart":
+                    toast.error(error?.data?.[0]?.message);
+                    break;
+                case "BlockTimeSlot.EmptyBlockReason":
+                    toast.error(error?.data?.[0]?.message);
+                    break;
+                case "BlockTimeSlot.BlockedTimeInPast":
                     toast.error(error?.data?.[0]?.message);
                     break;
                 default:

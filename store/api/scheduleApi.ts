@@ -5,6 +5,7 @@ export type AddBlockedTimeRequest = {
     startTime: string;
     endTime: string;
     scheduleDate: string;
+    blockReason: string;
 };
 
 export const scheduleApi = createApi({
