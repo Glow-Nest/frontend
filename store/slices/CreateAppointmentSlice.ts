@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { calculateEndTime } from "libs/helpers";
 
-const initialState: AppointmentState = {
+const initialState: AppointmentBookingState = {
     selectedServices: [],
     totalPrice: 0,
     totalDuration: 0,
@@ -19,8 +19,8 @@ function parseDuration(durationString: string): number {
     return parseInt(durationString.replace(/\D/g, ''));
 }
 
-const appointmentSlice = createSlice({
-    name: 'appointment',
+const createAppointmentSlice = createSlice({
+    name: 'createAppointment',
     initialState,
     reducers: {
         clearServices(state) {
@@ -77,5 +77,5 @@ const appointmentSlice = createSlice({
     }
 });
 
-export const { toggleService, clearServices, addSelectedDate, addSelectedTime } = appointmentSlice.actions;
-export default appointmentSlice.reducer;
+export const { toggleService, clearServices, addSelectedDate, addSelectedTime } = createAppointmentSlice.actions;
+export default createAppointmentSlice.reducer;

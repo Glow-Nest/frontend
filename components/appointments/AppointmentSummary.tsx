@@ -1,7 +1,7 @@
 "use client";
 
 import { RootState } from '@/store';
-import { toggleService } from '@/store/slices/AppointmentSlice';
+import { toggleService } from '@/store/slices/CreateAppointmentSlice';
 import { faArrowLeft, faArrowRight, faCalendar, faCalendarDay, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getNextStep, getPrevStep, Step } from 'libs/stepUtils';
@@ -157,7 +157,7 @@ function NavigationButtons({ currentStep, canProceed, onNext, onBack }: { curren
     );
 }
 
-function SelectedServiceList({ selected }: { selected: AppointmentState }) {
+function SelectedServiceList({ selected }: { selected: AppointmentBookingState }) {
     const dispatch = useDispatch();
 
     const handleServiceToggle = (service: Service) => {

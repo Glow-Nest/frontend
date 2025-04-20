@@ -1,30 +1,42 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { clientApi } from "./api/clientApi";
-import authReducer from "./slice/AuthSlice";
+import authReducer from "./slices/AuthSlice";
 
-import appointmentReducer from './slices/AppointmentSlice';
+import appointmentReducer from './slices/CreateAppointmentSlice';
 import storageSession from 'redux-persist/lib/storage/session';
 import { persistReducer } from 'redux-persist';
+import { serviceApi } from "./api/serviceApi";
+import blockedTimeReducer from './slices/BlockedTimeSlice';
+import { scheduleApi } from "./api/scheduleApi";
 
 const persistAppointmentConfig = {
     key: "appointment",
     version: 1,
-    storage: storageSession}
+    storage: storageSession,
+    blacklist: ["blockedTimes", clientApi.reducerPath, serviceApi.reducerPath, scheduleApi.reducerPath, "auth"],
+};
+
 
 const reducer = combineReducers({
     [clientApi.reducerPath]: clientApi.reducer,
+    [serviceApi.reducerPath]: serviceApi.reducer,
+    [scheduleApi.reducerPath] : scheduleApi.reducer,
     appointment: appointmentReducer,
-      auth: authReducer,
-
+    auth: authReducer,
+    blockedTimes: blockedTimeReducer,
 })
 
-const persistedReducer = persistReducer(persistAppointmentConfig, reducer);
+const persistedReducer = persistReducer<ReturnType<typeof reducer>>(persistAppointmentConfig, reducer);
 
 export const store = configureStore({
     reducer: persistedReducer,
 
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({ serializableCheck: false, }).concat(clientApi.middleware),
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+            },
+        }).concat(clientApi.middleware, serviceApi.middleware, scheduleApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

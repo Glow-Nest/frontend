@@ -23,3 +23,35 @@ export function protectAppointmentSteps(request: NextRequest): NextResponse | vo
         }
     }
 }
+
+export function protectOwnerPages(request: NextRequest): NextResponse | void {
+    const url = request.nextUrl;
+
+    if (url.pathname.startsWith("/owner")) {
+        const token = request.cookies.get("token")?.value;
+
+        if (!token) {
+            url.pathname = "/login"
+            const response = NextResponse.redirect(url);
+
+            response.cookies.set("redirectReason", "login-required", {
+                maxAge: 10,
+                path: "/",
+            });
+
+            return response;
+        }
+
+        try {
+            const payload = JSON.parse(Buffer.from(token.split(".")[1], "base64").toString());
+            if (payload.role !== "Salon Owner") {
+                url.pathname = "/unauthorized"
+                return NextResponse.redirect(url);
+            }
+        } catch (err) {
+            return NextResponse.redirect(new URL("/login", request.url));
+        }
+
+        return NextResponse.next();
+    }
+}

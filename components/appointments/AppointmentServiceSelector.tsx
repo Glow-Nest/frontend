@@ -1,29 +1,59 @@
 "use client";
 
 import { RootState } from '@/store';
-import { toggleService } from '@/store/slices/AppointmentSlice';
+import { useGetServicesMutation } from '@/store/api/serviceApi';
+import { toggleService } from '@/store/slices/CreateAppointmentSlice';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-const services: Service[] = [
-    { serviceId: "1", serviceName: "Service1", price: "150 DKK", duration: "30 min" },
-    { serviceId: "2", serviceName: "Service2", price: "150 DKK", duration: "30 min" },
-    { serviceId: "3", serviceName: "Service3", price: "150 DKK", duration: "30 min" },
-    { serviceId: "4", serviceName: "Service4", price: "150 DKK", duration: "30 min" },
-    { serviceId: "5", serviceName: "Service5", price: "150 DKK", duration: "30 min" },
+const tempServices: Service[] = [
+    {
+        serviceId: "1", serviceName: "Service1", price: "150 DKK", duration: "30 min",
+        description: '',
+        mediaUrlList: []
+    },
+    {
+        serviceId: "2", serviceName: "Service2", price: "150 DKK", duration: "30 min",
+        description: '',
+        mediaUrlList: []
+    },
+    {
+        serviceId: "3", serviceName: "Service3", price: "150 DKK", duration: "30 min",
+        description: '',
+        mediaUrlList: []
+    },
+    {
+        serviceId: "4", serviceName: "Service4", price: "150 DKK", duration: "30 min",
+        description: '',
+        mediaUrlList: []
+    },
+    {
+        serviceId: "5", serviceName: "Service5", price: "150 DKK", duration: "30 min",
+        description: '',
+        mediaUrlList: []
+    },
 ];
 
 function AppointmentServiceSelector() {
+    const [services, setServices] = useState<Service[]>([])
+
     const dispatch = useDispatch();
     const selectedServices = useSelector((state: RootState) => state.appointment.selectedServices);
+
+    const [getServices, { isLoading }] = useGetServicesMutation();
+
+    useEffect(() => {
+      getServices({});
+    }, [])
+
 
     return (
         <div className='w-full'>
             <p className="text-2xl font-bold mb-4">Customize Your Appointment – Choose a Service</p>
             <div>
-                {services.map((service, index) => {
+                {tempServices.map((service, index) => {
                     const isSelected = selectedServices.some(s => s.serviceName === service.serviceName);
 
                     return (

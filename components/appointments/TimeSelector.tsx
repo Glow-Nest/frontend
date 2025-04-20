@@ -1,7 +1,7 @@
 "use client";
 
 import { RootState } from "@/store";
-import { addSelectedTime } from "@/store/slices/AppointmentSlice";
+import { addSelectedTime } from "@/store/slices/CreateAppointmentSlice";
 import { useDispatch, useSelector } from "react-redux";
 import toast from 'react-hot-toast';
 import { useEffect } from "react";
