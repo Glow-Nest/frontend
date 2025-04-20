@@ -8,6 +8,13 @@ export type AddBlockedTimeRequest = {
     blockReason: string;
 };
 
+export type BlockedTime = {
+    startTime: string;
+    endTime: string;
+    scheduleDate: string;
+    reason: string;
+}
+
 export const scheduleApi = createApi({
     reducerPath: "scheduleApi",
     baseQuery: fetchBaseQuery({
@@ -30,8 +37,17 @@ export const scheduleApi = createApi({
                 body,
             }),
         }),
+
+        getBlockedTimes: builder.query<BlockedTime[], string>({
+            query: (scheduleDate) => ({
+                url: `owner/schedule/blockTime`,
+                method: "POST",
+                params: { scheduleDate },
+            }),
+            transformResponse: (response: { blockedTimes: BlockedTime[] }) => response.blockedTimes,
+        }),
     }),
 
 });
 
-export const { useAddBlockedTimeMutation } = scheduleApi;
+export const { useAddBlockedTimeMutation, useGetBlockedTimesQuery } = scheduleApi;

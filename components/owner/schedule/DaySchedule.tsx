@@ -3,9 +3,10 @@
 import React, { useState } from "react";
 import { format } from "date-fns";
 import AddModal, { BlockInput } from "./AddModal";
-import { useAppDispatch } from "@/store/hook";
-import { useAddBlockedTimeMutation } from "@/store/api/scheduleApi";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { BlockedTime, useAddBlockedTimeMutation } from "@/store/api/scheduleApi";
 import toast from "react-hot-toast";
+import { RootState } from "@/store";
 
 const workingHours = Array.from({ length: 9 }, (_, i) => 10 + i);
 
@@ -19,7 +20,6 @@ interface TimeBlock {
 interface DayScheduleProps {
     date?: Date;
     appointments?: TimeBlock[];
-    blockedTimes?: TimeBlock[];
 }
 
 // Utility to calculate positioning for time blocks
@@ -51,7 +51,6 @@ const getPosition = (start: string, end: string) => {
 export default function DaySchedule({
     date = new Date(),
     appointments = [],
-    blockedTimes = [],
 }: DayScheduleProps) {
     const dispatch = useAppDispatch();
     const [addBlockedTime, { isLoading }] = useAddBlockedTimeMutation();
@@ -104,13 +103,16 @@ export default function DaySchedule({
         }
     };
 
+    const selectedDate = format(date, "yyyy-MM-dd");
+    const blockedTimesByDate = useAppSelector(
+        (state: RootState) => state.blockedTimes?.blockedTimesByDate?.[selectedDate] ?? []);
 
     return (
         <div className="flex flex-col w-full h-full rounded-xl shadow bg-white border border-gray-200">
             <Header title={formattedDate} onAdd={() => setModalOpen(true)} />
             <Schedule
                 appointments={appointments}
-                blockedTimes={blockedTimes}
+                blockedTimes={blockedTimesByDate}
             />
             <AddModal
                 isOpen={modalOpen}
@@ -141,10 +143,10 @@ function Header({ title, onAdd }: { title: string; onAdd: () => void }) {
 // ---------- COMPONENT: Schedule ----------
 function Schedule({
     appointments,
-    blockedTimes,
+    blockedTimes
 }: {
     appointments: TimeBlock[];
-    blockedTimes: TimeBlock[];
+    blockedTimes: BlockedTime[];
 }) {
     return (
         <div className="flex flex-1 overflow-y-auto">
@@ -176,11 +178,14 @@ function TimeLabels() {
 // ---------- COMPONENT: ScheduleGrid ----------
 function ScheduleGrid({
     appointments,
-    blockedTimes,
+    blockedTimes
 }: {
     appointments: TimeBlock[];
-    blockedTimes: TimeBlock[];
+    blockedTimes: BlockedTime[];
 }) {
+
+    console.log("Inside schedule grid ", blockedTimes);
+
     return (
         <div className="flex-1 relative">
             {/* Time grid rows */}
@@ -199,14 +204,17 @@ function ScheduleGrid({
             ))}
 
             {/* Blocked time blocks */}
-            {blockedTimes.map((block, i) => (
-                <TimeBlockItem
-                    key={`block-${i}`}
-                    {...getPosition(block.startTime, block.endTime)}
-                    label={block.label}
-                    type="blocked"
-                />
-            ))}
+            {blockedTimes.length !== 0 &&
+                blockedTimes.map((block, i) => (
+                    <TimeBlockItem
+                        key={`block-${i}`}
+                        {...getPosition(block.startTime, block.endTime)}
+                        label={block.reason}
+                        type="blocked"
+                    />
+                ))
+            }
+
         </div>
     );
 }

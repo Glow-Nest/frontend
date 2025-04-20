@@ -3,7 +3,12 @@
 import DatePicker from '@/components/appointments/DatePicker';
 import DaySchedule from '@/components/owner/schedule/DaySchedule';
 import UpcomingAppointmentsList, { AppointmentCardProps } from '@/components/owner/schedule/UpcomingAppointmentsList';
-import React, { useState } from 'react'
+import { useGetBlockedTimesQuery } from '@/store/api/scheduleApi';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
+import { setBlockedTimesForDate } from '@/store/slices/BlockedTimeSlice';
+import { format } from 'date-fns';
+import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast';
 
 const upcomingAppointments: AppointmentCardProps[] = [
   {
@@ -40,20 +45,25 @@ const demoAppointments = [
   }
 ];
 
-const demoBlockedTimes = [
-  {
-    startTime: "15:00",
-    endTime: "15:30",
-    label: "Lunch Break"
-  }
-];
-
 function Schedule() {
   const today = new Date();
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(today);
+
+  const dispatch = useAppDispatch();
+
+  const formattedScheduleDate = format(selectedDate, "yyyy-MM-dd");
+  const { data: blockedTimes, isSuccess, isLoading } = useGetBlockedTimesQuery(formattedScheduleDate);
+
+  useEffect(() => {
+    if (isSuccess && blockedTimes) {
+      console.log("🧪 blockedTimes type:", Array.isArray(blockedTimes), blockedTimes);
+
+      dispatch(setBlockedTimesForDate({ date: formattedScheduleDate, blockedTimes: blockedTimes }));
+    }
+  }, [isSuccess, blockedTimes, dispatch, formattedScheduleDate]);
 
   const handleSelectedDate = (date: Date | null) => {
-    setSelectedDate(date || undefined);
+    setSelectedDate(date || new Date());
   }
 
   return (
@@ -81,7 +91,7 @@ function Schedule() {
 
       {/* 4 - day schedule */}
       <div className="h-full lg:col-span-6 lg:row-span-5 lg:col-start-3 lg:row-start-3">
-        <DaySchedule date={selectedDate} appointments={demoAppointments} blockedTimes={demoBlockedTimes} />
+        <DaySchedule date={selectedDate} appointments={demoAppointments} />
       </div>
     </div>
   )
