@@ -1,6 +1,5 @@
 "use client";
 
-
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
@@ -90,9 +89,8 @@ export default function Navbar() {
                         <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Manage Account</div>
                         <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>Logout</div>
                     </div>
-        )}
-            </div>
-
+                        )}
+                </div>
             </div>
 
 
