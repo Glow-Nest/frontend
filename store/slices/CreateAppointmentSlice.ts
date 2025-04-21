@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { calculateEndTime } from "libs/helpers";
+import { calculateEndTime, parseDurationString, parseFormattedDuration, parsePrice } from "libs/helpers";
+import { AppointmentBookingState, Service } from "libs/types/common";
 
 const initialState: AppointmentBookingState = {
     selectedServices: [],
@@ -11,13 +12,6 @@ const initialState: AppointmentBookingState = {
     endTime: null
 };
 
-function parsePrice(priceString: string): number {
-    return parseFloat(priceString.replace(/\D/g, ''));
-}
-
-function parseDuration(durationString: string): number {
-    return parseInt(durationString.replace(/\D/g, ''));
-}
 
 const createAppointmentSlice = createSlice({
     name: 'createAppointment',
@@ -33,19 +27,19 @@ const createAppointmentSlice = createSlice({
 
         toggleService(state, action: PayloadAction<Service>) {
             const index = state.selectedServices.findIndex(
-                s => s.serviceName === action.payload.serviceName
+                s => s.name === action.payload.name
             );
 
             if (index !== -1) {
                 // Remove service
                 const removed = state.selectedServices.splice(index, 1)[0];
                 state.totalPrice -= parsePrice(removed.price);
-                state.totalDuration -= parseDuration(removed.duration);
+                state.totalDuration -= parseFormattedDuration(removed.formattedDuration || "0 min");
             } else {
                 // Add service
                 state.selectedServices.push(action.payload);
                 state.totalPrice += parsePrice(action.payload.price);
-                state.totalDuration += parseDuration(action.payload.duration);
+                state.totalDuration += parseFormattedDuration(action.payload.formattedDuration || "0 min");
             }
 
             // Recalculate endTime if a time is already selected

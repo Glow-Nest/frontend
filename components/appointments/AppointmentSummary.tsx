@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // @ts-ignore
 import cookie from 'cookie-cutter';
+import { AppointmentBookingState, Service } from 'libs/types/common';
+import { convertMinutesStringToDuration } from 'libs/helpers';
 
 function AppointmentSummary() {
     const selected = useSelector((state: RootState) => state.appointment);
@@ -79,7 +81,9 @@ function AppointmentSummary() {
                                     <span className="text-gray-600 font-medium">
                                         Total Price: <span className="font-semibold">{selected.totalPrice} DKK</span>
                                         {selected.totalDuration > 0 && (
-                                            <> · <span className="font-semibold">{selected.totalDuration} min</span></>
+                                            <> · <span className="font-semibold">
+                                                {convertMinutesStringToDuration(selected.totalDuration)}
+                                            </span></>
                                         )}
                                     </span>
                                 )}
@@ -181,10 +185,10 @@ function SelectedServiceList({ selected }: { selected: AppointmentBookingState }
                         <span className="w-2 h-2 mt-2 rounded-full bg-gray-400" />
                         <div className="flex flex-col leading-tight">
                             <span className="text-lg font-medium text-gray-900">
-                                {service.serviceName}
+                                {service.name}
                             </span>
                             <span className="text-xs text-gray-500">
-                                {service.duration}
+                                {(service.formattedDuration)}
                             </span>
                         </div>
                     </div>

@@ -1,13 +1,14 @@
-type Service = {
+export type Service = {
     serviceId: string;
-    serviceName: string;
+    name: string;
     description: string;
     price: string;
     duration: string;
-    mediaUrlList: string[];
+    mediaUrls: string[];
+    formattedDuration?: string;
 };
 
-interface AppointmentBookingState {
+export interface AppointmentBookingState {
     selectedServices: Service[];
     totalPrice: number;
     totalDuration: number;
@@ -16,3 +17,4 @@ interface AppointmentBookingState {
     startTime?: string | null;
     endTime?: string | null;
 }
+

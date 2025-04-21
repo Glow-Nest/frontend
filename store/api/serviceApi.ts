@@ -6,13 +6,13 @@ export const serviceApi = createApi({
         baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
     }),
     endpoints: (builder) => ({
-        getServices: builder.mutation({
+        getAllServices: builder.query({
             query: () => ({
-                url: "services/",
+                url: "service/all",
                 method: "POST",
             }),
         }),
     }),
 });
 
-export const { useGetServicesMutation } = serviceApi;
+export const { useGetAllServicesQuery, useLazyGetAllServicesQuery} = serviceApi;

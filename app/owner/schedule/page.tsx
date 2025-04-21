@@ -56,7 +56,6 @@ function Schedule() {
 
   useEffect(() => {
     if (isSuccess && blockedTimes) {
-      console.log("🧪 blockedTimes type:", Array.isArray(blockedTimes), blockedTimes);
 
       dispatch(setBlockedTimesForDate({ date: formattedScheduleDate, blockedTimes: blockedTimes }));
     }
