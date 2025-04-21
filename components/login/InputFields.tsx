@@ -49,7 +49,7 @@ function InputFields() {
 
                 if (notVerifiedError) {
                     toast.success("Please verify your account via OTP");
-                    router.push(`/otpVerify?email=${form.email}`);
+                    router.push(`/otpVerify?email=${form.email}&purpose=Registration`);
                     return;
                 }
 

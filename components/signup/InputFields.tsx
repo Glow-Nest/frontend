@@ -36,7 +36,7 @@ function InputFields({ onEmailClick }: { onEmailClick: () => void }) {
                 (async () => {
                     await createClient(form).unwrap();
                     await sendOtp({ email: form.email, purpose: "Registration" }).unwrap();
-                    router.push(`/otpVerify?email=${form.email}`);
+                    router.push(`/otpVerify?email=${form.email}&purpose=Registration`);
                 })(),
                 {
                     loading: 'Creating account and sending OTP...',

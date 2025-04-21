@@ -16,6 +16,7 @@ function VerifyBox() {
 
     const searchParams = useSearchParams();
     const email = searchParams.get("email");
+    const purpose = searchParams.get("purpose");
 
     const inputRefs = useRef<HTMLInputElement[]>([]);
 
@@ -74,7 +75,7 @@ function VerifyBox() {
         }
     
         try {
-            await toast.promise(
+            const result = await toast.promise(
                 verifyOtp({ email: email, otpCode: joinedOtp }).unwrap(),
                 {
                     loading: "Verifying OTP...",
@@ -82,8 +83,13 @@ function VerifyBox() {
                     error: (err: any) => err?.data?.[0]?.message || "Failed to verify OTP. Please try again.",
                 }
             );
+
+            if(purpose === "Registration") {
+                    router.push("/login");
+                    return;
+                }
     
-            router.push("/login");
+            router.push("/resetPassword?email=" + encodeURIComponent(email));
         } catch {
         }
     };
@@ -98,7 +104,7 @@ function VerifyBox() {
         setSecondsLeft(2*60);
     
         await toast.promise(
-            sendOtp({ email: email, purpose: "Registration" }).unwrap(),
+            sendOtp({ email, purpose: purpose || "Registration" }).unwrap(),
             {
                 loading: "Resending OTP...",
                 success: "OTP has been resent.",

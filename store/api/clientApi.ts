@@ -42,7 +42,7 @@ export const clientApi = createApi({
     }),
     initiatePasswordReset: builder.mutation<void, { email: string }>({
       query: ({ email }) => ({
-        url: "/api/client/initiate-password-reset",
+        url: "clients/password/reset/initiate",
         method: "POST",
         body: { email },
       }),
@@ -53,7 +53,6 @@ export const clientApi = createApi({
         email: string;
         newPassword: string;
         confirmPassword: string;
-        otpCode: string;
       }
     >({
       query: (body) => ({

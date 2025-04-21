@@ -7,7 +7,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 function ResetPasswordBox() {
   const [email, setEmail] = useState("");
-  const [otpCode, setOtpCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -19,25 +18,14 @@ function ResetPasswordBox() {
     const emailParam = searchParams.get("email");
     if (emailParam) {
       setEmail(emailParam);
-    }
+    } 
   }, [searchParams]);
 
   const handleSubmit = async () => {
-    if (!email || !otpCode || !newPassword || !confirmPassword) {
-      toast.error("Please fill in all fields.");
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      toast.error("Passwords do not match.");
-      return;
-    }
-
     try {
       await toast.promise(
         resetPassword({
           email,
-          otpCode,
           newPassword,
           confirmPassword,
         }).unwrap(),

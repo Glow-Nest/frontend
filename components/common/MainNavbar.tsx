@@ -16,6 +16,7 @@ import { RootState } from "@/store";
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false);
     const user = useSelector((state: RootState) => state.auth.firstName);
 
     // Scroll Shrink Effect
@@ -25,6 +26,17 @@ export default function Navbar() {
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as HTMLElement;
+            if (!target.closest(".user-dropdown-container")) {
+                setShowDropdown(false);
+            }
+        };
+        document.addEventListener("click", handleClickOutside);
+        return () => document.removeEventListener("click", handleClickOutside);
     }, []);
 
     return (
@@ -56,14 +68,21 @@ export default function Navbar() {
                     BOOK APPOINTMENT
                     <FontAwesomeIcon icon={faArrowRight} className="w-[14px] h-[14px]" />
                 </button>
-                <div className="flex gap-4 items-center">
-                {user ? (
-                    <span className="font-semibold">HI, {user}</span>
-                ) : (
+                <div className="relative user-dropdown-container">
+                    <div className="flex items-center gap-2 cursor-pointer"
+                            onClick={() => setShowDropdown(!showDropdown)}>
                     <FontAwesomeIcon icon={faUser} className="w-[14px] h-[14px]" />
-                )}
-                    <FontAwesomeIcon icon={faCartShopping} className="w-[14px] h-[14px]" />
-                </div>
+                        {user && <span className="font-semibold">HI, {user}</span>}
+                    </div>
+
+                    {showDropdown && (
+                        <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md py-2 z-50 text-sm border border-gray-200">
+                        <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Manage Account</div>
+                        <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Logout</div>
+                    </div>
+        )}
+            </div>
+
             </div>
 
 

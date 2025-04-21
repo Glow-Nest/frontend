@@ -13,7 +13,7 @@ function EmailVerificationBox() {
     const handleSubmit = async () => {
         try {
             await toast.promise(
-                initiateReset({ email }).unwrap(),
+                initiateReset({ email}).unwrap(),
                 {
                     loading: "Sending OTP...",
                     success: "OTP sent successfully!",
@@ -21,9 +21,7 @@ function EmailVerificationBox() {
                         err?.data?.[0]?.message || "Failed to send OTP.",
                 }
             );
-
-            // Redirect to OTP page
-            router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
+            router.push(`/otpVerify?email=${encodeURIComponent(email)}&purpose=ResetPassword`);
         } catch {
             // No-op since toast handles it
         }
@@ -32,7 +30,7 @@ function EmailVerificationBox() {
     return (
         <div className="bg-white shadow-md rounded-xl border border-neutral-200 
                 w-[90vw] sm:w-[70vw] md:w-[30vw] 
-                p-6 sm:p-8 flex flex-col gap-5 items-center text-center m-auto mt-10">
+                p-6 sm:p-8 flex flex-col gap-5 item s-center text-center m-auto mt-10">
 
             <h2 className="text-xl font-bold text-neutral-900">Forgot Password?</h2>
 
