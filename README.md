@@ -1,9 +1,9 @@
 # GlowNest Beauty Salon Web App - Feature Checklist
 
-## ✅ User Login and Account Management
+## User Login and Account Management
 
 ### Must Have
-- [*] Clients can **create an account** using email and password.
+- ✅ Clients can **create an account** using email and password.
 - [ ] Clients must **log in** before booking appointments, purchasing products, or leaving reviews.
 - [ ] Salon owners can **log in** to view daily bookings.
 - [ ] Clients can **reset their password** if forgotten.
@@ -13,7 +13,7 @@
 
 ---
 
-## ✅ Appointment Booking & Management
+## Appointment Booking & Management
 
 ### Must Have
 - [ ] Clients can **view real-time available appointment slots**.
@@ -34,7 +34,7 @@
 
 ---
 
-## ✅ Service Showcase
+## Service Showcase
 
 ### Must Have
 - [ ] Clients can **browse services** without logging in, with descriptions, pricing, images, and videos.
@@ -42,7 +42,7 @@
 
 ---
 
-## ✅ Product Sales and Inventory
+## Product Sales and Inventory
 
 ### Must Have
 - [ ] Clients can **view available products** without logging in.
@@ -62,7 +62,7 @@
 
 ---
 
-## ✅ Customer Feedback
+## Customer Feedback
 
 ### Must Have
 - [ ] Clients can **rate services**.
@@ -74,7 +74,7 @@
 
 ---
 
-## ✅ Multilingual Support
+## Multilingual Support
 
 ### Must Have
 - [ ] Clients can **switch between Danish and English** on the website.
