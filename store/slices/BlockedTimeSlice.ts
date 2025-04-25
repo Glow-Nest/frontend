@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { BlockedTime } from "../api/scheduleApi";
-import { a } from "node_modules/framer-motion/dist/types.d-B50aGbjN";
 
 type BlockedTimeState = {
     blockedTimesByDate: {

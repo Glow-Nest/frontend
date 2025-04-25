@@ -9,6 +9,7 @@ import { persistReducer } from 'redux-persist';
 import { serviceApi } from "./api/serviceApi";
 import blockedTimeReducer from './slices/BlockedTimeSlice';
 import { scheduleApi } from "./api/scheduleApi";
+import scheduleReducer from "./slices/ScheduleSlice";
 
 const persistAppointmentConfig = {
     key: "appointment",
@@ -25,7 +26,8 @@ const reducer = combineReducers({
     appointment: appointmentReducer,
     auth: authReducer,
     blockedTimes: blockedTimeReducer,
-    services: serviceReducer
+    services: serviceReducer,
+    schedules: scheduleReducer,
 })
 
 const persistedReducer = persistReducer<ReturnType<typeof reducer>>(persistAppointmentConfig, reducer);

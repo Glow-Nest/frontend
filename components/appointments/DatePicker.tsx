@@ -43,7 +43,7 @@ function DatePicker({
     const [isExpanded, setIsExpanded] = useState(expanded);
     const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate);
 
-    const maxDate = addWeeks(today, 13);
+    const maxDate = addWeeks(today, 4);
     const fullWeekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
     const isSelectable = (date: Date) =>

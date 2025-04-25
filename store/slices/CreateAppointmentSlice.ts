@@ -12,7 +12,6 @@ const initialState: AppointmentBookingState = {
     endTime: null
 };
 
-
 const createAppointmentSlice = createSlice({
     name: 'createAppointment',
     initialState,
@@ -44,7 +43,9 @@ const createAppointmentSlice = createSlice({
 
             // Recalculate endTime if a time is already selected
             if (state.selectedTime && state.totalDuration > 0) {
-                state.startTime = state.selectedTime;
+                const extractedStartTime = state.selectedTime.split("-")[0].trim();
+
+                state.startTime = extractedStartTime;
                 state.endTime = calculateEndTime(state.selectedTime, state.totalDuration);
             } else {
                 state.startTime = null;
@@ -60,14 +61,15 @@ const createAppointmentSlice = createSlice({
             state.selectedTime = action.payload;
 
             if (action.payload && state.totalDuration > 0) {
-                state.startTime = action.payload;
+                const extractedStartTime = action.payload.split("-")[0].trim();
+
+                state.startTime = extractedStartTime;
                 state.endTime = calculateEndTime(action.payload, state.totalDuration);
             } else {
                 state.startTime = null;
                 state.endTime = null;
             }
         }
-
     }
 });
 

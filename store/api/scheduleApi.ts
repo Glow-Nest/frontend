@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
+import { TimeSlotGroup } from "../slices/ScheduleSlice";
 
 export type AddBlockedTimeRequest = {
     startTime: string;
@@ -14,6 +15,8 @@ export type BlockedTime = {
     scheduleDate: string;
     reason: string;
 }
+
+
 
 export const scheduleApi = createApi({
     reducerPath: "scheduleApi",
@@ -46,8 +49,17 @@ export const scheduleApi = createApi({
             }),
             transformResponse: (response: { blockedTimes: BlockedTime[] }) => response.blockedTimes,
         }),
+
+        getAvailableSlots: builder.query<TimeSlotGroup, string>({
+            query: (scheduleDate) => ({
+                url: `schedule/availableSlots`,
+                method: "POST",
+                params: { scheduleDate }, 
+            }),
+            transformResponse: (response: { timeSlots: TimeSlotGroup }) => response.timeSlots
+        })
     }),
 
 });
 
-export const { useAddBlockedTimeMutation, useGetBlockedTimesQuery } = scheduleApi;
+export const { useAddBlockedTimeMutation, useGetBlockedTimesQuery, useLazyGetAvailableSlotsQuery } = scheduleApi;
