@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useInitiatePasswordResetMutation } from "@/store/api/clientApi";
 import { useRouter } from "next/navigation";
+import GlowNestSpinner from "@/components/common/GlowNestSpinner";
 
 function EmailVerificationBox() {
     const [email, setEmail] = useState("");
@@ -27,6 +28,10 @@ function EmailVerificationBox() {
         }
     };
 
+    if (isLoading) {
+        return <GlowNestSpinner />;
+    }
+
     return (
         <div className="bg-white shadow-md rounded-xl border border-neutral-200 
                 w-[90vw] sm:w-[70vw] md:w-[30vw] 
@@ -48,10 +53,9 @@ function EmailVerificationBox() {
 
             <button
                 onClick={handleSubmit}
-                disabled={isLoading}
                 className="w-full font-medium py-2 rounded-full bg-black text-white hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                {isLoading ? "Sending..." : "Verify OTP"}
+                Verify Email
             </button>
         </div>
     );
