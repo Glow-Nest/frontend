@@ -1,7 +1,6 @@
 "use client";
 
-import { RootState } from '@/store';
-import { toggleService } from '@/store/slices/CreateAppointmentSlice';
+import { RootState, store } from '@/store';
 import {
     faArrowLeft,
     faArrowRight,
@@ -17,22 +16,54 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // @ts-ignore
 import cookie from 'cookie-cutter';
-import { AppointmentBookingState, Service } from 'libs/types/common';
+import { AppointmentBookingState } from 'libs/types/common';
 import { convertMinutesStringToDuration } from 'libs/helpers';
+import { useAddAppointmentMutation } from '@/store/api/scheduleApi';
+import { toggleService } from '@/store/slices/schedules/CreateAppointmentSlice';
+import { selectCreateAppointmentPayload } from '@/store/slices/schedules/createAppointmentSelectors';
+import { Service } from 'libs/types/ServiceCategory';
+import toast from 'react-hot-toast';
 
 function AppointmentSummary() {
-    const selected = useSelector((state: RootState) => state.appointment);
+    const appointment = useSelector((state: RootState) => state.appointment);
+    const user = useSelector((state: RootState) => state.user);
+
     const router = useRouter();
     const pathName = usePathname();
+    const [addAppointment, { isLoading, isSuccess, error }] = useAddAppointmentMutation();
 
     const currentStep = pathName.split('/').pop() as Step;
     const nextStep = getNextStep(currentStep);
     const prevStep = getPrevStep(currentStep);
-    const canProceed = currentStep !== 'services' || selected.selectedServices.length > 0;
+
+    const canProceed = (() => {
+        if (currentStep === "services") {
+            return appointment.selectedServices.length > 0;
+        }
+        if (currentStep === "datetime") {
+            return appointment.selectedDate !== null && appointment.selectedTime !== null;
+        }
+        if (currentStep === "confirmation") {
+            return (
+                appointment.selectedServices.length > 0 &&
+                appointment.selectedDate !== null &&
+                appointment.startTime !== null &&
+                appointment.endTime !== null &&
+                appointment.selectedTime !== null &&
+                appointment.appointmentNote !== null &&
+                user.email !== null &&
+                user.phoneNumber !== null &&
+                user.firstName !== null &&
+                user.lastName !== null
+            );
+        }
+        return true;
+    })();
+
 
     const handleNext = () => {
         if (nextStep && canProceed) {
-            cookie.set('selectedServices', JSON.stringify(selected.selectedServices));
+            cookie.set('selectedServices', JSON.stringify(appointment.selectedServices));
             router.push(`/appointments/step/${nextStep}`);
         }
     };
@@ -46,14 +77,15 @@ function AppointmentSummary() {
             <p className="text-2xl font-bold mb-4 text-center md:text-left">Appointment Summary</p>
 
             <div className="bg-white w-full md:w-[350px] rounded-2xl shadow-md border border-gray-200 p-2 px-6">
-                <SummaryHeader selected={selected} />
+                <SummaryHeader selected={appointment} />
                 <hr className="border-gray-300 mb-4" />
-                <SelectedServiceList selected={selected} />
+                <SelectedServiceList selected={appointment} />
                 <NavigationButtons
                     currentStep={currentStep}
                     canProceed={canProceed}
                     onNext={handleNext}
                     onBack={handleBack}
+                    addAppointment={addAppointment}
                 />
             </div>
         </div>
@@ -131,7 +163,7 @@ function SelectedServiceList({ selected }: { selected: AppointmentBookingState }
                     </div>
                     <div className="flex items-center gap-2 ml-2">
                         <span className="text-sm font-semibold text-gray-800 whitespace-nowrap">
-                            {service.price}
+                            {service.price} kr
                         </span>
                         <button
                             onClick={() => handleServiceToggle(service)}
@@ -152,13 +184,36 @@ function NavigationButtons({
     canProceed,
     onNext,
     onBack,
+    addAppointment
 }: {
     currentStep: Step;
     canProceed: boolean;
     onNext: () => void;
     onBack: () => void;
+    addAppointment: (payload: ReturnType<typeof selectCreateAppointmentPayload>) => any;
 }) {
-    const handleBookingConfirmed = () => alert('Confirmed!!!');
+
+
+    const handleBookingConfirmed = async () => {
+        const payload = selectCreateAppointmentPayload(store.getState());
+
+        const toastId = toast.loading('Booking your appointment...');
+
+        try {
+            await addAppointment(payload).unwrap();
+            toast.success('Appointment booked successfully!', { id: toastId });
+        } catch (error: any) {
+            console.error('Booking failed:', error);
+
+            // If backend sent proper validation errors
+            if (error?.data && Array.isArray(error.data) && error.data[0]?.message) {
+                toast.error(error.data[0].message, { id: toastId });
+            } else {
+                toast.error('Failed to book appointment. Please try again.', { id: toastId });
+            }
+        }
+    };
+
 
     const baseBtnClass =
         'w-full md:w-auto px-6 py-3 flex items-center justify-center gap-2 text-base font-semibold rounded-lg transition duration-200 shadow';
@@ -168,7 +223,7 @@ function NavigationButtons({
             {currentStep === 'confirmation' ? (
                 <button
                     className={`${baseBtnClass} ${canProceed
-                        ? 'bg-[#1f2937] hover:bg-[#111827] text-white'
+                        ? 'bg-[#1f2937] hover:bg-[#111827] text-white cursor-pointer'
                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         }`}
                     onClick={handleBookingConfirmed}
@@ -179,7 +234,7 @@ function NavigationButtons({
             ) : (
                 <button
                     className={`${baseBtnClass} ${canProceed
-                        ? 'bg-[#1f2937] hover:bg-[#111827] text-white'
+                        ? 'bg-[#1f2937] hover:bg-[#111827] text-white cursor-pointer'
                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         }`}
                     onClick={onNext}
@@ -193,7 +248,7 @@ function NavigationButtons({
             {currentStep !== 'services' && (
                 <button
                     onClick={onBack}
-                    className="w-full md:w-auto px-6 flex items-center justify-center gap-2 text-sm font-medium py-3 rounded-lg border border-gray-300 text-gray-700 bg-white hover:bg-gray-100 transition duration-200"
+                    className="w-full cursor-pointer md:w-auto px-6 flex items-center justify-center gap-2 text-sm font-medium py-3 rounded-lg border border-gray-300 text-gray-700 bg-white hover:bg-gray-100 transition duration-200"
                 >
                     <FontAwesomeIcon icon={faArrowLeft} className="text-sm" />
                     Back

@@ -1,25 +1,40 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+
+import "../common/css/hoverUnderline.css";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { useRouter } from "next/navigation";
+import { setAppointmentNote } from "@/store/slices/schedules/CreateAppointmentSlice";
 
 function AppointmentConfirmation() {
-    const [phone, setPhone] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [note, setNote] = useState("");
+    const router = useRouter();
+    const dispatch = useDispatch();
+
+    const user = useSelector((state: RootState) => state.user);
+
+    const note = useSelector((state: RootState) => state.appointment.appointmentNote);
+    const phone = user.phoneNumber || "";
+    const firstName = user.firstName || "";
+    const lastName = user.lastName || "";
+    const email = user.email || "";
+
+    const handleSignInClick = () => {
+        router.push("/login");
+    }
+
 
     return (
         <div className="w-full max-w-xl mx-auto p-4 space-y-8">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold text-gray-900">Contact info</h2>
-                <button className="text-base font-medium text-gray-500 hover:text-gray-700">
+                {!user.email && <button className="hoverUnderline text-sm uppercase cursor-pointer relative inline-block" onClick={handleSignInClick}>
                     Sign in
-                </button>
+                </button>}
             </div>
 
-            {/* Phone Number */}
             {/* Phone Number with floating label */}
             <div className="relative w-full">
                 {/* Fixed prefix element */}
@@ -32,8 +47,8 @@ function AppointmentConfirmation() {
                     id="phone"
                     type="tel"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
                     placeholder="Phone number"
+                    readOnly
                     className={`peer pl-20 pr-4 pt-6 pb-2 w-full border border-gray-300 rounded-lg text-base text-gray-800 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition duration-200`}
                 />
 
@@ -41,8 +56,8 @@ function AppointmentConfirmation() {
                 <label
                     htmlFor="phone"
                     className={`absolute left-20 transition-all text-sm pb-1 ${phone.length > 0
-                            ? "top-2 text-[#dba052] font-semibold"
-                            : "peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400"
+                        ? "top-2 text-[#dba052] font-semibold"
+                        : "peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400"
                         } peer-focus:top-2 peer-focus:text-sm peer-focus:text-[#dba052] peer-focus:font-semibold`}
                 >
                     Phone number
@@ -56,13 +71,12 @@ function AppointmentConfirmation() {
                     id="firstName"
                     label="First name"
                     value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+
                 />
                 <FloatingInput
                     id="lastName"
                     label="Last name"
                     value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
                 />
             </div>
 
@@ -72,20 +86,18 @@ function AppointmentConfirmation() {
                 type="email"
                 label="Email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
             />
 
             {/* Appointment Note */}
             <div className="pt-4 border-t border-gray-200">
                 <div className="flex items-center justify-between mb-2">
                     <h2 className="text-xl font-bold text-gray-900">Appointment note</h2>
-                    <span className="text-sm text-gray-500">Optional</span>
                 </div>
                 <textarea
                     rows={4}
                     placeholder="Add any notes for your appointment..."
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
+                    value={note || ""}
+                    onChange={(e) => dispatch(setAppointmentNote(e.target.value))}
                     className="w-full border border-gray-300 rounded-lg px-4 py-3 text-base text-gray-800 placeholder-gray-400 resize-none"
                 />
             </div>
@@ -96,20 +108,11 @@ function AppointmentConfirmation() {
 interface FloatingInputProps {
     label: string;
     value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     type?: string;
     id: string;
 }
 
-interface FloatingInputProps {
-    label: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    type?: string;
-    id: string;
-}
-
-function FloatingInput({ label, value, onChange, type = "text", id }: FloatingInputProps) {
+function FloatingInput({ label, value, type = "text", id }: FloatingInputProps) {
     const isFilled = value.length > 0;
 
     return (
@@ -118,15 +121,15 @@ function FloatingInput({ label, value, onChange, type = "text", id }: FloatingIn
                 id={id}
                 type={type}
                 value={value}
-                onChange={onChange}
+                readOnly
                 className={`peer w-full border border-gray-300 rounded-lg px-4 pt-6 pb-2 text-base text-gray-800 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition duration-200`}
                 placeholder={label}
             />
             <label
                 htmlFor={id}
                 className={`absolute left-4 transition-all text-sm pb-1 ${isFilled
-                        ? "top-2 text-[#dba052] font-semibold"
-                        : "peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400"
+                    ? "top-2 text-[#dba052] font-semibold"
+                    : "peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400"
                     } peer-focus:top-2 peer-focus:text-sm peer-focus:text-[#dba052] peer-focus:font-semibold`}
             >
                 {label}

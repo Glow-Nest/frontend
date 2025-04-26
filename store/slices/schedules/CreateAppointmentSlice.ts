@@ -1,15 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { calculateEndTime, parseDurationString, parseFormattedDuration, parsePrice } from "libs/helpers";
-import { AppointmentBookingState, Service } from "libs/types/common";
+import { calculateEndTime, formatDuration } from "libs/helpers";
+import { AppointmentBookingState } from "libs/types/common";
+import { Service } from "libs/types/ServiceCategory";
 
 const initialState: AppointmentBookingState = {
     selectedServices: [],
+    selectedCategoryIds: [],
     totalPrice: 0,
     totalDuration: 0,
     selectedDate: null,
     selectedTime: null,
     startTime: null,
-    endTime: null
+    endTime: null,
+    appointmentNote: null
 };
 
 const createAppointmentSlice = createSlice({
@@ -18,6 +21,7 @@ const createAppointmentSlice = createSlice({
     reducers: {
         clearServices(state) {
             state.selectedServices = [];
+            state.selectedCategoryIds = [];
             state.totalPrice = 0;
             state.totalDuration = 0;
             state.selectedDate = null;
@@ -25,6 +29,8 @@ const createAppointmentSlice = createSlice({
         },
 
         toggleService(state, action: PayloadAction<Service>) {
+            console.log(action.payload);
+
             const index = state.selectedServices.findIndex(
                 s => s.name === action.payload.name
             );
@@ -32,13 +38,14 @@ const createAppointmentSlice = createSlice({
             if (index !== -1) {
                 // Remove service
                 const removed = state.selectedServices.splice(index, 1)[0];
-                state.totalPrice -= parsePrice(removed.price);
-                state.totalDuration -= parseFormattedDuration(removed.formattedDuration || "0 min");
+                state.totalPrice -= Number(removed.price);
+                state.totalDuration -= Number(formatDuration(removed.duration));
             } else {
                 // Add service
                 state.selectedServices.push(action.payload);
-                state.totalPrice += parsePrice(action.payload.price);
-                state.totalDuration += parseFormattedDuration(action.payload.formattedDuration || "0 min");
+                state.totalPrice += Number(action.payload.price);
+                state.totalDuration += Number(formatDuration(action.payload.duration));
+
             }
 
             // Recalculate endTime if a time is already selected
@@ -69,9 +76,30 @@ const createAppointmentSlice = createSlice({
                 state.startTime = null;
                 state.endTime = null;
             }
+        },
+
+        setAppointmentNote(state, action: PayloadAction<string>) {
+            state.appointmentNote = action.payload;
+        },
+
+        toggleCategoryId(state, action: PayloadAction<string>) {
+            const categoryId = action.payload;
+            console.log("inside create appointment slice: ", categoryId);
+            
+            const index = state.selectedCategoryIds.indexOf(categoryId);
+            
+            console.log("inside create appointment slice: ", index);
+
+            if (index !== -1) {
+                state.selectedCategoryIds.splice(index, 1);
+            } else {
+                state.selectedCategoryIds.push(categoryId);
+            }
+
         }
+
     }
 });
 
-export const { toggleService, clearServices, addSelectedDate, addSelectedTime } = createAppointmentSlice.actions;
+export const { toggleService, clearServices, addSelectedDate, addSelectedTime, setAppointmentNote, toggleCategoryId } = createAppointmentSlice.actions;
 export default createAppointmentSlice.reducer;

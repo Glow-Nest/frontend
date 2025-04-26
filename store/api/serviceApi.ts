@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { Category, CategoryList } from "libs/types/ServiceCategory";
 
 export const serviceApi = createApi({
     reducerPath: "serviceApi",
@@ -12,7 +13,14 @@ export const serviceApi = createApi({
                 method: "POST",
             }),
         }),
+
+        getAllCategoriesWithService: builder.query<CategoryList, void>({
+            query: () => ({
+                url: "/categories/services/all",
+                method: "POST"
+            }),
+        })
     }),
 });
 
-export const { useGetAllServicesQuery, useLazyGetAllServicesQuery} = serviceApi;
+export const { useGetAllServicesQuery, useLazyGetAllServicesQuery, useGetAllCategoriesWithServiceQuery, useLazyGetAllCategoriesWithServiceQuery } = serviceApi;

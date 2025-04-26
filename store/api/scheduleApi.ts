@@ -1,13 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import Cookies from "js-cookie";
-import { TimeSlotGroup } from "../slices/ScheduleSlice";
-
-export type AddBlockedTimeRequest = {
-    startTime: string;
-    endTime: string;
-    scheduleDate: string;
-    blockReason: string;
-};
+import { TimeSlotGroup } from "../slices/schedules/ScheduleSlice";
+import { GetFromCookies } from "libs/cookies";
 
 export type BlockedTime = {
     startTime: string;
@@ -16,14 +9,22 @@ export type BlockedTime = {
     reason: string;
 }
 
-
+export type CreateAppointmentRequest = {
+    appointmentNote: string,
+    startTime: string,
+    endTime: string,
+    appointmentDate: string,
+    bookedByClient: string,
+    serviceIds: string[],
+    categoryIds: string[]
+};
 
 export const scheduleApi = createApi({
     reducerPath: "scheduleApi",
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
         prepareHeaders: (headers) => {
-            const token = Cookies.get("token");
+            const token = GetFromCookies("token");
 
             if (token) {
                 headers.set("Authorization", `Bearer ${token}`);
@@ -33,13 +34,22 @@ export const scheduleApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        addBlockedTime: builder.mutation<void, AddBlockedTimeRequest>({
+        addBlockedTime: builder.mutation<void, BlockedTime>({
             query: (body) => ({
                 url: "owner/schedule/blockTime/add",
                 method: "POST",
                 body,
             }),
         }),
+
+        addAppointment: builder.mutation<unknown, CreateAppointmentRequest>({
+            query: (body) => ({
+                url: "schedule/appointment/create",
+                method: "POST",
+                body,
+            }),
+        }),
+        
 
         getBlockedTimes: builder.query<BlockedTime[], string>({
             query: (scheduleDate) => ({
@@ -54,7 +64,7 @@ export const scheduleApi = createApi({
             query: (scheduleDate) => ({
                 url: `schedule/availableSlots`,
                 method: "POST",
-                params: { scheduleDate }, 
+                params: { scheduleDate },
             }),
             transformResponse: (response: { timeSlots: TimeSlotGroup }) => response.timeSlots
         })
@@ -62,4 +72,4 @@ export const scheduleApi = createApi({
 
 });
 
-export const { useAddBlockedTimeMutation, useGetBlockedTimesQuery, useLazyGetAvailableSlotsQuery } = scheduleApi;
+export const { useAddBlockedTimeMutation, useGetBlockedTimesQuery, useLazyGetAvailableSlotsQuery, useAddAppointmentMutation } = scheduleApi;

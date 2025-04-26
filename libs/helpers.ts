@@ -19,10 +19,6 @@ export function calculateEndTime(startTime: string, duration: number): string {
     return formatted;
 }
 
-export const formatPrice = (price: number) => `${price} kr`;
-export function parsePrice(priceString: string): number {
-    return parseFloat(priceString.replace(/\D/g, ''));
-}
 
 export const parseDurationString = (duration: string): number => {
     const [hoursStr, minutesStr, secondsStr] = duration.split(":");
@@ -41,7 +37,10 @@ export const formatDuration = (duration: string): string => {
 
     if (hours && minutes) return `${hours} hour${hours > 1 ? 's' : ''} ${minutes} min`;
     if (hours) return `${hours} hour${hours > 1 ? 's' : ''}`;
-    return `${minutes} min`;
+
+    console.log("Format duration", minutes)
+
+    return `${minutes}`;
 };
 
 export const parseFormattedDuration = (durationStr: string): number => {

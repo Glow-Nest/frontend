@@ -1,33 +1,34 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { clientApi } from "./api/clientApi";
-import authReducer from "./slices/AuthSlice";
-import serviceReducer from "./slices/ServiceSlice";
+import userReducer from "./slices/user/UserSlice";
+// import serviceReducer from "./slices/serviceCategory/ServiceSlice";
 
-import appointmentReducer from './slices/CreateAppointmentSlice';
+import appointmentReducer from './slices/schedules/CreateAppointmentSlice';
 import storageSession from 'redux-persist/lib/storage/session';
 import { persistReducer } from 'redux-persist';
 import { serviceApi } from "./api/serviceApi";
-import blockedTimeReducer from './slices/BlockedTimeSlice';
+import blockedTimeReducer from './slices/schedules/BlockedTimeSlice';
 import { scheduleApi } from "./api/scheduleApi";
-import scheduleReducer from "./slices/ScheduleSlice";
+import scheduleReducer from "./slices/schedules/ScheduleSlice";
+import serviceCategoryReducer from "./slices/serviceCategory/ServiceCategorySlice";
 
 const persistAppointmentConfig = {
     key: "appointment",
     version: 1,
     storage: storageSession,
-    blacklist: ["blockedTimes", clientApi.reducerPath, serviceApi.reducerPath, scheduleApi.reducerPath, "auth"],
+    blacklist: ["blockedTimes", clientApi.reducerPath, serviceApi.reducerPath, scheduleApi.reducerPath],
 };
 
 
 const reducer = combineReducers({
     [clientApi.reducerPath]: clientApi.reducer,
     [serviceApi.reducerPath]: serviceApi.reducer,
-    [scheduleApi.reducerPath] : scheduleApi.reducer,
+    [scheduleApi.reducerPath]: scheduleApi.reducer,
     appointment: appointmentReducer,
-    auth: authReducer,
+    user: userReducer,
     blockedTimes: blockedTimeReducer,
-    services: serviceReducer,
     schedules: scheduleReducer,
+    serviceCategory: serviceCategoryReducer
 })
 
 const persistedReducer = persistReducer<ReturnType<typeof reducer>>(persistAppointmentConfig, reducer);

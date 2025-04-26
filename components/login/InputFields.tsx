@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import {InputField} from '../signup/InputFields';
+import { InputField } from '../signup/InputFields';
 import { useLoginClientMutation } from '@/store/api/clientApi';
 import { useAppDispatch } from '@/store/hook';
-import { setCredentials } from '@/store/slices/AuthSlice';
+import { setCredentials } from '@/store/slices/user/UserSlice';
 
 import Cookies from 'js-cookie';
 
@@ -22,12 +22,12 @@ function InputFields() {
 
     useEffect(() => {
         const reason = Cookies.get("redirectReason");
-    
+
         if (reason === "login-required") {
-          toast.error("Please login to access this page.");
-          Cookies.remove("redirectReason");
+            toast.error("Please login to access this page.");
+            Cookies.remove("redirectReason");
         }
-      }, []);
+    }, []);
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -42,19 +42,30 @@ function InputFields() {
 
         try {
             const res = await login(form).unwrap();
+
+            console.log(res);
             dispatch(setCredentials({
-                firstName: res.username,
+                firstName: res.firstName,
                 email: res.email,
                 role: res.role,
+                lastName: res.lastName,
+                phoneNumber: res.phoneNumber,
+                id: res.id
             }));
-            
-            Cookies.set("token", res.token, {secure: true, sameSite: "Lax"});
+
+            Cookies.set("token", res.token, { secure: true, sameSite: "Lax" });
 
             toast.success("Login successful! Redirecting...");
-            router.push(`/owner`);
+
+            if (res.role === "Salon Owner") {
+                router.push(`/owner`);
+            } else {
+                router.push(`/`);
+            }
+
         } catch (err: any) {
             const errorsArray = err?.data;
-    
+
             if (Array.isArray(errorsArray)) {
                 const notVerifiedError = errorsArray.find((e: any) => e.errorId === "Client.NotVerified");
                 const invalidCredentialsError = errorsArray.find((e: any) => e.errorId === "Credentials.Invalid");
@@ -76,13 +87,13 @@ function InputFields() {
                     router.push(`/signup`);
                     return;
                 }
-    
+
                 const fieldErrors: { [key: string]: string } = {};
                 errorsArray.forEach((e: any) => {
                     if (e.errorId?.startsWith("Email")) fieldErrors.email = e.message;
                     if (e.errorId?.startsWith("Password")) fieldErrors.password = e.message;
                 });
-    
+
                 setErrors(fieldErrors);
             } else {
                 toast.error("Something went wrong. Please try again.");

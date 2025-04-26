@@ -1,5 +1,5 @@
+import { BlockedTime } from "@/store/api/scheduleApi";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { BlockedTime } from "../api/scheduleApi";
 
 type BlockedTimeState = {
     blockedTimesByDate: {

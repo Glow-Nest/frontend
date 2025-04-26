@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
-    const user = useSelector((state: RootState) => state.auth.firstName);
+    const user = useSelector((state: RootState) => state.user.firstName);
 
     const router = useRouter();
 
@@ -27,6 +27,7 @@ export default function Navbar() {
         const handleScroll = () => {
             setScrolled(window.scrollY > 10);
         };
+        
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
