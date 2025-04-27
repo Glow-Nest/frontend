@@ -5,7 +5,7 @@ import DaySchedule from '@/components/owner/schedule/DaySchedule';
 import UpcomingAppointmentsList, { AppointmentCardProps } from '@/components/owner/schedule/UpcomingAppointmentsList';
 import { useGetBlockedTimesQuery } from '@/store/api/scheduleApi';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
-import { setBlockedTimesForDate } from '@/store/slices/BlockedTimeSlice';
+import { setBlockedTimesForDate } from '@/store/slices/schedules/BlockedTimeSlice';
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
@@ -52,11 +52,10 @@ function Schedule() {
   const dispatch = useAppDispatch();
 
   const formattedScheduleDate = format(selectedDate, "yyyy-MM-dd");
-  const { data: blockedTimes, isSuccess, isLoading } = useGetBlockedTimesQuery(formattedScheduleDate);
+  const { data: blockedTimes, isSuccess, isLoading, refetch } = useGetBlockedTimesQuery(formattedScheduleDate);
 
   useEffect(() => {
     if (isSuccess && blockedTimes) {
-      console.log("🧪 blockedTimes type:", Array.isArray(blockedTimes), blockedTimes);
 
       dispatch(setBlockedTimesForDate({ date: formattedScheduleDate, blockedTimes: blockedTimes }));
     }

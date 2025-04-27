@@ -18,6 +18,7 @@ import { logout } from "@/store/slices/AuthSlice";
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+
     const [showDropdown, setShowDropdown] = useState(false);
     const user = useSelector((state: RootState) => state.auth.firstName);
 
@@ -34,6 +35,7 @@ export default function Navbar() {
         const handleScroll = () => {
             setScrolled(window.scrollY > 10);
         };
+        
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);

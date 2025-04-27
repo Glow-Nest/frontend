@@ -28,7 +28,7 @@ export const clientApi = createApi({
       }),
     }),
     loginClient: builder.mutation<
-      { username: string; token: string; email: string; role: string },
+      {id: string, firstName: string; lastName: string, phoneNumber: string; token: string; email: string; role: string },
       { email: string; password: string }
     >({
       query: (credentials) => ({
