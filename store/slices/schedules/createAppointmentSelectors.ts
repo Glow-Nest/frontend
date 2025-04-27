@@ -3,11 +3,7 @@ import { CreateAppointmentRequest } from "@/store/api/scheduleApi";
 
 export const selectCreateAppointmentPayload = (
     state: RootState,
-    overrides?: {
-        firstName?: string;
-        lastName?: string;
-        email?: string;
-    }
+    email?: string,
 ): CreateAppointmentRequest => {
     const appointment = state.appointment;
     const user = state.user;
@@ -18,7 +14,7 @@ export const selectCreateAppointmentPayload = (
         endTime: appointment.endTime ?? "",
         appointmentDate: appointment.selectedDate ?? "",
         serviceIds: appointment.selectedServices.map(s => s.serviceId) ?? [],
-        bookedByClient: overrides?.email || user.email || "",
+        bookedByClient: email || user.email || "",
         categoryIds: appointment.selectedCategoryIds,
     };
 }

@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { BlockedTime, useAddBlockedTimeMutation } from "@/store/api/scheduleApi";
 import toast from "react-hot-toast";
 import { RootState } from "@/store";
+import { addSelectedDate } from "@/store/slices/schedules/CreateAppointmentSlice";
 
 const workingHours = Array.from({ length: 9 }, (_, i) => 10 + i);
 
@@ -55,18 +56,22 @@ export default function DaySchedule({
     const dispatch = useAppDispatch();
     const [addBlockedTime, { isLoading }] = useAddBlockedTimeMutation();
 
-    const [modalOpen, setModalOpen] = useState(false);
     const formattedDate = format(date, "EEEE, MMMM d, yyyy");
+    const selectedDate = format(date, "yyyy-MM-dd");
+
+    const blockedTimesByDate = useAppSelector(
+        (state: RootState) => state.blockedTimes?.blockedTimesByDate?.[selectedDate] ?? []);
+
+    const [modalOpen, setModalOpen] = useState(false);
+
 
     const handleBlockTimeSave = async (blockedTime: BlockInput) => {
         try {
             toast.loading('Saving blocked time...');
 
-            const formattedScheduleDate = format(date, 'yyyy-MM-dd');
-
             await addBlockedTime({
-                scheduleDate: formattedScheduleDate, startTime: blockedTime.startTime, endTime: blockedTime.endTime,
-                blockReason: blockedTime.reason
+                scheduleDate: selectedDate, startTime: blockedTime.startTime, endTime: blockedTime.endTime,
+                blockReason: blockedTime.blockReason
             }).unwrap();
 
             toast.dismiss();
@@ -103,13 +108,14 @@ export default function DaySchedule({
         }
     };
 
-    const selectedDate = format(date, "yyyy-MM-dd");
-    const blockedTimesByDate = useAppSelector(
-        (state: RootState) => state.blockedTimes?.blockedTimesByDate?.[selectedDate] ?? []);
+    const handleAddModalClick = () => {
+        setModalOpen(true);
+        dispatch(addSelectedDate(formattedDate));
+    }
 
     return (
         <div className="flex flex-col w-full h-full rounded-xl shadow bg-white border border-gray-200">
-            <Header title={formattedDate} onAdd={() => setModalOpen(true)} />
+            <Header title={formattedDate} onAdd={handleAddModalClick} />
             <Schedule
                 appointments={appointments}
                 blockedTimes={blockedTimesByDate}
@@ -119,7 +125,6 @@ export default function DaySchedule({
                 onClose={() => setModalOpen(false)}
                 onCreateAppointment={() => { }}
                 onCreateBlock={handleBlockTimeSave}
-                serviceOptions={["Haircut", "Facial", "Manicure"]}
             />
         </div>
     );
@@ -184,7 +189,6 @@ function ScheduleGrid({
     blockedTimes: BlockedTime[];
 }) {
 
-    console.log("Inside schedule grid ", blockedTimes);
 
     return (
         <div className="flex-1 relative">
@@ -209,7 +213,7 @@ function ScheduleGrid({
                     <TimeBlockItem
                         key={`block-${i}`}
                         {...getPosition(block.startTime, block.endTime)}
-                        label={block.reason}
+                        label={block.blockReason}
                         type="blocked"
                     />
                 ))

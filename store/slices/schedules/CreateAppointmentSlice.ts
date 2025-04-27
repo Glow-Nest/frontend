@@ -26,11 +26,10 @@ const createAppointmentSlice = createSlice({
             state.totalDuration = 0;
             state.selectedDate = null;
             state.selectedTime = null;
+            state.appointmentNote = "";
         },
 
         toggleService(state, action: PayloadAction<Service>) {
-            console.log(action.payload);
-
             const index = state.selectedServices.findIndex(
                 s => s.name === action.payload.name
             );
@@ -84,11 +83,7 @@ const createAppointmentSlice = createSlice({
 
         toggleCategoryId(state, action: PayloadAction<string>) {
             const categoryId = action.payload;
-            console.log("inside create appointment slice: ", categoryId);
-            
             const index = state.selectedCategoryIds.indexOf(categoryId);
-            
-            console.log("inside create appointment slice: ", index);
 
             if (index !== -1) {
                 state.selectedCategoryIds.splice(index, 1);

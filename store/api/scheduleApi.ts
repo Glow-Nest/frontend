@@ -6,7 +6,7 @@ export type BlockedTime = {
     startTime: string;
     endTime: string;
     scheduleDate: string;
-    reason: string;
+    blockReason: string;
 }
 
 export type CreateAppointmentRequest = {

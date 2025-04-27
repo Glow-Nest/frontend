@@ -5,7 +5,7 @@ import DaySchedule from '@/components/owner/schedule/DaySchedule';
 import UpcomingAppointmentsList, { AppointmentCardProps } from '@/components/owner/schedule/UpcomingAppointmentsList';
 import { useGetBlockedTimesQuery } from '@/store/api/scheduleApi';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
-import { setBlockedTimesForDate } from '@/store/slices/BlockedTimeSlice';
+import { setBlockedTimesForDate } from '@/store/slices/schedules/BlockedTimeSlice';
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';

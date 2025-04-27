@@ -58,7 +58,7 @@ function InputFields() {
             toast.success("Login successful! Redirecting...");
 
             if (res.role === "Salon Owner") {
-                router.push(`/owner`);
+                router.push(`/owner/dashboard`);
             } else {
                 router.push(`/`);
             }

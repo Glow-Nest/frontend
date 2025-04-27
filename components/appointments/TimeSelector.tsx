@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useGetBlockedTimesQuery, useLazyGetAvailableSlotsQuery } from "@/store/api/scheduleApi";
 import { setSchedule, TimeSlotGroup } from "@/store/slices/schedules/ScheduleSlice";
 import { addSelectedTime } from "@/store/slices/schedules/CreateAppointmentSlice";
+import { formatTime } from "libs/helpers";
 
 
 function TimeSelector() {
@@ -45,21 +46,7 @@ function TimeSelector() {
             });
     }, [selected.selectedDate, scheduleState.schedules, trigger, dispatch]);
 
-
-    const handleTimeClick = (time: string) => {
-        if (!selected.selectedDate) {
-            toast.error("Please select date before choosing time!!");
-            return;
-        };
-        dispatch(addSelectedTime(time));
-    };
-
-    function formatTime(t: string) {
-        const [hours, minutes] = t.split(":");
-        const date = new Date();
-        date.setHours(parseInt(hours), parseInt(minutes));
-        return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-    }
+    
 
     return (
         <div className="w-full max-w-2xl mx-auto p-6">

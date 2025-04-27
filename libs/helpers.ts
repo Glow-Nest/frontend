@@ -38,8 +38,6 @@ export const formatDuration = (duration: string): string => {
     if (hours && minutes) return `${hours} hour${hours > 1 ? 's' : ''} ${minutes} min`;
     if (hours) return `${hours} hour${hours > 1 ? 's' : ''}`;
 
-    console.log("Format duration", minutes)
-
     return `${minutes}`;
 };
 
@@ -72,6 +70,13 @@ export const convertMinutesStringToDuration = (minutes: number): string => {
     if (hours) return `${hours} hour${hours > 1 ? 's' : ''}`;
     return `${min} min`;
 };
+
+export function formatTime(t: string) {
+    const [hours, minutes] = t.split(":");
+    const date = new Date();
+    date.setHours(parseInt(hours), parseInt(minutes));
+    return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+}
 
 
 
