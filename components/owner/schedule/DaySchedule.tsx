@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { format } from "date-fns";
 import AddModal, { BlockInput } from "./AddModal";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { BlockedTime, useAddBlockedTimeMutation } from "@/store/api/scheduleApi";
+import { BlockedTime, useAddBlockedTimeMutation, useGetBlockedTimesQuery } from "@/store/api/scheduleApi";
 import toast from "react-hot-toast";
 import { RootState } from "@/store";
 import { addSelectedDate } from "@/store/slices/schedules/CreateAppointmentSlice";
@@ -52,12 +52,15 @@ const getPosition = (start: string, end: string) => {
 export default function DaySchedule({
     date = new Date(),
     appointments = [],
+
 }: DayScheduleProps) {
     const dispatch = useAppDispatch();
     const [addBlockedTime, { isLoading }] = useAddBlockedTimeMutation();
 
     const formattedDate = format(date, "EEEE, MMMM d, yyyy");
     const selectedDate = format(date, "yyyy-MM-dd");
+
+    const { refetch } = useGetBlockedTimesQuery(selectedDate);
 
     const blockedTimesByDate = useAppSelector(
         (state: RootState) => state.blockedTimes?.blockedTimesByDate?.[selectedDate] ?? []);
@@ -78,6 +81,13 @@ export default function DaySchedule({
             toast.success(`Time blocked from ${blockedTime.startTime} to ${blockedTime.endTime}.`);
 
             setModalOpen(false);
+
+            // ✅ Refresh blocked times
+            toast.loading("Refreshing blocked times...");
+            await refetch();
+            toast.dismiss();
+            toast.success("Schedule updated!");
+
         } catch (error: any) {
             toast.dismiss();
 

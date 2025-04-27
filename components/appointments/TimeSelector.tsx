@@ -4,7 +4,7 @@ import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import toast from 'react-hot-toast';
 import { useEffect, useState } from "react";
-import { useGetBlockedTimesQuery, useLazyGetAvailableSlotsQuery } from "@/store/api/scheduleApi";
+import { useLazyGetAvailableSlotsQuery } from "@/store/api/scheduleApi";
 import { setSchedule, TimeSlotGroup } from "@/store/slices/schedules/ScheduleSlice";
 import { addSelectedTime } from "@/store/slices/schedules/CreateAppointmentSlice";
 import { formatTime } from "libs/helpers";

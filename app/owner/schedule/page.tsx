@@ -52,7 +52,7 @@ function Schedule() {
   const dispatch = useAppDispatch();
 
   const formattedScheduleDate = format(selectedDate, "yyyy-MM-dd");
-  const { data: blockedTimes, isSuccess, isLoading } = useGetBlockedTimesQuery(formattedScheduleDate);
+  const { data: blockedTimes, isSuccess, isLoading, refetch } = useGetBlockedTimesQuery(formattedScheduleDate);
 
   useEffect(() => {
     if (isSuccess && blockedTimes) {
