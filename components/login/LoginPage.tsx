@@ -25,6 +25,13 @@ function LoginPage() {
             <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-3xl gap-6 md:gap-12">
                 <div className="w-full md:w-1/2">
                     <InputFields />
+                    <div className="flex justify-center mt-10">
+                        <span
+                            onClick={() => router.push('/initialResetPassword')}
+                            className="hoverUnderline text-sm uppercase cursor-pointer relative inline-block text-center">
+                            Forgot Password?
+                        </span>
+                    </div>
                 </div>
 
                 <div className="hidden md:flex flex-col items-center">
