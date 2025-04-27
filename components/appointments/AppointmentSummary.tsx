@@ -15,7 +15,7 @@ import { AppointmentBookingState } from "libs/types/common";
 
 import { RootState, store } from "@/store";
 import { useAddAppointmentMutation } from "@/store/api/scheduleApi";
-import { toggleService } from "@/store/slices/schedules/CreateAppointmentSlice";
+import { clearServices, toggleService } from "@/store/slices/schedules/CreateAppointmentSlice";
 import { selectCreateAppointmentPayload } from "@/store/slices/schedules/createAppointmentSelectors";
 import { Service } from "libs/types/ServiceCategory";
 
@@ -27,6 +27,7 @@ function AppointmentSummary() {
 
     const router = useRouter();
     const pathName = usePathname();
+    const dispatch = useDispatch();
 
     const currentStep = pathName.split('/').pop() as Step;
     const nextStep = getNextStep(currentStep);
@@ -57,6 +58,11 @@ function AppointmentSummary() {
         try {
             await addAppointment(payload).unwrap();
             toast.success('Appointment booked successfully!', { id: toastId });
+
+            Cookies.remove('selectedServices');
+            dispatch(clearServices());
+
+            router.push('/');
         } catch (error: any) {
             const errorMessage = error?.data?.[0]?.message || 'Failed to book appointment. Please try again.';
             toast.error(errorMessage, { id: toastId });
