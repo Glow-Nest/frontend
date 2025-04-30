@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { calculateEndTime, formatDuration } from "libs/helpers";
+import { calculateEndTime, formatHHMMDurationToReadable, parseHHMMDurationToMinutes } from "libs/helpers";
 import { AppointmentBookingState } from "libs/types/common";
 import { Service } from "libs/types/ServiceCategory";
 
@@ -38,13 +38,19 @@ const createAppointmentSlice = createSlice({
                 // Remove service
                 const removed = state.selectedServices.splice(index, 1)[0];
                 state.totalPrice -= Number(removed.price);
-                state.totalDuration -= Number(formatDuration(removed.duration));
+                state.totalDuration -= Number(parseHHMMDurationToMinutes(removed.duration));
             } else {
                 // Add service
                 state.selectedServices.push(action.payload);
                 state.totalPrice += Number(action.payload.price);
-                state.totalDuration += Number(formatDuration(action.payload.duration));
 
+
+                state.totalDuration += Number(parseHHMMDurationToMinutes(action.payload.duration));
+
+                console.log("Inside appoitnmetn slice format duration formatiing: ", (parseHHMMDurationToMinutes(action.payload.duration)));
+                console.log("Total duration inside appointment slice:", state.totalDuration);
+                console.log("Start Time inside appointment slice:", state.startTime);
+                console.log("End time inside appointment slice:", state.endTime);
             }
 
             // Recalculate endTime if a time is already selected
@@ -57,6 +63,7 @@ const createAppointmentSlice = createSlice({
                 state.startTime = null;
                 state.endTime = null;
             }
+
         },
 
         addSelectedDate(state, action: PayloadAction<string | null>) {

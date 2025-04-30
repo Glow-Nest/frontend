@@ -6,7 +6,7 @@ import { RootState, store } from "@/store";
 import { setSchedule, TimeSlotGroup } from "@/store/slices/schedules/ScheduleSlice";
 import { useAddAppointmentMutation, useLazyGetAvailableSlotsQuery } from "@/store/api/scheduleApi";
 import toast from "react-hot-toast";
-import { formatTime } from "libs/helpers";
+import { formatTimeStringTo12HourClock } from "libs/helpers";
 import { useLazyGetAllCategoriesWithServiceQuery } from "@/store/api/serviceApi";
 import { setServiceCategory } from "@/store/slices/serviceCategory/ServiceCategorySlice";
 import { Service, ServiceCategoryState } from "libs/types/ServiceCategory";
@@ -216,7 +216,7 @@ export default function AddModal({
                                         const slotId = `${slot.start}-${slot.end}`;
                                         return (
                                             <option key={slotId} value={slotId}>
-                                                {formatTime(slot.start)} – {formatTime(slot.end)}
+                                                {formatTimeStringTo12HourClock(slot.start)} – {formatTimeStringTo12HourClock(slot.end)}
                                             </option>
                                         );
                                     })}

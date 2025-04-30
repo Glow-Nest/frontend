@@ -13,14 +13,14 @@ import "../common/css/buttonSweep.css";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { useRouter } from "next/navigation";
-import { logout } from "@/store/slices/AuthSlice";
+import { logout } from "@/store/slices/user/UserSlice";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
     const [showDropdown, setShowDropdown] = useState(false);
-    const user = useSelector((state: RootState) => state.auth.firstName);
+    const user = useSelector((state: RootState) => state.user.firstName);
 
     const router = useRouter();
     const dispatch = useDispatch();

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useLazyGetAvailableSlotsQuery } from "@/store/api/scheduleApi";
 import { setSchedule, TimeSlotGroup } from "@/store/slices/schedules/ScheduleSlice";
 import { addSelectedTime } from "@/store/slices/schedules/CreateAppointmentSlice";
-import { formatTime } from "libs/helpers";
+import { formatTimeStringTo12HourClock } from "libs/helpers";
 
 
 function TimeSelector() {
@@ -68,7 +68,7 @@ function TimeSelector() {
                     <p className="text-lg font-medium text-gray-800 mb-3">{label}</p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
                         {slots.map((timeObj, index) => {
-                            const formattedTime = `${formatTime(timeObj.start)} - ${formatTime(timeObj.end)}`;
+                            const formattedTime = `${formatTimeStringTo12HourClock(timeObj.start)} - ${formatTimeStringTo12HourClock(timeObj.end)}`;
                             const isSelected = selected.selectedTime === formattedTime;
 
                             const selectedRawStart = selected.startTime;
