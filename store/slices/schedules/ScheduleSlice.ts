@@ -1,25 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Appointment, Schedule, ScheduleState } from "libs/types/ScheduleTypes";
 import { JSX } from "react";
-
-export type TimeSlot = {
-    start: string;
-    end: string;
-}
-
-export type TimeSlotGroup = {
-    Morning: TimeSlot[];
-    Afternoon: TimeSlot[];
-    Evening: TimeSlot[];
-}
-
-export type Schedule = {
-    scheduleDate: string;
-    availableSlots: TimeSlotGroup;
-}
-
-export type ScheduleState = {
-    schedules: Record<string, Schedule>;
-};
 
 const initialState: ScheduleState = {
     schedules: {}
@@ -37,8 +18,37 @@ const scheduleSlice = createSlice({
         removeSchedule(state, action: PayloadAction<string>) {
             delete state.schedules[action.payload];
         },
+
+        setAppointmentForDate(state, action: PayloadAction<Appointment[]>) {
+            for (const appointment of action.payload) {
+                const scheduleDate = appointment.appointmentDate;
+                const schedule = state.schedules[scheduleDate];
+
+                if (schedule) {
+                    // if schedule for that date exists, add it
+                    if (!schedule.appointments) {
+                        schedule.appointments = [];
+                    }
+
+                    schedule.appointments.push(appointment);
+                } else {
+                    state.schedules[scheduleDate] = {
+                        scheduleDate: scheduleDate,
+                        availableSlots: { Morning: [], Afternoon: [], Evening: [] },
+                        appointments: [appointment]
+                    }
+                }
+            }
+        },
+
+        clearAppointments(state, action: PayloadAction<string>) {
+            const schedule = state.schedules[action.payload];
+            if (schedule) {
+                schedule.appointments = [];
+            }
+        }
     }
 });
 
-export const { setSchedule, removeSchedule } = scheduleSlice.actions;
+export const { setSchedule, removeSchedule, setAppointmentForDate } = scheduleSlice.actions;
 export default scheduleSlice.reducer;

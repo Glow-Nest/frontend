@@ -3,7 +3,7 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { CalendarDays, ChevronDown, ChevronUp, Clock, Mail, Pen, Scissors } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, store } from "@/store";
-import { setSchedule, TimeSlotGroup } from "@/store/slices/schedules/ScheduleSlice";
+import { setSchedule } from "@/store/slices/schedules/ScheduleSlice";
 import { useAddAppointmentMutation, useLazyGetAvailableSlotsQuery } from "@/store/api/scheduleApi";
 import toast from "react-hot-toast";
 import { formatTimeStringTo12HourClock } from "libs/helpers";
@@ -14,6 +14,7 @@ import { addSelectedTime, clearServices, setAppointmentNote, toggleCategoryId, t
 import { selectCreateAppointmentPayload } from "@/store/slices/schedules/createAppointmentSelectors";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { TimeSlotGroup } from "libs/types/ScheduleTypes";
 
 // --- Types ---
 export interface AppointmentInput {
@@ -89,7 +90,8 @@ export default function AddModal({
             .then((response) => {
                 dispatch(setSchedule({
                     scheduleDate: selectedDate,
-                    availableSlots: response
+                    availableSlots: response,
+                    appointments: []
                 }));
                 setTimeSlots(response);
                 toast.success("Available time loaded!", { id: toastId });

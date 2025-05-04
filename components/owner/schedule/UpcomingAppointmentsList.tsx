@@ -16,21 +16,7 @@ interface UpcomingAppointmentsListProps {
   appointments: AppointmentCardProps[];
 }
 
-function parseTodayTimeToDate(timeString: string): Date {
-  const [hoursStr, minutesStr] = timeString.split(":");
-  const hours = parseInt(hoursStr, 10);
-  const minutes = parseInt(minutesStr, 10);
 
-  const now = new Date();
-  return new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    hours,
-    minutes,
-    0
-  );
-}
 
 function combineDateAndTime(date: Date, timeString: string): Date {
   const [hours, minutes] = timeString.split(":").map(Number);

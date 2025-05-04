@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setBlockedTimesForDate } from '@/store/slices/schedules/BlockedTimeSlice';
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast';
 
 const upcomingAppointments: AppointmentCardProps[] = [
   {
@@ -37,13 +36,13 @@ const upcomingAppointments: AppointmentCardProps[] = [
   },
 ];
 
-const demoAppointments = [
+/* const demoAppointments = [
   {
     startTime: "12:00",
     endTime: "13:00",
     label: "Kushum Sharma - Manicure"
   }
-];
+]; */
 
 function Schedule() {
   const today = new Date();
@@ -90,7 +89,7 @@ function Schedule() {
 
       {/* 4 - day schedule */}
       <div className="h-full lg:col-span-6 lg:row-span-5 lg:col-start-3 lg:row-start-3">
-        <DaySchedule date={selectedDate} appointments={demoAppointments} />
+        <DaySchedule date={selectedDate} />
       </div>
     </div>
   )
