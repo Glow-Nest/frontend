@@ -20,24 +20,19 @@ const scheduleSlice = createSlice({
         },
 
         setAppointmentForDate(state, action: PayloadAction<Appointment[]>) {
-            for (const appointment of action.payload) {
-                const scheduleDate = appointment.appointmentDate;
-                const schedule = state.schedules[scheduleDate];
+            if (action.payload.length === 0) return;
 
-                if (schedule) {
-                    // if schedule for that date exists, add it
-                    if (!schedule.appointments) {
-                        schedule.appointments = [];
-                    }
+            const scheduleDate = action.payload[0].appointmentDate;
 
-                    schedule.appointments.push(appointment);
-                } else {
-                    state.schedules[scheduleDate] = {
-                        scheduleDate: scheduleDate,
-                        availableSlots: { Morning: [], Afternoon: [], Evening: [] },
-                        appointments: [appointment]
-                    }
-                }
+            // Overwrite the appointments directly
+            if (state.schedules[scheduleDate]) {
+                state.schedules[scheduleDate].appointments = action.payload;
+            } else {
+                state.schedules[scheduleDate] = {
+                    scheduleDate,
+                    availableSlots: { Morning: [], Afternoon: [], Evening: [] },
+                    appointments: action.payload,
+                };
             }
         },
 
