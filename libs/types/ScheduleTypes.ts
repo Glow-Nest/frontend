@@ -20,9 +20,11 @@ export type ScheduleState = {
 };
 
 export type Appointment = {
+    appointmentId: string;
     appointmentDate: string;
     startTime: string;
     endTime: string;
     clientName: string;
     services: string[];
+    appointmentNote: string;
 }

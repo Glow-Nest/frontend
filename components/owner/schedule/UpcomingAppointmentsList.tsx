@@ -6,6 +6,7 @@ import { formatTimeStringTo12HourClock } from "libs/helpers";
 import { Appointment } from "libs/types/ScheduleTypes";
 import { CalendarDays, Clock, User2 } from "lucide-react";
 import { useMemo, useState } from "react";
+import AppointmentModal from "./AppointmentModal";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -21,6 +22,7 @@ export default function UpcomingAppointmentsList({ date }: { date: Date }) {
   );
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
 
   const appointments: Appointment[] = data?.appointments ?? [];
 
@@ -30,6 +32,9 @@ export default function UpcomingAppointmentsList({ date }: { date: Date }) {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
     return appointments.slice(start, start + ITEMS_PER_PAGE);
   }, [appointments, currentPage]);
+
+  const openModal = (appt: Appointment) => setSelectedAppointment(appt);
+  const closeModal = () => setSelectedAppointment(null);
 
   return (
     <div className="bg-white h-full rounded-2xl p-6 mb-5 shadow-md flex flex-col border border-[#f6e9dc]">
@@ -54,7 +59,8 @@ export default function UpcomingAppointmentsList({ date }: { date: Date }) {
           {paginatedAppointments.map((appt, i) => (
             <li
               key={i}
-              className="flex flex-col gap-2 border-l-4 border-[#f7b267] bg-[#fff8f3] rounded-md shadow-sm px-4 py-3 hover:bg-[#fff1e7] transition"
+              onClick={() => openModal(appt)}
+              className="flex cursor-pointer flex-col gap-2 border-l-4 border-[#f7b267] bg-[#fff8f3] rounded-md shadow-sm px-4 py-3 hover:bg-[#fff1e7] transition"
             >
               <div className="flex items-center gap-2 ">
                 <User2 className="w-4 h-4 text-[#f08a24]" />
@@ -99,6 +105,10 @@ export default function UpcomingAppointmentsList({ date }: { date: Date }) {
             Next
           </button>
         </div>
+      )}
+
+      {selectedAppointment && (
+        <AppointmentModal appointment={selectedAppointment} onClose={closeModal} />
       )}
     </div>
   );

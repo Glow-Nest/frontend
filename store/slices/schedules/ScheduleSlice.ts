@@ -61,6 +61,31 @@ const scheduleSlice = createSlice({
             }
         },        
 
+        addMultipleAppointments(state, action: PayloadAction<Appointment[]>) {
+            const groupedByDate: Record<string, Appointment[]> = {};
+        
+            for (const appointment of action.payload) {
+                const date = appointment.appointmentDate;
+                if (!groupedByDate[date]) {
+                    groupedByDate[date] = [];
+                }
+                groupedByDate[date].push(appointment);
+            }
+        
+            for (const date in groupedByDate) {
+                if (state.schedules[date]) {
+                    // You can merge instead if needed
+                    state.schedules[date].appointments = groupedByDate[date];
+                } else {
+                    state.schedules[date] = {
+                        scheduleDate: date,
+                        availableSlots: { Morning: [], Afternoon: [], Evening: [] },
+                        appointments: groupedByDate[date]
+                    };
+                }
+            }
+        },        
+
         clearAppointments(state, action: PayloadAction<string>) {
             const schedule = state.schedules[action.payload];
             if (schedule) {
@@ -70,5 +95,5 @@ const scheduleSlice = createSlice({
     }
 });
 
-export const { setSchedule, removeSchedule, setAppointmentForDate } = scheduleSlice.actions;
+export const { setSchedule, removeSchedule, setAppointmentForDate, addMultipleAppointments  } = scheduleSlice.actions;
 export default scheduleSlice.reducer;

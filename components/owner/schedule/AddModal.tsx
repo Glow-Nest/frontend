@@ -177,7 +177,7 @@ export default function AddModal({
         <Dialog open={isOpen} onClose={onClose} className="relative z-50">
             <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
             <div className="fixed inset-0 flex items-center justify-center p-4">
-                <DialogPanel className="bg-white w-full max-w-md rounded-xl shadow-xl p-6 border border-gray-200">
+                <DialogPanel className="bg-white w-full max-w-md max-h-[90vh] overflow-y-auto rounded-xl shadow-xl p-6 border border-gray-200">
                     <DialogTitle className="text-xl font-semibold mb-6 text-[#dba052] flex items-center gap-2">
                         <CalendarDays className="w-5 h-5" />
                         Add for {selectedDate}
