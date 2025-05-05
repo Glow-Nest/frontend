@@ -23,7 +23,6 @@ interface TimeBlock {
 
 interface DayScheduleProps {
     date?: Date;
-    appointments?: Appointment[];
 }
 
 // Utility to calculate positioning for time blocks
@@ -136,8 +135,6 @@ export default function DaySchedule({
 
 
     useEffect(() => {
-        console.log(data, selectedDate);
-
         if (Array.isArray(data?.appointments)) {
             dispatch(setAppointmentForDate(data.appointments));
         }

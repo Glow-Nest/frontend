@@ -2,47 +2,13 @@
 
 import DatePicker from '@/components/appointments/DatePicker';
 import DaySchedule from '@/components/owner/schedule/DaySchedule';
-import UpcomingAppointmentsList, { AppointmentCardProps } from '@/components/owner/schedule/UpcomingAppointmentsList';
+import UpcomingAppointmentsList from '@/components/owner/schedule/UpcomingAppointmentsList';
 import { useGetBlockedTimesQuery } from '@/store/api/scheduleApi';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setBlockedTimesForDate } from '@/store/slices/schedules/BlockedTimeSlice';
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react'
 
-const upcomingAppointments: AppointmentCardProps[] = [
-  {
-    startTime: "11:00",
-    endTime: "12:00",
-    clientName: "Suhani Pandey",
-    service: "Haircut & Styling",
-    avatarUrl: `https://avatar.iran.liara.run/public/boy?username=${encodeURIComponent("Suhani Pandey")}`,
-    appointmentDate: new Date()
-  },
-  {
-    startTime: "13:00",
-    endTime: "14:30",
-    clientName: "Sadixa Baral",
-    service: "Hair Spa",
-    avatarUrl: `https://avatar.iran.liara.run/public/boy?username=${encodeURIComponent("Sadixa Bista")}`,
-    appointmentDate: new Date()
-  },
-  {
-    startTime: "14:00",
-    endTime: "16:00",
-    clientName: "Kushum Poudel",
-    service: "Facial",
-    avatarUrl: `https://avatar.iran.liara.run/public/boy?username=${encodeURIComponent("Kushum Poudel")}`,
-    appointmentDate: new Date()
-  },
-];
-
-/* const demoAppointments = [
-  {
-    startTime: "12:00",
-    endTime: "13:00",
-    label: "Kushum Sharma - Manicure"
-  }
-]; */
 
 function Schedule() {
   const today = new Date();
@@ -74,7 +40,7 @@ function Schedule() {
 
       {/* 2 - upcoming appointments */}
       <div className="h-full lg:col-span-2 lg:row-span-4 lg:col-start-1 lg:row-start-4">
-        <UpcomingAppointmentsList appointments={upcomingAppointments} />
+        <UpcomingAppointmentsList date={selectedDate}/>
       </div>
 
       {/* 3 - week schedule (date picker) */}

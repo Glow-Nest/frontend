@@ -36,6 +36,31 @@ const scheduleSlice = createSlice({
             }
         },
 
+        addAppointments(state, action: PayloadAction<Appointment[]>) {
+            const byDate: Record<string, Appointment[]> = {};
+        
+            for (const appt of action.payload) {
+                const date = appt.appointmentDate;
+                if (!byDate[date]) {
+                    byDate[date] = [];
+                }
+                byDate[date].push(appt);
+            }
+        
+            for (const date in byDate) {
+                const existing = state.schedules[date];
+                if (existing) {
+                    existing.appointments = byDate[date];
+                } else {
+                    state.schedules[date] = {
+                        scheduleDate: date,
+                        availableSlots: { Morning: [], Afternoon: [], Evening: [] },
+                        appointments: byDate[date],
+                    };
+                }
+            }
+        },        
+
         clearAppointments(state, action: PayloadAction<string>) {
             const schedule = state.schedules[action.payload];
             if (schedule) {
