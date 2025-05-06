@@ -46,11 +46,6 @@ const createAppointmentSlice = createSlice({
 
 
                 state.totalDuration += Number(parseHHMMDurationToMinutes(action.payload.duration));
-
-                console.log("Inside appoitnmetn slice format duration formatiing: ", (parseHHMMDurationToMinutes(action.payload.duration)));
-                console.log("Total duration inside appointment slice:", state.totalDuration);
-                console.log("Start Time inside appointment slice:", state.startTime);
-                console.log("End time inside appointment slice:", state.endTime);
             }
 
             // Recalculate endTime if a time is already selected
