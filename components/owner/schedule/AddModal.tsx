@@ -3,10 +3,10 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { CalendarDays, ChevronDown, ChevronUp, Clock, Mail, Pen, Scissors } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, store } from "@/store";
-import { setSchedule, TimeSlotGroup } from "@/store/slices/schedules/ScheduleSlice";
+import { setSchedule } from "@/store/slices/schedules/ScheduleSlice";
 import { useAddAppointmentMutation, useLazyGetAvailableSlotsQuery } from "@/store/api/scheduleApi";
 import toast from "react-hot-toast";
-import { formatTime } from "libs/helpers";
+import { formatTimeStringTo12HourClock } from "libs/helpers";
 import { useLazyGetAllCategoriesWithServiceQuery } from "@/store/api/serviceApi";
 import { setServiceCategory } from "@/store/slices/serviceCategory/ServiceCategorySlice";
 import { Service, ServiceCategoryState } from "libs/types/ServiceCategory";
@@ -14,6 +14,7 @@ import { addSelectedTime, clearServices, setAppointmentNote, toggleCategoryId, t
 import { selectCreateAppointmentPayload } from "@/store/slices/schedules/createAppointmentSelectors";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { TimeSlotGroup } from "libs/types/ScheduleTypes";
 
 // --- Types ---
 export interface AppointmentInput {
@@ -89,7 +90,8 @@ export default function AddModal({
             .then((response) => {
                 dispatch(setSchedule({
                     scheduleDate: selectedDate,
-                    availableSlots: response
+                    availableSlots: response,
+                    appointments: []
                 }));
                 setTimeSlots(response);
                 toast.success("Available time loaded!", { id: toastId });
@@ -175,7 +177,7 @@ export default function AddModal({
         <Dialog open={isOpen} onClose={onClose} className="relative z-50">
             <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
             <div className="fixed inset-0 flex items-center justify-center p-4">
-                <DialogPanel className="bg-white w-full max-w-md rounded-xl shadow-xl p-6 border border-gray-200">
+                <DialogPanel className="bg-white w-full max-w-md max-h-[90vh] overflow-y-auto rounded-xl shadow-xl p-6 border border-gray-200">
                     <DialogTitle className="text-xl font-semibold mb-6 text-[#dba052] flex items-center gap-2">
                         <CalendarDays className="w-5 h-5" />
                         Add for {selectedDate}
@@ -216,7 +218,7 @@ export default function AddModal({
                                         const slotId = `${slot.start}-${slot.end}`;
                                         return (
                                             <option key={slotId} value={slotId}>
-                                                {formatTime(slot.start)} – {formatTime(slot.end)}
+                                                {formatTimeStringTo12HourClock(slot.start)} – {formatTimeStringTo12HourClock(slot.end)}
                                             </option>
                                         );
                                     })}

@@ -13,6 +13,7 @@ import { RootState } from '@/store';
 import { useLazyGetAllCategoriesWithServiceQuery } from '@/store/api/serviceApi';
 import { toggleCategoryId, toggleService } from '@/store/slices/schedules/CreateAppointmentSlice';
 import { setServiceCategory } from '@/store/slices/serviceCategory/ServiceCategorySlice';
+import { formatHHMMDurationToReadable, parseHHMMDurationToMinutes } from 'libs/helpers';
 
 function AppointmentServiceSelector() {
     const dispatch = useDispatch();
@@ -135,14 +136,14 @@ function ServiceCard({
     selected: boolean;
     onClick: () => void;
 }) {
-    const { name, price, duration } = service;
+    const { name, price, formattedDuration } = service;
 
     return (
         <div onClick={onClick} className="p-3 transition-shadow border-b w-full border-gray-200 cursor-pointer hover:shadow-lg hover:bg-[#fff3e0]">
             <div className="flex justify-between items-start">
                 <h3 className="text-xl font-semibold text-gray-900">{name}</h3>
                 <div className="text-sm px-3 py-1 rounded-full bg-[#f4ca67] text-gray-700 font-medium">
-                    {duration}
+                    {formattedDuration}
                 </div>
             </div>
             <div className="text-md font-medium text-gray-700 mt-1">{price} kr.</div>

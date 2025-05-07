@@ -1,13 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
-import { format } from "date-fns";
-import AddModal, { BlockInput } from "./AddModal";
-import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { BlockedTime, useAddBlockedTimeMutation, useGetBlockedTimesQuery } from "@/store/api/scheduleApi";
-import toast from "react-hot-toast";
+import GlowNestSpinner from "@/components/common/GlowNestSpinner";
 import { RootState } from "@/store";
+import { BlockedTime, useAddBlockedTimeMutation, useGetAppointmentForOwnerQuery, useGetBlockedTimesQuery } from "@/store/api/scheduleApi";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { addSelectedDate } from "@/store/slices/schedules/CreateAppointmentSlice";
+import { setAppointmentForDate } from "@/store/slices/schedules/ScheduleSlice";
+import { format } from "date-fns";
+import { Appointment } from "libs/types/ScheduleTypes";
+import { JSX, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import AddModal, { BlockInput } from "./AddModal";
 
 const workingHours = Array.from({ length: 9 }, (_, i) => 10 + i);
 
@@ -20,7 +23,6 @@ interface TimeBlock {
 
 interface DayScheduleProps {
     date?: Date;
-    appointments?: TimeBlock[];
 }
 
 // Utility to calculate positioning for time blocks
@@ -51,8 +53,6 @@ const getPosition = (start: string, end: string) => {
 // ---------- COMPONENT: Main DaySchedule ----------
 export default function DaySchedule({
     date = new Date(),
-    appointments = [],
-
 }: DayScheduleProps) {
     const dispatch = useAppDispatch();
     const [addBlockedTime, { isLoading }] = useAddBlockedTimeMutation();
@@ -61,12 +61,23 @@ export default function DaySchedule({
     const selectedDate = format(date, "yyyy-MM-dd");
 
     const { refetch } = useGetBlockedTimesQuery(selectedDate);
+    const { data, isFetching } = useGetAppointmentForOwnerQuery(
+        { scheduleDate: selectedDate, mode: "SpecificDay" },
+        {
+            refetchOnMountOrArgChange: true,
+            skip: !selectedDate
+        }
+    );
 
     const blockedTimesByDate = useAppSelector(
         (state: RootState) => state.blockedTimes?.blockedTimesByDate?.[selectedDate] ?? []);
 
-    const [modalOpen, setModalOpen] = useState(false);
+    const appointments = useAppSelector(
+        (state: RootState) =>
+            state.schedules.schedules[selectedDate]?.appointments ?? []
+    );
 
+    const [modalOpen, setModalOpen] = useState(false);
 
     const handleBlockTimeSave = async (blockedTime: BlockInput) => {
         try {
@@ -82,7 +93,6 @@ export default function DaySchedule({
 
             setModalOpen(false);
 
-            // ✅ Refresh blocked times
             toast.loading("Refreshing blocked times...");
             await refetch();
             toast.dismiss();
@@ -123,12 +133,20 @@ export default function DaySchedule({
         dispatch(addSelectedDate(formattedDate));
     }
 
+
+    useEffect(() => {
+        if (Array.isArray(data?.appointments)) {
+            dispatch(setAppointmentForDate(data.appointments));
+        }
+    }, [data, selectedDate, dispatch]);
+
     return (
         <div className="flex flex-col w-full h-full rounded-xl shadow bg-white border border-gray-200">
-            <Header title={formattedDate} onAdd={handleAddModalClick} />
+            <Header title={formattedDate} onAdd={handleAddModalClick} appointmentCount={appointments.length} blockedCount={blockedTimesByDate.length} />
             <Schedule
                 appointments={appointments}
                 blockedTimes={blockedTimesByDate}
+                isLoading={isFetching}
             />
             <AddModal
                 isOpen={modalOpen}
@@ -141,10 +159,13 @@ export default function DaySchedule({
 }
 
 // ---------- COMPONENT: Header ----------
-function Header({ title, onAdd }: { title: string; onAdd: () => void }) {
+function Header({ title, appointmentCount, blockedCount, onAdd }: { title: string; appointmentCount: number; blockedCount: number, onAdd: () => void }) {
     return (
         <div className="px-4 py-3 border-b rounded-xl border-gray-200 bg-[#fdfaf6] flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-[#dba052]">{title}</h2>
+            <h2 className="text-lg font-semibold text-[#dba052]">
+                {title}
+                <span className="ml-2 text-sm text-gray-600">({appointmentCount} appointment{appointmentCount !== 1 ? "s" : ""} , {blockedCount} blocked time{blockedCount !== 1 ? "s" : ""})</span>
+            </h2>
             <button
                 onClick={onAdd}
                 className="bg-[#dba052] text-white px-3 py-1 rounded shadow hover:bg-[#c48a3a] transition-colors duration-200"
@@ -158,15 +179,17 @@ function Header({ title, onAdd }: { title: string; onAdd: () => void }) {
 // ---------- COMPONENT: Schedule ----------
 function Schedule({
     appointments,
-    blockedTimes
+    blockedTimes,
+    isLoading
 }: {
-    appointments: TimeBlock[];
+    appointments: Appointment[];
     blockedTimes: BlockedTime[];
+    isLoading: boolean;
 }) {
     return (
         <div className="flex flex-1 overflow-y-auto">
             <TimeLabels />
-            <ScheduleGrid appointments={appointments} blockedTimes={blockedTimes} />
+            <ScheduleGrid appointments={appointments} blockedTimes={blockedTimes} isLoading={isLoading} />
         </div>
     );
 }
@@ -193,32 +216,51 @@ function TimeLabels() {
 // ---------- COMPONENT: ScheduleGrid ----------
 function ScheduleGrid({
     appointments,
-    blockedTimes
+    blockedTimes,
+    isLoading
 }: {
-    appointments: TimeBlock[];
+    appointments: Appointment[];
     blockedTimes: BlockedTime[];
+    isLoading: boolean;
 }) {
-
 
     return (
         <div className="flex-1 relative">
             {/* Time grid rows */}
-            {workingHours.map((hour) => (
+
+            {isLoading && (
+                <div className="absolute inset-0 z-10 flex items-center justify-center bg-white bg-opacity-80 rounded-xl">
+                    <GlowNestSpinner />
+                </div>
+            )}
+
+            {!isLoading && workingHours.map((hour) => (
                 <div key={hour} className="h-16 border-b border-gray-200" />
             ))}
 
+
             {/* Appointment blocks */}
-            {appointments.map((appt, i) => (
+            {!isLoading && appointments.map((appt, i) => (
                 <TimeBlockItem
                     key={`appt-${i}`}
                     {...getPosition(appt.startTime, appt.endTime)}
-                    label={appt.label}
+                    label={
+                        <div className="flex flex-col">
+                            <span className="font-semibold">{appt.clientName}</span>
+                            {appt.services.length > 0 && (
+                                <span className="text-xs text-gray-600">
+                                    {appt.services.join(", ")}
+                                </span>
+                            )}
+                        </div>
+                    }
                     type="appointment"
                 />
             ))}
 
+
             {/* Blocked time blocks */}
-            {blockedTimes.length !== 0 &&
+            {!isLoading && blockedTimes.length !== 0 &&
                 blockedTimes.map((block, i) => (
                     <TimeBlockItem
                         key={`block-${i}`}
@@ -242,7 +284,7 @@ function TimeBlockItem({
 }: {
     top: string;
     height: string;
-    label: string;
+    label: string | JSX.Element;
     type: "appointment" | "blocked";
 }) {
     const styles = {

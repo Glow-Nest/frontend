@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight, faCalendar, faCalendarDay, faTrash } from "@fortawesome/free-solid-svg-icons";
 
-import { convertMinutesStringToDuration } from "libs/helpers";
+import { formatMinutesToReadableDuration } from "libs/helpers";
 import { getNextStep, getPrevStep, Step } from "libs/stepUtils";
 import { AppointmentBookingState } from "libs/types/common";
 
@@ -120,7 +120,7 @@ function SummaryHeader({ selected }: { selected: AppointmentBookingState }) {
                                 <>
                                     {" · "}
                                     <span className="font-semibold">
-                                        {convertMinutesStringToDuration(selected.totalDuration)}
+                                        {formatMinutesToReadableDuration(selected.totalDuration)}
                                     </span>
                                 </>
                             )}
