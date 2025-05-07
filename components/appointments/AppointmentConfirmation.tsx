@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import "../common/css/hoverUnderline.css";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { useRouter } from "next/navigation";
 import { setAppointmentNote } from "@/store/slices/schedules/CreateAppointmentSlice";
+import toast from "react-hot-toast";
 
 function AppointmentConfirmation() {
     const router = useRouter();
@@ -19,6 +20,15 @@ function AppointmentConfirmation() {
     const firstName = user.firstName || "";
     const lastName = user.lastName || "";
     const email = user.email || "";
+
+    useEffect(() => {
+        if (!user.email) {
+            toast("You need to sign in to complete your appointment", {
+                icon: "🔒",
+            });
+        }
+    }, [user.email]);
+
 
     const handleSignInClick = () => {
         router.push("/login");

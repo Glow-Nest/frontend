@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Appointment, Schedule, ScheduleState } from "libs/types/ScheduleTypes";
-import { JSX } from "react";
 
 const initialState: ScheduleState = {
     schedules: {}

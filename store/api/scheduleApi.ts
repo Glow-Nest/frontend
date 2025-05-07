@@ -76,8 +76,16 @@ export const scheduleApi = createApi({
                 method: "POST",
                 body: { scheduleDate, mode }
             })
+        }),
+
+        getAppointmentsClient: builder.query<{ appointments: Appointment[] }, { clientId: string, timeFrame: string }>({
+            query: ({ clientId, timeFrame }) => ({
+                url: "schedule/appointments/clients",
+                method: "POST",
+                body: { clientId, timeFrame }
+            })
         })
     }),
 });
 
-export const { useAddBlockedTimeMutation, useGetBlockedTimesQuery, useLazyGetAvailableSlotsQuery, useAddAppointmentMutation, useGetAppointmentForOwnerQuery } = scheduleApi;
+export const { useAddBlockedTimeMutation, useGetBlockedTimesQuery, useLazyGetAvailableSlotsQuery, useAddAppointmentMutation, useGetAppointmentForOwnerQuery, useGetAppointmentsClientQuery, useLazyGetAppointmentsClientQuery } = scheduleApi;

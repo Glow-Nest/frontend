@@ -5,9 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import toast from 'react-hot-toast';
 import { useEffect, useState } from "react";
 import { useLazyGetAvailableSlotsQuery } from "@/store/api/scheduleApi";
-import { setSchedule, TimeSlotGroup } from "@/store/slices/schedules/ScheduleSlice";
+import { setSchedule } from "@/store/slices/schedules/ScheduleSlice";
 import { addSelectedTime } from "@/store/slices/schedules/CreateAppointmentSlice";
 import { formatTimeStringTo12HourClock } from "libs/helpers";
+import { TimeSlotGroup } from "libs/types/ScheduleTypes";
 
 
 function TimeSelector() {
@@ -36,7 +37,8 @@ function TimeSelector() {
             .then((response) => {
                 dispatch(setSchedule({
                     scheduleDate: selected.selectedDate!,
-                    availableSlots: response
+                    availableSlots: response,
+                    appointments: []
                 }));
                 setTimeSlots(response);
                 toast.success("Available Time loaded!", { id: toastId });
