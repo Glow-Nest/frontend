@@ -102,12 +102,13 @@ export default function Navbar() {
 
             {showDropdown && (
                 <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md py-2 z-50 text-sm border border-gray-200">
-                    <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Manage Account</div>
+                        <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => router.push("/profile")}>Profile</div>
                     <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>Logout</div>
                 </div>
             )}
         </>
     )}
+
                 </div>
             </div>
 
