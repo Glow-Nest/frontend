@@ -4,6 +4,7 @@ import { useState } from "react";
 import { formatDuration, convertMinutesStringToDuration } from "libs/helpers";
 import { useGetAllCategoriesWithServiceQuery } from "@/store/api/serviceApi";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"; // Optional: lucide-react icons
+import { AnimatePresence, motion } from "framer-motion";
 
 // Explicit type definition for openCategories state
 type OpenCategories = Record<string, boolean>;
@@ -33,7 +34,7 @@ export function CategoryServiceSection() {
       </h2>
 
       {data?.categories.map((category) => {
-        const categoryId = category.categoryId; 
+        const categoryId = category.categoryId;
         const isOpen = openCategories[categoryId] ?? true;
 
         return (
@@ -46,41 +47,52 @@ export function CategoryServiceSection() {
 
               <button
                 onClick={() => toggleCategory(categoryId)}
-                className="p-2 text-[#de6412] hover:text-[#a04e12] focus:outline-none cursor-pointer"
+                className="p-2 text-[#de6412] hover:text-[#a04e12] focus:outline-none cursor-pointer transition-transform duration-300"
               >
-                {isOpen ? (
+                <div
+                  className={`transition-transform duration-300 ease-in-out ${
+                    isOpen ? "rotate-180" : "rotate-0"
+                  }`}
+                >
                   <ChevronDown size={30} />
-                ) : (
-                  <ChevronLeft size={30} />
-                )}
+                </div>
               </button>
             </div>
 
-            {isOpen && (
-              <div className="flex gap-6 justify-center items-center mt-2">
-                {category.mediaUrls?.[0] && (
-                  <img
-                    src={category.mediaUrls[0]}
-                    alt={category.name}
-                    className="w-96 h-56 rounded-lg object-cover"
-                  />
-                )}
+            <AnimatePresence initial={false}>
+              {isOpen && (
+                <motion.div
+                  key="content"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  className="overflow-hidden flex gap-6 justify-center items-center mt-2"
+                >
+                  {category.mediaUrls?.[0] && (
+                    <img
+                      src={category.mediaUrls[0]}
+                      alt={category.name}
+                      className="w-96 h-56 rounded-lg object-cover"
+                    />
+                  )}
 
-                <div className="flex-1 space-y-3">
-                  {category.services?.map((service) => (
-                    <div key={service.serviceId} className="pb-2 border-b">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-800 font-medium">{service.name}</span>
-                        <span className="text-sm text-gray-700">{service.price} DKK</span>
+                  <div className="flex-1 space-y-3">
+                    {category.services?.map((service) => (
+                      <div key={service.serviceId} className="pb-2 border-b">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-800 font-medium">{service.name}</span>
+                          <span className="text-sm text-gray-700">{service.price} DKK</span>
+                        </div>
+                        <div className="text-xs text-black-500">
+                          {formatFlexibleDuration(service.duration)}
+                        </div>
                       </div>
-                      <div className="text-xs text-black-500">
-                        {formatFlexibleDuration(service.duration)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         );
       })}
