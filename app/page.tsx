@@ -26,13 +26,21 @@ export default function Home() {
         {/* Small screen */}
         <div className="block md:hidden space-y-4">
           <ImageCard src={image1} alt="External Image" className="h-[200px] w-full" />
-          <TextBox text="Welcome to GlowNest" />
+          <TextBox
+  headline="Welcome to GlowNest"
+  subheadline="Elevate your beauty with GlowNest — appointments available now."
+/>
+
         </div>
 
         {/* Medium screen */}
         <div className="hidden md:grid lg:hidden grid-cols-2 gap-4">
           <ImageCard src={image1} alt="External Image" className="min-h-[250px]" />
-          <TextBox text="Welcome to GlowNest" />
+          <TextBox
+  headline="Welcome to GlowNest"
+  subheadline="Elevate your beauty with GlowNest — appointments available now."
+/>
+
         </div>
 
         {/* Large screen */}
@@ -42,7 +50,12 @@ export default function Home() {
           <ImageCard src={image2} alt="External Image" className="row-span-3 col-start-3 row-start-2" />
           <ImageCard src={image1} alt="External Image" className="col-span-2 row-span-3 col-start-5 row-start-3" />
           <ImageCard src={image4} alt="External Image" className="row-span-2 col-start-5 row-start-1" />
-          <TextBox text="Welcome to GlowNest" className="col-span-2 row-span-2 row-start-2" />
+          <TextBox
+  headline="Welcome to GlowNest"
+  subheadline="Elevate your beauty with GlowNest — appointments available now."
+  className="col-span-2 row-span-2 row-start-2"
+/>
+
         </div>
       </section>
 

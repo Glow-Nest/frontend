@@ -1,24 +1,23 @@
 export function calculateEndTime(startTime: string, duration: number): string {
-    const [time, meridiem] = startTime.split(" ");
-    let [hour, minute] = time.split(":").map(Number);
+  const [time, meridiem] = startTime.split(" ");
+  let [hour, minute] = time.split(":").map(Number);
 
-    if (meridiem === "PM" && hour !== 12) hour += 12;
-    if (meridiem === "AM" && hour === 12) hour = 0;
+  if (meridiem === "PM" && hour !== 12) hour += 12;
+  if (meridiem === "AM" && hour === 12) hour = 0;
 
-    const startDate = new Date();
-    startDate.setHours(hour, minute);
+  const startDate = new Date();
+  startDate.setHours(hour, minute);
 
-    const endDate = new Date(startDate.getTime() + duration * 60000);
+  const endDate = new Date(startDate.getTime() + duration * 60000);
 
-    const formatted = endDate.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true
-    });
+  const formatted = endDate.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
 
-    return formatted;
+  return formatted;
 }
-
 
 // 	Converts "HH:MM:SS" string to total minutes
 export const parseHHMMDurationToMinutes = (duration: string): number => {
@@ -27,40 +26,41 @@ export const parseHHMMDurationToMinutes = (duration: string): number => {
     const minutes = parseInt(minutesStr, 10) || 0;
     const seconds = parseInt(secondsStr, 10) || 0;
 
-    return hours * 60 + minutes + Math.floor(seconds / 60);
+  return hours * 60 + minutes + Math.floor(seconds / 60);
 };
 
 // Converts "HH:MM:SS" to "X hours Y min" string
 export const formatHHMMDurationToReadable = (duration: string): string => {
     const totalMinutes = parseHHMMDurationToMinutes(duration);
 
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
 
-    if (hours && minutes) return `${hours} hour${hours > 1 ? 's' : ''} ${minutes} min`;
-    if (hours) return `${hours} hour${hours > 1 ? 's' : ''}`;
+  if (hours && minutes)
+    return `${hours} hour${hours > 1 ? "s" : ""} ${minutes} min`;
+  if (hours) return `${hours} hour${hours > 1 ? "s" : ""}`;
 
-    return `${minutes}`;
+  return `${minutes} min`;
 };
+
 
 // Converts "X hours Y min" to total minutes
 export const parseReadableDurationToMinutes = (durationStr: string): number => {
     let totalMinutes = 0;
     const normalized = durationStr.toLowerCase().trim();
 
+  const hourMatch = normalized.match(/(\d+)\s*hour/);
+  const minMatch = normalized.match(/(\d+)\s*min/);
 
-    const hourMatch = normalized.match(/(\d+)\s*hour/);
-    const minMatch = normalized.match(/(\d+)\s*min/);
+  if (hourMatch) {
+    totalMinutes += parseInt(hourMatch[1], 10) * 60;
+  }
 
-    if (hourMatch) {
-        totalMinutes += parseInt(hourMatch[1], 10) * 60;
-    }
+  if (minMatch) {
+    totalMinutes += parseInt(minMatch[1], 10);
+  }
 
-    if (minMatch) {
-        totalMinutes += parseInt(minMatch[1], 10);
-    }
-
-    return totalMinutes;
+  return totalMinutes;
 };
 
 // Converts minutes number to "X hours Y min" string
