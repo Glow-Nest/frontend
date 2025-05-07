@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { formatDuration, convertMinutesStringToDuration } from "libs/helpers";
 import { useGetAllCategoriesWithServiceQuery } from "@/store/api/serviceApi";
-import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"; // Optional: lucide-react icons
+import { ChevronDown } from "lucide-react"; // Optional: lucide-react icons
 import { AnimatePresence, motion } from "framer-motion";
 
 // Explicit type definition for openCategories state
@@ -20,12 +19,6 @@ export function CategoryServiceSection() {
 
   if (isLoading) return <p className="text-center text-gray-600">Loading services...</p>;
   if (isError) return <p className="text-center text-red-500">Error fetching services.</p>;
-
-  const formatFlexibleDuration = (duration: string) => {
-    if (duration.includes(":")) return formatDuration(duration);
-    const minutes = parseInt(duration, 10);
-    return !isNaN(minutes) ? convertMinutesStringToDuration(minutes) : duration;
-  };
 
   return (
     <section className="max-w-6xl mx-auto mt-1 px-4">
@@ -85,7 +78,7 @@ export function CategoryServiceSection() {
                           <span className="text-sm text-gray-700">{service.price} DKK</span>
                         </div>
                         <div className="text-xs text-black-500">
-                          {formatFlexibleDuration(service.duration)}
+                          {service.formattedDuration}
                         </div>
                       </div>
                     ))}

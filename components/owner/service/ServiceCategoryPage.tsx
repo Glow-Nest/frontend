@@ -9,7 +9,6 @@ import {
 } from "@/store/api/serviceApi";
 import CreateCategoryModal from "./CreateCategory";
 import CreateServiceForm from "./AddService";
-import { formatDuration, convertMinutesStringToDuration } from "libs/helpers";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface Category {
@@ -74,11 +73,6 @@ export default function ServiceCategoryPage() {
     }
   };
 
-  const formatFlexibleDuration = (duration: string) => {
-      if (duration.includes(":")) return formatDuration(duration);
-      const minutes = parseInt(duration, 10);
-      return !isNaN(minutes) ? convertMinutesStringToDuration(minutes) : duration;
-    };
 
   return (
     <div className="flex h-screen">
@@ -131,7 +125,7 @@ export default function ServiceCategoryPage() {
                                         <span className="text-sm text-gray-700">{service.price} DKK</span>
                                         </div>
                                         <div className="text-xs text-black-500">
-                                          {formatFlexibleDuration(service.duration)}
+                                          {service.formattedDuration}
                                         </div>
                                     </div>
                                     ))}
