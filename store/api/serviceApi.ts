@@ -12,6 +12,21 @@ export type CreateCategoryRequest = {
   MediaUrls: string[];
 };
 
+export type UpdateCategoryRequest = {
+  Id: string;
+  Name: string;
+  Description: string;
+  MediaUrls: string[];
+};
+
+export type UpdateServiceRequest = {
+  CategoryId: string;
+  ServiceId: string;
+  Name: string;
+  duration: string;
+  price: number;
+};
+
 export type serviceRequest = {
   categoryId: string;
   name: string;
@@ -47,6 +62,14 @@ export const serviceApi = createApi({
       }),
     }),
 
+    updateCategory: builder.mutation<void, UpdateCategoryRequest>({
+      query: (body) => ({
+        url: "owner/category/update",
+        method: "POST",
+        body,
+      }),
+    }),
+
     addServiceToCategory: builder.mutation<void, serviceRequest>({
       query: (body) => ({
         url: "owner/category/service/add",
@@ -59,6 +82,14 @@ export const serviceApi = createApi({
       query: () => ({
         url: "service/all",
         method: "POST",
+      }),
+    }),
+
+    updateService: builder.mutation<void, UpdateServiceRequest>({
+      query: (body) => ({
+        url: "owner/service/update",
+        method: "POST",
+        body,
       }),
     }),
 
@@ -103,4 +134,6 @@ export const {
   useLazyGetAllServicesQuery,
   useGetAllCategoriesWithServiceQuery,
   useLazyGetAllCategoriesWithServiceQuery,
+  useUpdateCategoryMutation,
+  useUpdateServiceMutation,
 } = serviceApi;
