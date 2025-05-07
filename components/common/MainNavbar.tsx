@@ -58,7 +58,7 @@ export default function Navbar() {
             {/* Left */}
             <div className="hidden lg:flex w-full justify-center gap-14 items-center text-[15px]">
                 <div onClick={() => router.push("/")} className="hoverUnderline cursor-pointer relative inline-block">HOME</div>
-                <div className="hoverUnderline cursor-pointer relative inline-block">SERVICES</div>
+                <div onClick={() => router.push("/services")} className="hoverUnderline cursor-pointer relative inline-block">SERVICES</div>
                 <div className="hoverUnderline cursor-pointer relative inline-block">PRODUCTS</div>
             </div>
 
@@ -80,18 +80,34 @@ export default function Navbar() {
                     <FontAwesomeIcon icon={faArrowRight} className="w-[14px] h-[14px]" />
                 </button>
                 <div className="relative user-dropdown-container">
-                    <div className="flex items-center gap-2 cursor-pointer"
-                            onClick={() => setShowDropdown(!showDropdown)}>
-                    <FontAwesomeIcon icon={faUser} className="w-[14px] h-[14px]" />
-                        {user && <span className="font-semibold">HI, {user}</span>}
-                    </div>
+                {!user ? (
+        // User not logged in — Show login icon
+        <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => router.push("/login")}
+        >
+            <FontAwesomeIcon icon={faUser} className="w-[14px] h-[14px]" />
+            <span className="font-semibold">Login</span>
+        </div>
+    ) : (
+        // User logged in — Show dropdown
+        <>
+            <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => setShowDropdown(!showDropdown)}
+            >
+                <FontAwesomeIcon icon={faUser} className="w-[14px] h-[14px]" />
+                <span className="font-semibold">HI, {user}</span>
+            </div>
 
-                    {showDropdown && (
-                        <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md py-2 z-50 text-sm border border-gray-200">
-                        <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Manage Account</div>
-                        <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>Logout</div>
-                    </div>
-                        )}
+            {showDropdown && (
+                <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md py-2 z-50 text-sm border border-gray-200">
+                    <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Manage Account</div>
+                    <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>Logout</div>
+                </div>
+            )}
+        </>
+    )}
                 </div>
             </div>
 
