@@ -1,47 +1,62 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { clientApi } from "./api/clientApi";
 import userReducer from "./slices/user/UserSlice";
-// import serviceReducer from "./slices/serviceCategory/ServiceSlice";
 
-import appointmentReducer from './slices/schedules/CreateAppointmentSlice';
-import storageSession from 'redux-persist/lib/storage/session';
-import { persistReducer } from 'redux-persist';
+import appointmentReducer from "./slices/schedules/CreateAppointmentSlice";
+import storageSession from "redux-persist/lib/storage/session";
+import { persistReducer } from "redux-persist";
 import { serviceApi } from "./api/serviceApi";
-import blockedTimeReducer from './slices/schedules/BlockedTimeSlice';
+import blockedTimeReducer from "./slices/schedules/BlockedTimeSlice";
 import { scheduleApi } from "./api/scheduleApi";
 import scheduleReducer from "./slices/schedules/ScheduleSlice";
 import serviceCategoryReducer from "./slices/serviceCategory/ServiceCategorySlice";
+import { productApi } from "./api/productApi";
+import productReducer from "./slices/product/productSlice";
 
 const persistAppointmentConfig = {
-    key: "appointment",
-    version: 1,
-    storage: storageSession,
-    blacklist: ["blockedTimes", clientApi.reducerPath, serviceApi.reducerPath, scheduleApi.reducerPath],
+  key: "appointment",
+  version: 1,
+  storage: storageSession,
+  blacklist: [
+    "blockedTimes",
+    clientApi.reducerPath,
+    serviceApi.reducerPath,
+    scheduleApi.reducerPath,
+  ],
 };
 
-
 const reducer = combineReducers({
-    [clientApi.reducerPath]: clientApi.reducer,
-    [serviceApi.reducerPath]: serviceApi.reducer,
-    [scheduleApi.reducerPath]: scheduleApi.reducer,
-    appointment: appointmentReducer,
-    user: userReducer,
-    blockedTimes: blockedTimeReducer,
-    schedules: scheduleReducer,
-    serviceCategory: serviceCategoryReducer
-})
+  [clientApi.reducerPath]: clientApi.reducer,
+  [serviceApi.reducerPath]: serviceApi.reducer,
+  [scheduleApi.reducerPath]: scheduleApi.reducer,
+  [productApi.reducerPath]: productApi.reducer,
+  appointment: appointmentReducer,
+  user: userReducer,
+  blockedTimes: blockedTimeReducer,
+  schedules: scheduleReducer,
+  serviceCategory: serviceCategoryReducer,
+  product: productReducer,
+});
 
-const persistedReducer = persistReducer<ReturnType<typeof reducer>>(persistAppointmentConfig, reducer);
+const persistedReducer = persistReducer<ReturnType<typeof reducer>>(
+  persistAppointmentConfig,
+  reducer
+);
 
 export const store = configureStore({
-    reducer: persistedReducer,
+  reducer: persistedReducer,
 
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({
-            serializableCheck: {
-                ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
-            },
-        }).concat(clientApi.middleware, serviceApi.middleware, scheduleApi.middleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+      },
+    }).concat(
+      clientApi.middleware,
+      serviceApi.middleware,
+      scheduleApi.middleware,
+      productApi.middleware
+    ),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
