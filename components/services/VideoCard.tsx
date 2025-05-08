@@ -7,7 +7,7 @@ export default function VideoCard({
   alt,
   className,
 }: {
-  src: string; // The src is now a string representing the video file path
+  src: string; 
   alt: string;
   className?: string;
 }) {
