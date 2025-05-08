@@ -6,8 +6,12 @@ import {
   useAddServiceToCategoryMutation,
   useCreateCategoryMutation,
   useGetAllCategoriesWithServiceQuery,
-  useUpdateCategoryMutation,
-  useUpdateServiceMutation
+  useUpdateCategoryNameMutation,
+  useUpdateCategoryDescriptionMutation,
+  useUpdateCategoryMediaUrlsMutation,
+  useUpdateServiceNameMutation,
+  useUpdateServicePriceMutation,
+  useUpdateServiceDurationMutation
 } from "@/store/api/serviceApi";
 import CreateCategoryModal from "./CreateCategory";
 import CreateServiceForm from "./AddService";
@@ -29,8 +33,12 @@ export default function ServiceCategoryPage() {
   const { data: categoryData, refetch } = useGetAllCategoriesWithServiceQuery();
   const [createCategory] = useCreateCategoryMutation();
   const [addServiceToCategory] = useAddServiceToCategoryMutation();
-  const [updateCategory] = useUpdateCategoryMutation();
-  const [updateService] = useUpdateServiceMutation();
+  const [updateCategoryName] = useUpdateCategoryNameMutation();
+  const [updateCategoryDescription] = useUpdateCategoryDescriptionMutation();
+  const [updateCategoryMediaUrls] = useUpdateCategoryMediaUrlsMutation();
+  const [updateServiceName] = useUpdateServiceNameMutation();
+  const [updateServicePrice] = useUpdateServicePriceMutation();
+  const [updateServiceDuration] = useUpdateServiceDurationMutation();
 
   const toggleCategory = (categoryId: string) => {
     setOpenCategories((prev) => ({
@@ -88,12 +96,33 @@ export default function ServiceCategoryPage() {
     if (!currentCategory) return;
     
     try {
-      await updateCategory({
-        Id: currentCategory.categoryId,
-        Name: data.name,
-        Description: data.description,
-        MediaUrls: data.mediaUrl ? [data.mediaUrl] : currentCategory.mediaUrls || [],
-      }).unwrap();
+      // Update name if it changed
+      if (data.name !== currentCategory.name) {
+        await updateCategoryName({
+          Id: currentCategory.categoryId,
+          Name: data.name
+        }).unwrap();
+      }
+      
+      // Update description if it changed
+      if (data.description !== currentCategory.description) {
+        await updateCategoryDescription({
+          Id: currentCategory.categoryId,
+          Description: data.description
+        }).unwrap();
+      }
+      
+      // Update media URLs if provided
+      const newMediaUrls = data.mediaUrl ? [data.mediaUrl] : currentCategory.mediaUrls || [];
+      const currentMediaUrl = currentCategory.mediaUrls?.[0] || '';
+      
+      if (data.mediaUrl && data.mediaUrl !== currentMediaUrl) {
+        await updateCategoryMediaUrls({
+          Id: currentCategory.categoryId,
+          MediaUrls: newMediaUrls
+        }).unwrap();
+      }
+      
       refetch();
     } catch (err) {
       console.error("Failed to update category", err);
@@ -115,13 +144,33 @@ export default function ServiceCategoryPage() {
     if (!currentService) return;
     
     try {
-      await updateService({
-        CategoryId: currentService.categoryId,
-        ServiceId: currentService.serviceId,
-        Name: name,
-        price: price,
-        duration: duration,
-      }).unwrap();
+      // Update service name if changed
+      if (name !== currentService.name) {
+        await updateServiceName({
+          CategoryId: currentService.categoryId,
+          ServiceId: currentService.serviceId,
+          Name: name
+        }).unwrap();
+      }
+      
+      // Update service price if changed
+      if (price !== currentService.price) {
+        await updateServicePrice({
+          CategoryId: currentService.categoryId,
+          ServiceId: currentService.serviceId,
+          Price: price
+        }).unwrap();
+      }
+      
+      // Update service duration if changed
+      if (duration !== currentService.duration) {
+        await updateServiceDuration({
+          CategoryId: currentService.categoryId,
+          ServiceId: currentService.serviceId,
+          Duration: duration
+        }).unwrap();
+      }
+      
       refetch();
     } catch (error) {
       console.error("Failed to update service", error);
@@ -248,9 +297,6 @@ export default function ServiceCategoryPage() {
           category={currentCategory}
         />
       )}
-
-      
-
 
       {/* Update Service Modal */}
       {currentService && (

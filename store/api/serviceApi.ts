@@ -12,19 +12,37 @@ export type CreateCategoryRequest = {
   MediaUrls: string[];
 };
 
-export type UpdateCategoryRequest = {
+export type UpdateCategoryNameRequest = {
   Id: string;
   Name: string;
+};
+
+export type UpdateCategoryDescriptionRequest = {
+  Id: string;
   Description: string;
+};
+
+export type UpdateCategoryMediaUrlsRequest = {
+  Id: string;
   MediaUrls: string[];
 };
 
-export type UpdateServiceRequest = {
+export type UpdateServiceNameRequest = {
   CategoryId: string;
   ServiceId: string;
   Name: string;
-  duration: string;
-  price: number;
+};
+
+export type UpdateServicePriceRequest = {
+  CategoryId: string;
+  ServiceId: string;
+  Price: number;
+};
+
+export type UpdateServiceDurationRequest = {
+  CategoryId: string;
+  ServiceId: string;
+  Duration: string;
 };
 
 export type serviceRequest = {
@@ -62,9 +80,31 @@ export const serviceApi = createApi({
       }),
     }),
 
-    updateCategory: builder.mutation<void, UpdateCategoryRequest>({
+    updateCategoryName: builder.mutation<void, UpdateCategoryNameRequest>({
       query: (body) => ({
-        url: "owner/category/update",
+        url: "owner/category/update/name",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    updateCategoryDescription: builder.mutation<
+      void,
+      UpdateCategoryDescriptionRequest
+    >({
+      query: (body) => ({
+        url: "owner/category/update/description",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    updateCategoryMediaUrls: builder.mutation<
+      void,
+      UpdateCategoryMediaUrlsRequest
+    >({
+      query: (body) => ({
+        url: "owner/category/update/media-url",
         method: "POST",
         body,
       }),
@@ -85,13 +125,31 @@ export const serviceApi = createApi({
       }),
     }),
 
-    updateService: builder.mutation<void, UpdateServiceRequest>({
+    updateServiceName: builder.mutation<void, UpdateServiceNameRequest>({
       query: (body) => ({
-        url: "owner/service/update",
+        url: "owner/service/update/name",
         method: "POST",
         body,
       }),
     }),
+
+    updateServicePrice: builder.mutation<void, UpdateServicePriceRequest>({
+      query: (body) => ({
+        url: "owner/service/update/price",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    updateServiceDuration: builder.mutation<void, UpdateServiceDurationRequest>(
+      {
+        query: (body) => ({
+          url: "owner/service/update/duration",
+          method: "POST",
+          body,
+        }),
+      }
+    ),
 
     getAllCategoriesWithService: builder.query<CategoryList, void>({
       query: () => ({
@@ -134,6 +192,10 @@ export const {
   useLazyGetAllServicesQuery,
   useGetAllCategoriesWithServiceQuery,
   useLazyGetAllCategoriesWithServiceQuery,
-  useUpdateCategoryMutation,
-  useUpdateServiceMutation,
+  useUpdateCategoryNameMutation,
+  useUpdateCategoryDescriptionMutation,
+  useUpdateCategoryMediaUrlsMutation,
+  useUpdateServiceNameMutation,
+  useUpdateServicePriceMutation,
+  useUpdateServiceDurationMutation,
 } = serviceApi;
