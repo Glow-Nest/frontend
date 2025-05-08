@@ -1,25 +1,24 @@
 export type Service = {
-    serviceId: string;
-    name: string;
-    price: string;
-    duration: string;
+  serviceId: string;
+  name: string;
+  price: number;
+  duration: string;
 
-    formattedDuration?: string;
-}
+  formattedDuration?: string;
+};
 
 export type Category = {
-    categoryId: string;
-    name: string;
-    description: string;
-    mediaUrls: string[];
-    services: Service[];
-}
+  categoryId: string;
+  name: string;
+  description: string;
+  mediaUrls: string[];
+  services: Service[];
+};
 
 export type CategoryList = {
-    categories: Category[];
-}
+  categories: Category[];
+};
 
 export type ServiceCategoryState = {
-    [categoryId: string]: Category;
-  };
-  
+  [categoryId: string]: Category;
+};

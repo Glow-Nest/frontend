@@ -1,30 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { Plus } from "lucide-react";
 
-interface CreateServiceFormProps {
+interface Service {
+    serviceId: string;
+    name: string;
+    price: number;
+    duration: string;
+    formattedDuration?: string;
+    categoryId: string;
+  }
+
+interface UpdateServiceFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: { categoryId: string; name: string; price: number; duration: string }) => void;
-  categories: { categoryId: string; name: string }[];
+  onSubmit: (data: { name: string; price: number; duration: string }) => void;
+  service: Service;
 }
 
 export default function CreateServiceForm({
   isOpen,
   onClose,
   onSubmit,
-  categories,
-}: CreateServiceFormProps) {
+  service
+}: UpdateServiceFormProps) {
   const [categoryId, setCategoryId] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState<number | "">("");
   const [duration, setDuration] = useState("");
 
+  useEffect(() => {
+    if (service) {
+      setName(service.name);
+      setPrice(service.price);
+      setDuration(service.duration);
+    }
+  }, [service]);
+
   const handleSubmit = () => {
     if (!categoryId || !name.trim() || !price || !duration.trim()) return;
-    onSubmit({ categoryId, name, price: Number(price), duration });
+    onSubmit({ name, price: Number(price), duration });
     resetForm();
     onClose();
   };
@@ -45,25 +62,10 @@ export default function CreateServiceForm({
         <DialogPanel className="bg-white w-full max-w-md rounded-xl shadow-xl p-6 border border-gray-200">
           <DialogTitle className="text-xl font-semibold mb-6 text-[#dba052] flex items-center gap-2">
             <Plus className="w-5 h-5" />
-            Add New Service
+            Update Service
           </DialogTitle>
 
           <div className="grid gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1 text-gray-700">Category *</label>
-              <select
-                value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-                className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#dba052]"
-              >
-                <option value="">Select a category</option>
-                {categories.map((cat) => (
-                  <option key={cat.categoryId} value={cat.categoryId}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-            </div>
 
             <div>
               <label className="block text-sm font-medium mb-1 text-gray-700">Service Name *</label>
@@ -92,7 +94,7 @@ export default function CreateServiceForm({
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
                 className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#dba052]"
-                placeholder="e.g. hh:mm:ss"
+                placeholder="e.g. 30 min"
               />
             </div>
           </div>

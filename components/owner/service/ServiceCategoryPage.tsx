@@ -1,35 +1,44 @@
 "use client";
 
 import React, { useState } from "react";
-import { Plus, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
+import { Plus, ChevronDown, Pencil } from "lucide-react";
 import {
   useAddServiceToCategoryMutation,
   useCreateCategoryMutation,
   useGetAllCategoriesWithServiceQuery,
+  useUpdateCategoryNameMutation,
+  useUpdateCategoryDescriptionMutation,
+  useUpdateCategoryMediaUrlsMutation,
+  useUpdateServiceNameMutation,
+  useUpdateServicePriceMutation,
+  useUpdateServiceDurationMutation
 } from "@/store/api/serviceApi";
 import CreateCategoryModal from "./CreateCategory";
 import CreateServiceForm from "./AddService";
+import UpdateCategoryForm from "./UpdateCategory";
+import UpdateServiceForm from "./UpdateService";
 import { AnimatePresence, motion } from "framer-motion";
+import type { Category, Service } from "libs/types/ServiceCategory";
 
-interface Category {
-  categoryId: string;
-  name: string;
-  description: string;
-  mediaUrls?: string[];
-  services?: {
-    name: string;
-    price: number;
-    duration: string;
-  }[];
-}
 
 export default function ServiceCategoryPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
+  const [editCategoryModalOpen, setEditCategoryModalOpen] = useState(false);
+  const [editServiceModalOpen, setEditServiceModalOpen] = useState(false);
+  const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
+  const [currentService, setCurrentService] = useState<Service & { categoryId: string } | null>(null);
   const [openCategories, setOpenCategories] = useState<{ [key: string]: boolean }>({});
+  
   const { data: categoryData, refetch } = useGetAllCategoriesWithServiceQuery();
   const [createCategory] = useCreateCategoryMutation();
   const [addServiceToCategory] = useAddServiceToCategoryMutation();
+  const [updateCategoryName] = useUpdateCategoryNameMutation();
+  const [updateCategoryDescription] = useUpdateCategoryDescriptionMutation();
+  const [updateCategoryMediaUrls] = useUpdateCategoryMediaUrlsMutation();
+  const [updateServiceName] = useUpdateServiceNameMutation();
+  const [updateServicePrice] = useUpdateServicePriceMutation();
+  const [updateServiceDuration] = useUpdateServiceDurationMutation();
 
   const toggleCategory = (categoryId: string) => {
     setOpenCategories((prev) => ({
@@ -73,6 +82,103 @@ export default function ServiceCategoryPage() {
     }
   };
 
+  const handleEditCategory = (category: Category) => {
+    setCurrentCategory(category);
+    setEditCategoryModalOpen(true);
+  };
+
+  const handleEditService = (service: Service, categoryId: string) => {
+    setCurrentService({ ...service, categoryId });
+    setEditServiceModalOpen(true);
+  };
+
+  const submitCategoryEdit = async (data: { name: string; description: string; mediaUrl?: string }) => {
+    if (!currentCategory) return;
+    
+    try {
+      // Update name if it changed
+      if (data.name !== currentCategory.name) {
+        await updateCategoryName({
+          Id: currentCategory.categoryId,
+          Name: data.name
+        }).unwrap();
+      }
+      
+      // Update description if it changed
+      if (data.description !== currentCategory.description) {
+        await updateCategoryDescription({
+          Id: currentCategory.categoryId,
+          Description: data.description
+        }).unwrap();
+      }
+      
+      // Update media URLs if provided
+      const newMediaUrls = data.mediaUrl ? [data.mediaUrl] : currentCategory.mediaUrls || [];
+      const currentMediaUrl = currentCategory.mediaUrls?.[0] || '';
+      
+      if (data.mediaUrl && data.mediaUrl !== currentMediaUrl) {
+        await updateCategoryMediaUrls({
+          Id: currentCategory.categoryId,
+          MediaUrls: newMediaUrls
+        }).unwrap();
+      }
+      
+      refetch();
+    } catch (err) {
+      console.error("Failed to update category", err);
+    } finally {
+      setEditCategoryModalOpen(false);
+      setCurrentCategory(null);
+    }
+  };
+
+  const submitServiceEdit = async ({
+    name,
+    price,
+    duration,
+  }: {
+    name: string;
+    price: number;
+    duration: string;
+  }) => {
+    if (!currentService) return;
+    
+    try {
+      // Update service name if changed
+      if (name !== currentService.name) {
+        await updateServiceName({
+          CategoryId: currentService.categoryId,
+          ServiceId: currentService.serviceId,
+          Name: name
+        }).unwrap();
+      }
+      
+      // Update service price if changed
+      if (price !== currentService.price) {
+        await updateServicePrice({
+          CategoryId: currentService.categoryId,
+          ServiceId: currentService.serviceId,
+          Price: price
+        }).unwrap();
+      }
+      
+      // Update service duration if changed
+      if (duration !== currentService.duration) {
+        await updateServiceDuration({
+          CategoryId: currentService.categoryId,
+          ServiceId: currentService.serviceId,
+          Duration: duration
+        }).unwrap();
+      }
+      
+      refetch();
+    } catch (error) {
+      console.error("Failed to update service", error);
+    } finally {
+      setEditServiceModalOpen(false);
+      setCurrentService(null);
+    }
+  };
 
   return (
     <div className="flex h-screen">
@@ -89,50 +195,70 @@ export default function ServiceCategoryPage() {
               return (
                 <div key={cat.categoryId} className="border rounded p-4 shadow-sm">
                   <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#dba052]">{cat.name}</h3>
-                    <button onClick={() => toggleCategory(cat.categoryId)}
-                    className="p-2 text-[#de6412] hover:text-[#a04e12] focus:outline-none cursor-pointer transition-transform duration-300">
-                      <div className={`transition-transform duration-300 ease-in-out ${
-                        isOpen ? "rotate-180" : "rotate-0"
-                      }`}
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-xl font-bold text-[#dba052]">{cat.name}</h3>
+                      <button 
+                        onClick={() => handleEditCategory(cat)}
+                        className="p-1 text-gray-500 hover:text-[#dba052] focus:outline-none"
+                      >
+                        <Pencil size={16} />
+                      </button>
+                    </div>
+                    <button 
+                      onClick={() => toggleCategory(cat.categoryId)}
+                      className="p-2 text-[#de6412] hover:text-[#a04e12] focus:outline-none cursor-pointer transition-transform duration-300"
+                    >
+                      <div 
+                        className={`transition-transform duration-300 ease-in-out ${
+                          isOpen ? "rotate-180" : "rotate-0"
+                        }`}
                       >
                         <ChevronDown size={30} />
-                        </div>
-                        </button>
-                        </div>
-                        <p className="text-gray-600">{cat.description}</p>
-                        <AnimatePresence initial={false}>
-                          {isOpen && (
-                            <motion.div
-                            key="content"
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.4, ease: "easeInOut" }}
-                            className="overflow-hidden flex gap-6 justify-center items-center mt-2">
-                              {cat.mediaUrls?.[0] && (
-                                <img
-                                src={cat.mediaUrls[0]}
-                                alt={cat.name}
-                                className="w-96 h-56 rounded-lg object-cover"/>
-                                )}
-                                
-                                <div className="flex-1 space-y-3">
-                                  {cat.services?.map((service) => (
-                                    <div key={service.serviceId} className="pb-2 border-b">
-                                      <div className="flex justify-between items-center">
-                                        <span className="text-gray-800 font-medium">{service.name}</span>
-                                        <span className="text-sm text-gray-700">{service.price} DKK</span>
-                                        </div>
-                                        <div className="text-xs text-black-500">
-                                          {service.formattedDuration}
-                                        </div>
-                                    </div>
-                                    ))}
-                                </div>
-                                </motion.div>
-                              )}
-                        </AnimatePresence>
+                      </div>
+                    </button>
+                  </div>
+                  <p className="text-gray-600">{cat.description}</p>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                      key="content"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.4, ease: "easeInOut" }}
+                      className="overflow-hidden flex flex-col md:flex-row gap-6 gap-y-4 justify-center items-center mt-4 px-2"
+                    >
+                      {cat.mediaUrls?.[0] && (
+                        <img
+                          src={cat.mediaUrls[0]}
+                          alt={cat.name}
+                          className="w-full md:w-96 h-56 rounded-lg object-cover"
+                        />
+                      )}
+                    
+                      <div className="flex-1 space-y-3">
+                        {cat.services?.map((service) => (
+                          <div key={service.serviceId} className="pb-2 border-b">
+                            <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                              <span className="text-gray-800 font-medium">{service.name}</span>
+                              <button 
+                                    onClick={() => handleEditService(service, cat.categoryId)}
+                                    className="p-1 text-gray-500 hover:text-[#dba052] focus:outline-none"
+                                  >
+                                    <Pencil size={14} />
+                                  </button>
+                            </div>
+                              <span className="text-sm text-gray-700">{service.price} DKK</span>
+                            </div>
+                            <div className="text-xs text-black-500">{service.formattedDuration}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                    
+                    )}
+                  </AnimatePresence>
                 </div>
               );
             })
@@ -158,6 +284,32 @@ export default function ServiceCategoryPage() {
         }
         categories={categoryData?.categories || []}
       />
+
+      {/* Update Category Modal */}
+      {currentCategory && (
+        <UpdateCategoryForm
+          isOpen={editCategoryModalOpen}
+          onClose={() => {
+            setEditCategoryModalOpen(false);
+            setCurrentCategory(null);
+          }}
+          onSubmit={submitCategoryEdit}
+          category={currentCategory}
+        />
+      )}
+
+      {/* Update Service Modal */}
+      {currentService && (
+        <UpdateServiceForm
+          isOpen={editServiceModalOpen}
+          onClose={() => {
+            setEditServiceModalOpen(false);
+            setCurrentService(null);
+          }}
+          onSubmit={submitServiceEdit}
+          service={currentService}
+        />
+      )}
     </div>
   );
 }
