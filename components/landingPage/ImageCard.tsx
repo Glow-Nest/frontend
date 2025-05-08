@@ -16,7 +16,6 @@ export default function ImageCard({ src, alt, className }: { src: StaticImageDat
                 src={src}
                 alt={alt}
                 fill
-                unoptimized
                 loading="lazy"
                 role="img"
                 className="object-cover cursor-pointer transition-all duration-700 grayscale-[30%] hover:grayscale-0 hover:brightness-110"

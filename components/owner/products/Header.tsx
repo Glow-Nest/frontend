@@ -1,6 +1,6 @@
 "use client"
 
-import { PlusIcon } from "lucide-react"; // Make sure to install lucide-react if not already
+import { PlusIcon } from "lucide-react"; 
 
 export function ProductHeader({
   onAddProduct,

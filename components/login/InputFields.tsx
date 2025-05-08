@@ -40,10 +40,12 @@ function InputFields() {
     const handleSubmit = async () => {
         setErrors({});
 
+        const loadingToast = toast.loading("Logging in...");
+
         try {
             const res = await login(form).unwrap();
 
-            console.log(res);
+            toast.dismiss(loadingToast);
             dispatch(setCredentials({
                 firstName: res.firstName,
                 email: res.email,
@@ -64,6 +66,7 @@ function InputFields() {
             }
 
         } catch (err: any) {
+            toast.dismiss(loadingToast);
             const errorsArray = err?.data;
 
             if (Array.isArray(errorsArray)) {

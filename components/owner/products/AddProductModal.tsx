@@ -65,9 +65,9 @@ interface CreateProductFormProps {
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#dba052]"
+                  className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#dba052] resize-none"
                   placeholder="Enter product description"
-                  rows={3}
+                  rows={2}
                 />
               </div>
 
