@@ -55,35 +55,34 @@ export function CategoryServiceSection() {
             <AnimatePresence initial={false}>
               {isOpen && (
                 <motion.div
-                  key="content"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
-                  className="overflow-hidden flex gap-6 justify-center items-center mt-2"
-                >
-                  {category.mediaUrls?.[0] && (
-                    <img
-                      src={category.mediaUrls[0]}
-                      alt={category.name}
-                      className="w-96 h-56 rounded-lg object-cover"
-                    />
-                  )}
-
-                  <div className="flex-1 space-y-3">
-                    {category.services?.map((service) => (
-                      <div key={service.serviceId} className="pb-2 border-b">
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-800 font-medium">{service.name}</span>
-                          <span className="text-sm text-gray-700">{service.price} DKK</span>
-                        </div>
-                        <div className="text-xs text-black-500">
-                          {service.formattedDuration}
-                        </div>
+                key="content"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+                className="overflow-hidden flex flex-col md:flex-row gap-6 gap-y-4 justify-center items-center mt-4 px-2"
+              >
+                {category.mediaUrls?.[0] && (
+                  <img
+                    src={category.mediaUrls[0]}
+                    alt={category.name}
+                    className="w-full md:w-96 h-56 rounded-lg object-cover"
+                  />
+                )}
+              
+                <div className="flex-1 space-y-3 w-full">
+                  {category.services?.map((service) => (
+                    <div key={service.serviceId} className="pb-2 border-b">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-800 font-medium">{service.name}</span>
+                        <span className="text-sm text-gray-700">{service.price} DKK</span>
                       </div>
-                    ))}
-                  </div>
-                </motion.div>
+                      <div className="text-xs text-black-500">{service.formattedDuration}</div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+              
               )}
             </AnimatePresence>
           </div>
