@@ -1,9 +1,9 @@
 export type Product = {
-  name: string;
-  description: string;
-  price: number;
-  mediaUrls: string;
-  inventoryCount: number;
+  Name: string;
+  Description: string;
+  Price: number;
+  ImageUrl: string;
+  InventoryCount: number;
 };
 
 export type ProductState = {

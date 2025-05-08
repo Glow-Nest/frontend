@@ -6,7 +6,7 @@ import { useState } from "react";
 interface CreateProductFormProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (data: { name: string; description: string; mediaUrl: string; inventoryCount: number, price: number }) => void;
+    onSubmit: (data: { name: string; description: string; imageUrl: string; inventoryCount: number, price: number }) => void;
   }
 
   export default function CreateProductForm({
@@ -16,13 +16,13 @@ interface CreateProductFormProps {
   }: CreateProductFormProps) {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [mediaUrl, setMediaUrl] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
     const [inventoryCount, setInventoryCount] = useState(0);
     const [price, setPrice] = useState(0);
   
     const handleSubmit = () => {
       if (!name.trim() || !description.trim()) return;
-      onSubmit({ name, description, mediaUrl, inventoryCount, price });
+      onSubmit({ name, description, imageUrl, inventoryCount, price });
       resetForm();
       onClose();
     };
@@ -30,12 +30,12 @@ interface CreateProductFormProps {
     const resetForm = () => {
       setName('');
       setDescription('');
-      setMediaUrl('');
+      setImageUrl('');
       setInventoryCount(0);
       setPrice(0);
     };
   
-    const isValid = name.trim() && description.trim() && mediaUrl.trim() && inventoryCount > 0 && price > 0;
+    const isValid = name.trim() && description.trim() && imageUrl.trim() && inventoryCount > 0 && price > 0;
   
     return (
       <Dialog open={isOpen} onClose={onClose} className="relative z-50">
@@ -100,8 +100,8 @@ interface CreateProductFormProps {
                 <label className="block text-sm font-medium mb-1 text-gray-700">Media URL *</label>
                 <input
                   type="text"
-                  value={mediaUrl}
-                  onChange={(e) => setMediaUrl(e.target.value)}
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
                   className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#dba052]"
                   placeholder="https://example.com/image.png"
                 />

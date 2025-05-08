@@ -20,17 +20,17 @@ export function ProductLayout() {
   const handleSubmitProduct = async (data: { 
     name: string; 
     description: string; 
-    mediaUrl: string; 
+    imageUrl: string; 
     inventoryCount: number;
     price: number;
   }) => {
     try {
       await createProduct({
-        name: data.name,
-        description: data.description,
-        mediaUrls: data.mediaUrl,
-        inventoryCount: data.inventoryCount,
-        price: data.price
+        Name: data.name,
+        Description: data.description,
+        ImageUrl: data.imageUrl,
+        InventoryCount: data.inventoryCount,
+        Price: data.price
       }).unwrap(),
       {
         loading: "Creating product...",
