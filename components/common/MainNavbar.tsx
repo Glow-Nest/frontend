@@ -59,7 +59,7 @@ export default function Navbar() {
             <div className="hidden lg:flex w-full justify-center gap-14 items-center text-[15px]">
                 <div onClick={() => router.push("/")} className="hoverUnderline cursor-pointer relative inline-block">HOME</div>
                 <div onClick={() => router.push("/services")} className="hoverUnderline cursor-pointer relative inline-block">SERVICES</div>
-                <div className="hoverUnderline cursor-pointer relative inline-block">PRODUCTS</div>
+                <div onClick={() => router.push("/products")} className="hoverUnderline cursor-pointer relative inline-block">PRODUCTS</div>
             </div>
 
             {/* Logo */}

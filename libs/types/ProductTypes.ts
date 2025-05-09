@@ -9,3 +9,12 @@ export type Product = {
 export type ProductState = {
   [productId: string]: Product;
 };
+
+
+export type ProductSummary = {
+  Name: string;
+  Price: number;
+  ImageUrl: string;
+}
+
+

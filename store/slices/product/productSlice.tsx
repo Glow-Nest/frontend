@@ -7,11 +7,10 @@ const ProductSlice = createSlice({
     name: "Product",
     initialState,
     reducers: {
-        setProductCategory(state, action: PayloadAction<ProductState>) {
-            Object.assign(state, action.payload);
-        },
+        
+
     },
 });
 
-export const { setProductCategory } = ProductSlice.actions;
+export const {  } = ProductSlice.actions;
 export default ProductSlice.reducer;
