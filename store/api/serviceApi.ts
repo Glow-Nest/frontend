@@ -64,7 +64,7 @@ export type DeleteCategoryRequest = {
 export const serviceApi = createApi({
   reducerPath: "serviceApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
     prepareHeaders: (headers) => {
       const token = GetFromCookies("token");
       if (token) {
