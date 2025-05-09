@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Plus, ChevronDown, Pencil } from "lucide-react";
+import { Plus, ChevronDown, Pencil, Trash2 } from "lucide-react";
 import {
   useAddServiceToCategoryMutation,
   useCreateCategoryMutation,
@@ -11,12 +11,15 @@ import {
   useUpdateCategoryMediaUrlsMutation,
   useUpdateServiceNameMutation,
   useUpdateServicePriceMutation,
-  useUpdateServiceDurationMutation
+  useUpdateServiceDurationMutation,
+  useDeleteServiceMutation,
+  useDeleteCategoryMutation
 } from "@/store/api/serviceApi";
 import CreateCategoryModal from "./CreateCategory";
 import CreateServiceForm from "./AddService";
 import UpdateCategoryForm from "./UpdateCategory";
 import UpdateServiceForm from "./UpdateService";
+import ConfirmationDialog from "./DeleteConfirmationModal";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Category, Service } from "libs/types/ServiceCategory";
 
@@ -26,6 +29,8 @@ export default function ServiceCategoryPage() {
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
   const [editCategoryModalOpen, setEditCategoryModalOpen] = useState(false);
   const [editServiceModalOpen, setEditServiceModalOpen] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [deleteCategoryConfirmOpen, setDeleteCategoryConfirmOpen] = useState(false);
   const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
   const [currentService, setCurrentService] = useState<Service & { categoryId: string } | null>(null);
   const [openCategories, setOpenCategories] = useState<{ [key: string]: boolean }>({});
@@ -39,6 +44,8 @@ export default function ServiceCategoryPage() {
   const [updateServiceName] = useUpdateServiceNameMutation();
   const [updateServicePrice] = useUpdateServicePriceMutation();
   const [updateServiceDuration] = useUpdateServiceDurationMutation();
+  const [deleteService] = useDeleteServiceMutation();
+  const [deleteCategory] = useDeleteCategoryMutation();
 
   const toggleCategory = (categoryId: string) => {
     setOpenCategories((prev) => ({
@@ -90,6 +97,49 @@ export default function ServiceCategoryPage() {
   const handleEditService = (service: Service, categoryId: string) => {
     setCurrentService({ ...service, categoryId });
     setEditServiceModalOpen(true);
+  };
+
+  const handleDeleteService = (service: Service, categoryId: string) => {
+    setCurrentService({ ...service, categoryId });
+    setDeleteConfirmOpen(true);
+  };
+
+  const handleDeleteCategory = (category: Category) => {
+    setCurrentCategory(category);
+    setDeleteCategoryConfirmOpen(true);
+  };
+
+  const confirmDeleteService = async () => {
+    if (!currentService) return;
+    
+    try {
+      await deleteService({
+        CategoryId: currentService.categoryId,
+        Id: currentService.serviceId
+      }).unwrap();
+      refetch();
+    } catch (error) {
+      console.error("Failed to delete service", error);
+    } finally {
+      setDeleteConfirmOpen(false);
+      setCurrentService(null);
+    }
+  };
+
+  const confirmDeleteCategory = async () => {
+    if (!currentCategory) return;
+    
+    try {
+      await deleteCategory({
+        CategoryId: currentCategory.categoryId
+      }).unwrap();
+      refetch();
+    } catch (error) {
+      console.error("Failed to delete category", error);
+    } finally {
+      setDeleteCategoryConfirmOpen(false);
+      setCurrentCategory(null);
+    }
   };
 
   const submitCategoryEdit = async (data: { name: string; description: string; mediaUrl?: string }) => {
@@ -197,12 +247,22 @@ export default function ServiceCategoryPage() {
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                       <h3 className="text-xl font-bold text-[#dba052]">{cat.name}</h3>
-                      <button 
-                        onClick={() => handleEditCategory(cat)}
-                        className="p-1 text-gray-500 hover:text-[#dba052] focus:outline-none"
-                      >
-                        <Pencil size={16} />
-                      </button>
+                      <div className="flex gap-1">
+                        <button 
+                          onClick={() => handleEditCategory(cat)}
+                          className="p-1 text-gray-500 hover:text-[#dba052] focus:outline-none"
+                          aria-label="Edit category"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                        <button 
+                          onClick={() => handleDeleteCategory(cat)}
+                          className="p-1 text-gray-500 hover:text-red-500 focus:outline-none"
+                          aria-label="Delete category"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </div>
                     <button 
                       onClick={() => toggleCategory(cat.categoryId)}
@@ -240,15 +300,25 @@ export default function ServiceCategoryPage() {
                         {cat.services?.map((service) => (
                           <div key={service.serviceId} className="pb-2 border-b">
                             <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-2">
-                              <span className="text-gray-800 font-medium">{service.name}</span>
-                              <button 
+                              <div className="flex items-center gap-2">
+                                <span className="text-gray-800 font-medium">{service.name}</span>
+                                <div className="flex gap-1">
+                                  <button 
                                     onClick={() => handleEditService(service, cat.categoryId)}
                                     className="p-1 text-gray-500 hover:text-[#dba052] focus:outline-none"
+                                    aria-label="Edit service"
                                   >
                                     <Pencil size={14} />
                                   </button>
-                            </div>
+                                  <button 
+                                    onClick={() => handleDeleteService(service, cat.categoryId)}
+                                    className="p-1 text-gray-500 hover:text-red-500 focus:outline-none"
+                                    aria-label="Delete service"
+                                  >
+                                    <Trash2 size={14} />
+                                  </button>
+                                </div>
+                              </div>
                               <span className="text-sm text-gray-700">{service.price} DKK</span>
                             </div>
                             <div className="text-xs text-black-500">{service.formattedDuration}</div>
@@ -310,6 +380,30 @@ export default function ServiceCategoryPage() {
           service={currentService}
         />
       )}
+
+      {/* Delete Service Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={deleteConfirmOpen}
+        onClose={() => {
+          setDeleteConfirmOpen(false);
+          setCurrentService(null);
+        }}
+        onConfirm={confirmDeleteService}
+        title="Delete Service"
+        message={`Are you sure you want to delete ${currentService?.name}? `}
+      />
+
+      {/* Delete Category Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={deleteCategoryConfirmOpen}
+        onClose={() => {
+          setDeleteCategoryConfirmOpen(false);
+          setCurrentCategory(null);
+        }}
+        onConfirm={confirmDeleteCategory}
+        title="Delete Category"
+        message={`Are you sure you want to delete ${currentCategory?.name} and all its services?`}
+      />
     </div>
   );
 }

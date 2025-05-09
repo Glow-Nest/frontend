@@ -52,10 +52,19 @@ export type serviceRequest = {
   duration: string;
 };
 
+export type DeleteServiceRequest = {
+  CategoryId: string;
+  Id: string;
+};
+
+export type DeleteCategoryRequest = {
+  CategoryId: string;
+};
+
 export const serviceApi = createApi({
   reducerPath: "serviceApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL,
     prepareHeaders: (headers) => {
       const token = GetFromCookies("token");
       if (token) {
@@ -151,6 +160,22 @@ export const serviceApi = createApi({
       }
     ),
 
+    deleteService: builder.mutation<void, DeleteServiceRequest>({
+      query: (body) => ({
+        url: "owner/category/service/delete",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    deleteCategory: builder.mutation<void, DeleteCategoryRequest>({
+      query: (body) => ({
+        url: "owner/category/delete",
+        method: "POST",
+        body,
+      }),
+    }),
+
     getAllCategoriesWithService: builder.query<CategoryList, void>({
       query: () => ({
         url: "/categories/services/all",
@@ -198,4 +223,6 @@ export const {
   useUpdateServiceNameMutation,
   useUpdateServicePriceMutation,
   useUpdateServiceDurationMutation,
+  useDeleteServiceMutation,
+  useDeleteCategoryMutation,
 } = serviceApi;
