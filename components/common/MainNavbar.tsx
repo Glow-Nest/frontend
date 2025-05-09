@@ -81,7 +81,6 @@ export default function Navbar() {
                 </button>
                 <div className="relative user-dropdown-container">
                 {!user ? (
-        // User not logged in — Show login icon
         <div
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => router.push("/login")}
