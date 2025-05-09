@@ -1,9 +1,10 @@
 "use client";
 
 import { useGetAllProductsQuery } from '@/store/api/productApi';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProductPagination from './productionPagination';
 import toast from 'react-hot-toast';
+import ProductCard from './productCard';
 
 function ProductsList() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -14,28 +15,44 @@ function ProductsList() {
         { selectFromResult: (res) => res }
     );
 
-    if (isLoading){
-        toast.loading("Loading products.......")
-    }
+    useEffect(() => {
+        if (isLoading) {
+            toast.loading("Loading products...", { id: "loading-toast" });
+        } else {
+            toast.dismiss("loading-toast");
+        }
+    }, [isLoading]);
+
+    if (isLoading) return null;
 
     return (
-        <>
-            <div className="text-xl font-medium mb-4">ProductList</div>
-            
-            {data?.products.map((product, index) => {
-                return (
-                    <div key={index}>
-                        {product.Name}
-                    </div>
-                )
-            })}
+        <section className="w-full px-4 sm:px-6 md:px-10 py-10">
+            <h2 className="text-2xl font-bold mb-6">Products</h2>
 
-            <ProductPagination
-                currentPage={currentPage}
-                totalPages={Math.ceil((data?.totalCount ?? 0) / pageSize)}
-                onPageChange={setCurrentPage}
-            />
-        </>
+            <div className="flex justify-center">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 w-full max-w-6xl">
+                    {data?.products.map((product) => (
+                        <ProductCard
+                            key={product.productId}
+                            id={product.productId}
+                            name={product.name}
+                            price={product.price}
+                            imageUrl={product.imageUrl}
+                            onAddToCart={() => {
+                                console.log("Add to cart:", product.productId);
+                            }}  />
+                    ))}
+                </div>
+            </div>
+
+            <div className="mt-10 flex justify-center">
+                <ProductPagination
+                    currentPage={currentPage}
+                    totalPages={Math.ceil((data?.totalCount ?? 0) / pageSize)}
+                    onPageChange={setCurrentPage}
+                />
+            </div>
+        </section>
     );
 }
 

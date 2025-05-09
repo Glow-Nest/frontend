@@ -1,4 +1,5 @@
 import Navbar from '@/components/common/MainNavbar'
+import Cart from '@/components/products/cart'
 import ProductsHero from '@/components/products/productHero'
 import ProductsList from '@/components/products/productsList'
 import React from 'react'
@@ -12,7 +13,19 @@ function Products() {
 
       <ProductsHero />
 
-      <ProductsList />
+      <div className="flex">
+        {/* Products List*/}
+        <div className="w-full md:w-3/4 px-4">
+          <ProductsList />
+        </div>
+
+        {/* Cart*/}
+        <div className="hidden md:block w-full md:w-1/4 px-4 mb-8">
+          <Cart />
+        </div>
+      </div>
+
+
     </div>
   )
 }
