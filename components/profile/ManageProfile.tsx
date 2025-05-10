@@ -171,19 +171,19 @@ function ManageProfile() {
     };
 
     return (
-        <div className="max-w-3xl mx-auto mb-5 mt-14 p-8 bg-white rounded-lg shadow-lg">
-            <h2 className="text-xl md:text-2xl font-bold text-center">Manage Profile</h2>
+        <div className="md:p-4 flex flex-col rounded-lg shadow-lg">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 text-center md:text-left">Manage Profile</h2>
 
             <div className="space-y-6">
                 {/* Email Field */}
-                <div className="mb-6">
+                <div className="mb-6 mt-6">
                     <label className="block text-gray-700 font-semibold mb-2">Email Address</label>
                     <div className="relative">
                         <input
                             type="email"
                             disabled
                             value={user?.email ?? ""}
-                            className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-md cursor-not-allowed"
+                            className="w-70 px-4 py-2 bg-gray-100 border border-gray-200 rounded-md cursor-not-allowed"
                             onMouseEnter={() => setShowEmailTooltip(true)}
                             onMouseLeave={() => setShowEmailTooltip(false)}
                         />
@@ -265,7 +265,7 @@ function ManageProfile() {
                                     type="text" 
                                     value={user?.firstName || ""}
                                     readOnly
-                                    className="w-full px-4 py-2 bg-white border border-gray-200 rounded-md"
+                                    className="w-70 px-4 py-2 bg-white border border-gray-200 rounded-md"
                                 />
                             </div>
                             
@@ -275,7 +275,7 @@ function ManageProfile() {
                                     type="text" 
                                     value={user?.lastName || ""}
                                     readOnly
-                                    className="w-full px-4 py-2 bg-white border border-gray-200 rounded-md"
+                                    className="w-70 px-4 py-2 bg-white border border-gray-200 rounded-md"
                                 />
                             </div>
                         </div>
@@ -302,7 +302,7 @@ function ManageProfile() {
                                 <input 
                                     value={phoneNumber} 
                                     onChange={(e) => setPhoneNumber(e.target.value)} 
-                                    className={getInputClassName("phoneNumber")}
+                                    className={`${getInputClassName("phoneNumber")} w-70`}
                                     placeholder="Phone Number" 
                                 />
                                 <div className="text-xs text-red-500 mt-1 h-5">
@@ -333,7 +333,7 @@ function ManageProfile() {
                                 type="text" 
                                 value={user?.phoneNumber || "No phone number added"}
                                 readOnly
-                                className="w-full px-4 py-2 bg-white border border-gray-200 rounded-md"
+                                className="w-70 px-4 py-2 bg-white border border-gray-200 rounded-md"
                             />
                         </div>
                     )}
@@ -363,13 +363,13 @@ function ManageProfile() {
                                             type={showPassword ? "text" : "password"} 
                                             value={newPassword} 
                                             onChange={(e) => setNewPassword(e.target.value)} 
-                                            className={`${getInputClassName("password")} w-full pr-10`}
+                                            className={`${getInputClassName("password")} w-70 pr-10`}
                                             placeholder="New Password" 
                                         />
                                         <button 
                                             type="button" 
                                             onClick={togglePasswordVisibility} 
-                                            className="absolute top-0 right-0 h-full px-3 flex items-center justify-center text-gray-500 hover:text-gray-700 cursor-pointer"
+                                            className="absolute top-0 right-48 h-full px-13 flex items-center text-gray-500 hover:text-gray-700 cursor-pointer"
                                             aria-label={showPassword ? "Hide password" : "Show password"}
                                         >
                                             {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -384,13 +384,13 @@ function ManageProfile() {
                                             type={showConfirmPassword ? "text" : "password"} 
                                             value={confirmPassword} 
                                             onChange={(e) => setConfirmPassword(e.target.value)} 
-                                            className={`${getInputClassName("password")} w-full pr-10`}
+                                            className={`${getInputClassName("password")} w-70 pr-10`}
                                             placeholder="Confirm Password" 
                                         />
                                         <button 
                                             type="button" 
                                             onClick={toggleConfirmPasswordVisibility} 
-                                            className="absolute top-0 right-0 h-full px-3 flex items-center justify-center text-gray-500 hover:text-gray-700 cursor-pointer"
+                                            className="absolute top-0 right-48 h-full px-13 flex items-center text-gray-500 hover:text-gray-700 cursor-pointer"
                                             aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                                         >
                                             {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
@@ -426,7 +426,7 @@ function ManageProfile() {
                                 type="password" 
                                 value="••••••••"
                                 readOnly
-                                className="w-full px-4 py-2 bg-white border border-gray-200 rounded-md"
+                                className="w-70 px-4 py-2 bg-white border border-gray-200 rounded-md"
                             />
                         </div>
                     )}

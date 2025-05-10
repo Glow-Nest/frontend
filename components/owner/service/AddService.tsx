@@ -72,6 +72,7 @@ export default function CreateServiceForm({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#dba052]"
+                placeholder="Enter service name"
               />
             </div>
 
@@ -82,6 +83,7 @@ export default function CreateServiceForm({
                 value={price}
                 onChange={(e) => setPrice(e.target.value === "" ? "" : Number(e.target.value))}
                 className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#dba052]"
+                placeholder="e.g. 100"
               />
             </div>
 
