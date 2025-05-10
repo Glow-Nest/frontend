@@ -12,7 +12,7 @@ import "../common/css/buttonSweep.css";
 
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { logout } from "@/store/slices/user/UserSlice";
 
 export default function Navbar() {
@@ -23,7 +23,10 @@ export default function Navbar() {
     const user = useSelector((state: RootState) => state.user.firstName);
 
     const router = useRouter();
+    const pathname = usePathname();
     const dispatch = useDispatch();
+
+    const isActive = (path: string) => pathname === path || pathname.startsWith(`${path}/`);
 
     const handleLogout = () => {
         dispatch(logout());
@@ -35,7 +38,7 @@ export default function Navbar() {
         const handleScroll = () => {
             setScrolled(window.scrollY > 10);
         };
-        
+
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
@@ -53,13 +56,33 @@ export default function Navbar() {
 
     return (
         <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? "py-1 shadow-sm bg-white" : "py-3 bg-white"
-                } flex justify-between items-center px-8`}
+            } flex justify-between items-center px-8`}
         >
             {/* Left */}
             <div className="hidden lg:flex w-full justify-center gap-14 items-center text-[15px]">
-                <div onClick={() => router.push("/")} className="hoverUnderline cursor-pointer relative inline-block">HOME</div>
-                <div onClick={() => router.push("/services")} className="hoverUnderline cursor-pointer relative inline-block">SERVICES</div>
-                <div className="hoverUnderline cursor-pointer relative inline-block">PRODUCTS</div>
+                {/* home */}
+                <div
+                    onClick={() => router.push("/")}
+                    className={`hoverUnderline cursor-pointer relative inline-block ${isActive("/") ? "text-amber-500 font-semibold" : ""}`}
+                >
+                    HOME
+                </div>
+
+                {/* services */}
+                <div
+                    onClick={() => router.push("/services")}
+                    className={`hoverUnderline cursor-pointer relative inline-block ${isActive("/services") ? "text-amber-500 font-semibold" : ""}`}
+                >
+                    SERVICES
+                </div>
+
+                <div
+                    onClick={() => router.push("/products")}
+                    className={`hoverUnderline cursor-pointer relative inline-block ${isActive("/products") ? "text-amber-500 font-semibold" : ""}`}
+                >
+                    PRODUCTS
+                </div>
+
             </div>
 
             {/* Logo */}
@@ -75,39 +98,39 @@ export default function Navbar() {
 
             {/* Right */}
             <div className="hidden lg:flex w-full justify-end gap-8 items-center text-[15px]">
-                <button onClick={() =>  router.push("/appointments")} className="btn-sweep border cursor-pointer flex items-center justify-center gap-2 px-4 h-[38px] min-w-[170px] whitespace-nowrap leading-none text-sm" >
+                <button onClick={() => router.push("/appointments")} className="btn-sweep border cursor-pointer flex items-center justify-center gap-2 px-4 h-[38px] min-w-[170px] whitespace-nowrap leading-none text-sm" >
                     BOOK APPOINTMENT
                     <FontAwesomeIcon icon={faArrowRight} className="w-[14px] h-[14px]" />
                 </button>
                 <div className="relative user-dropdown-container">
-                {!user ? (
-        <div
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => router.push("/login")}
-        >
-            <FontAwesomeIcon icon={faUser} className="w-[14px] h-[14px]" />
-            <span className="font-semibold">Login</span>
-        </div>
-    ) : (
-        // User logged in — Show dropdown
-        <>
-            <div
-                className="flex items-center gap-2 cursor-pointer"
-                onClick={() => setShowDropdown(!showDropdown)}
-            >
-                <FontAwesomeIcon icon={faUser} className="w-[14px] h-[14px]" />
-                <span className="font-semibold">HI, {user}</span>
-            </div>
+                    {!user ? (
+                        // User not logged in — Show login icon
+                        <div
+                            className="flex items-center gap-2 cursor-pointer"
+                            onClick={() => router.push("/login")}
+                        >
+                            <FontAwesomeIcon icon={faUser} className="w-[14px] h-[14px]" />
+                            <span className="font-semibold">Login</span>
+                        </div>
+                    ) : (
+                        // User logged in — Show dropdown
+                        <>
+                            <div
+                                className="flex items-center gap-2 cursor-pointer"
+                                onClick={() => setShowDropdown(!showDropdown)}
+                            >
+                                <FontAwesomeIcon icon={faUser} className="w-[14px] h-[14px]" />
+                                <span className="font-semibold">HI, {user}</span>
+                            </div>
 
-            {showDropdown && (
-                <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md py-2 z-50 text-sm border border-gray-200">
-                        <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => router.push("/profile")}>Profile</div>
-                    <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>Logout</div>
-                </div>
-            )}
-        </>
-    )}
-
+                            {showDropdown && (
+                                <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md py-2 z-50 text-sm border border-gray-200">
+                                    <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => router.push("/profile")}>Profile</div>
+                                    <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>Logout</div>
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
             </div>
 
