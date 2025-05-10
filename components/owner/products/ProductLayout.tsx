@@ -26,11 +26,11 @@ export function ProductLayout() {
   }) => {
     try {
       await createProduct({
-        Name: data.name,
-        Description: data.description,
-        ImageUrl: data.imageUrl,
-        InventoryCount: data.inventoryCount,
-        Price: data.price
+        name: data.name,
+        description: data.description,
+        imageUrl: data.imageUrl,
+        inventoryCount: data.inventoryCount,
+        price: data.price
       }).unwrap(),
       {
         loading: "Creating product...",

@@ -26,7 +26,7 @@ function ProductsList() {
     if (isLoading) return null;
 
     return (
-        <section className="w-full px-4 sm:px-6 md:px-10 py-10">
+        <section className="w-full px-4 sm:px-6 md:px-10">
             <h2 className="text-2xl font-bold mb-6">Products</h2>
 
             <div className="flex justify-center">

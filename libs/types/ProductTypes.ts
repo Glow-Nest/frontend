@@ -1,13 +1,13 @@
-export type Product = {
-  Name: string;
-  Description: string;
-  Price: number;
-  ImageUrl: string;
-  InventoryCount: number;
+export interface Product {
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  inventoryCount: number;
 };
 
 export type ProductState = {
-  [productId: string]: Product;
+  [productId: string]: ProductWithId;
 };
 
 
@@ -18,4 +18,6 @@ export type ProductSummary = {
   imageUrl: string;
 }
 
-
+export interface ProductWithId extends Product {
+  productId: string;
+}

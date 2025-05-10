@@ -1,5 +1,6 @@
 import React from "react";
-import { ShoppingCart, Eye } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface ProductCardProps {
     name: string;
@@ -9,9 +10,23 @@ interface ProductCardProps {
     onAddToCart?: () => void;
 }
 
-const ProductCard = ({ name, price, imageUrl, id, onAddToCart }: ProductCardProps) => {
+function ProductCard({ name, price, imageUrl, id, onAddToCart }: ProductCardProps) {
+    const router = useRouter();
+
+    const handleCardClick = () => {
+        router.push(`/products/${id}`);
+    };
+
+    const handleIconClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onAddToCart?.();
+    };
+
     return (
-        <div className="bg-white rounded-xl shadow-sm hover:shadow-lg hover:scale-[1.02] transition-all overflow-hidden flex flex-col">
+        <div
+            onClick={handleCardClick}
+            className="bg-white rounded-xl shadow-sm hover:shadow-lg hover:scale-[1.02] transition-all overflow-hidden flex flex-col cursor-pointer"
+        >
             <img
                 src={imageUrl}
                 alt={name}
@@ -19,20 +34,22 @@ const ProductCard = ({ name, price, imageUrl, id, onAddToCart }: ProductCardProp
             />
 
             <div className="p-4 flex justify-between items-start">
-                {/* name and price */}
                 <div>
-                    <h3 className="text-base font-medium text-gray-800 mb-1 truncate">{name}</h3>
+                    <h3 className="text-base font-medium text-gray-800 mb-1 max-w-30 ">{name}</h3>
                     <p className="text-amber-600 font-semibold text-sm">{price.toFixed(2)} kr.</p>
                 </div>
 
-                {/* icons */}
                 <div className="flex flex-col items-end gap-2">
-                    <button onClick={onAddToCart} className="text-gray-600 hover:text-amber-500 cursor-pointer">
+                    <button
+                        onClick={handleIconClick}
+                        className="text-gray-600 hover:text-amber-500"
+                    >
                         <ShoppingCart className="w-5 h-5" />
                     </button>
                 </div>
             </div>
         </div>
     );
-};
+}
+
 export default ProductCard;
