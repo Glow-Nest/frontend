@@ -15,7 +15,7 @@ const initialState: UserState = {
   phoneNumber: null,
   email: null,
   role: null,
-  id: null
+  id: null,
 };
 
 const userSlice = createSlice({
@@ -35,8 +35,14 @@ const userSlice = createSlice({
       state.email = null;
       state.role = null;
     },
+    updateUser: (state, action: PayloadAction<Partial<UserState>>) => {
+      const { firstName, lastName, phoneNumber } = action.payload;
+      if (firstName !== undefined) state.firstName = firstName;
+      if (lastName !== undefined) state.lastName = lastName;
+      if (phoneNumber !== undefined) state.phoneNumber = phoneNumber;
+    },
   },
 });
 
-export const { setCredentials, logout } = userSlice.actions;
+export const { setCredentials, logout, updateUser } = userSlice.actions;
 export default userSlice.reducer;

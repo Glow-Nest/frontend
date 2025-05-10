@@ -1,5 +1,22 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+export type UpdateFullNameRequest = {
+  Id: string;
+  FirstName: string;
+  LastName: string;
+};
+
+export type UpdatePhoneNumberRequest = {
+  Id: string;
+  PhoneNumber: string;
+};
+
+export type UpdatePasswordRequest = {
+  Id: string;
+  NewPassword: string;
+  ConfirmPassword: string;
+};
+
 export const clientApi = createApi({
   reducerPath: "clientApi",
   baseQuery: fetchBaseQuery({
@@ -11,6 +28,30 @@ export const clientApi = createApi({
         url: "clients/create",
         method: "POST",
         body: user,
+      }),
+    }),
+
+    updateFullName: builder.mutation<void, UpdateFullNameRequest>({
+      query: (body) => ({
+        url: "clients/update/fullname",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    updatePhoneNumber: builder.mutation<void, UpdatePhoneNumberRequest>({
+      query: (body) => ({
+        url: "clients/update/phoneNumber",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    updatePassword: builder.mutation<void, UpdatePasswordRequest>({
+      query: (body) => ({
+        url: "clients/update/password",
+        method: "POST",
+        body,
       }),
     }),
     sendOtp: builder.mutation<void, { email: string; purpose: string }>({
@@ -28,7 +69,15 @@ export const clientApi = createApi({
       }),
     }),
     loginClient: builder.mutation<
-      {id: string, firstName: string; lastName: string, phoneNumber: string; token: string; email: string; role: string },
+      {
+        id: string;
+        firstName: string;
+        lastName: string;
+        phoneNumber: string;
+        token: string;
+        email: string;
+        role: string;
+      },
       { email: string; password: string }
     >({
       query: (credentials) => ({
@@ -68,4 +117,7 @@ export const {
   useLoginClientMutation,
   useInitiatePasswordResetMutation,
   useResetPasswordMutation,
+  useUpdateFullNameMutation,
+  useUpdatePhoneNumberMutation,
+  useUpdatePasswordMutation,
 } = clientApi;
