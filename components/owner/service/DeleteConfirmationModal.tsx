@@ -23,13 +23,12 @@ export default function ConfirmationDialog({
       {isOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen p-4">
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={onClose}
-              className="fixed inset-0 bg-black bg-opacity-25"
+              className="fixed inset-0 bg-black/50 bg-opacity-0"
             />
 
             {/* Modal */}
@@ -50,7 +49,7 @@ export default function ConfirmationDialog({
                 </button>
                 <button
                   onClick={onConfirm}
-                  className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
+                  className="px-4 py-2 text-sm font-medium text-white bg-[#dba052] rounded-md hover:bg-[#c48a3a]"
                 >
                   Yes
                 </button>

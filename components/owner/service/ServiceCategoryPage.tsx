@@ -257,7 +257,7 @@ export default function ServiceCategoryPage() {
                         </button>
                         <button 
                           onClick={() => handleDeleteCategory(cat)}
-                          className="p-1 text-gray-500 hover:text-red-500 focus:outline-none"
+                          className="p-1 text-gray-500 hover:text-[#dba052] focus:outline-none"
                           aria-label="Delete category"
                         >
                           <Trash2 size={16} />
@@ -420,13 +420,13 @@ function Header({
       <div className="flex gap-2">
         <button
           onClick={onAddCategory}
-          className="flex items-center gap-2 bg-[#dba052] text-white px-5 py-3 rounded shadow hover:bg-[#c48a3a]"
+          className="flex items-center gap-2 bg-[#dba052] text-white px-5 py-3 rounded shadow hover:bg-[#c48a3a] cursor-pointer"
         >
           <Plus size={16} /> Add Category
         </button>
         <button
           onClick={onAddService}
-          className="flex items-center gap-2 bg-[#dba052] text-white px-5 py-3 rounded shadow hover:bg-[#c48a3a]"
+          className="flex items-center gap-2 bg-[#dba052] text-white px-5 py-3 rounded shadow hover:bg-[#c48a3a] cursor-pointer"
         >
           <Plus size={16} /> Add Service
         </button>
