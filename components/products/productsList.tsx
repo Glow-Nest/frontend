@@ -38,9 +38,7 @@ function ProductsList() {
                             name={product.name}
                             price={product.price}
                             imageUrl={product.imageUrl}
-                            onAddToCart={() => {
-                                console.log("Add to cart:", product.productId);
-                            }}  />
+                           />
                     ))}
                 </div>
             </div>

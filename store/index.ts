@@ -1,17 +1,19 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { clientApi } from "./api/clientApi";
-import userReducer from "./slices/user/UserSlice";
 
-import appointmentReducer from "./slices/schedules/CreateAppointmentSlice";
 import storageSession from "redux-persist/lib/storage/session";
 import { persistReducer } from "redux-persist";
 import { serviceApi } from "./api/serviceApi";
-import blockedTimeReducer from "./slices/schedules/BlockedTimeSlice";
 import { scheduleApi } from "./api/scheduleApi";
-import scheduleReducer from "./slices/schedules/ScheduleSlice";
-import serviceCategoryReducer from "./slices/serviceCategory/ServiceCategorySlice";
 import { productApi } from "./api/productApi";
+
+import userReducer from "./slices/user/UserSlice";
+import appointmentReducer from "./slices/schedules/CreateAppointmentSlice";
+import blockedTimeReducer from "./slices/schedules/BlockedTimeSlice";
+import serviceCategoryReducer from "./slices/serviceCategory/ServiceCategorySlice";
 import productReducer from "./slices/product/productSlice";
+import scheduleReducer from "./slices/schedules/ScheduleSlice";
+import orderReducer from "./slices/order/orderSlice";
 
 const persistAppointmentConfig = {
   key: "appointment",
@@ -36,6 +38,7 @@ const reducer = combineReducers({
   schedules: scheduleReducer,
   serviceCategory: serviceCategoryReducer,
   product: productReducer,
+  order: orderReducer
 });
 
 const persistedReducer = persistReducer<ReturnType<typeof reducer>>(

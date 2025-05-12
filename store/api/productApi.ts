@@ -45,4 +45,4 @@ export const productApi = createApi({
   }),
 });
 
-export const { useCreateProductMutation, useGetAllProductsQuery, useGetProductByIdQuery } = productApi;
+export const { useCreateProductMutation, useGetAllProductsQuery, useGetProductByIdQuery, useLazyGetProductByIdQuery } = productApi;
