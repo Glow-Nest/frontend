@@ -2,18 +2,15 @@
 
 import React from 'react';
 import { ShoppingCart } from 'lucide-react';
-import { useAppSelector, useAppDispatch } from '@/store/hook';
+import { useAppSelector } from '@/store/hook';
 import { RootState } from '@/store';
-import { addProductToOrder, removeProductFromOrder, updateProductQuantity } from '@/store/slices/order/orderSlice';
+import CartItem from './cartItem';
+import { useRouter } from 'next/navigation';
 
 function Cart() {
-    const dispatch = useAppDispatch();
     const order = useAppSelector((state: RootState) => state.order);
     const products = useAppSelector((state: RootState) => state.product);
-
-    const handleQuantityChange = (productId: string, quantity: number) => {
-        dispatch(updateProductQuantity({ productId, quantity }));
-    };
+    const router = useRouter();
 
     return (
         <div className="bg-white h-full rounded-xl shadow p-4 flex flex-col border border-gray-200 overflow-y-auto">
@@ -29,70 +26,31 @@ function Cart() {
                     You haven't added any items yet.
                 </p>
             ) : (
-                <div className="space-y-4">
-                    {order.orderItems.map((item) => {
-                        const product = products[item.productId];
-                        if (!product) return null;
+                <>
+                    <div className="max-h-128 overflow-y-auto space-y-4 mb-2 pb-2">
+                        {order.orderItems.map((item) => {
+                            const product = products[item.productId];
+                            if (!product) return null;
 
-                        return (
-                            <div
-                                key={item.productId}
-                                className="flex items-center gap-2 p-2 rounded-md shadow-md border-gray-900 hover:shadow-lg transition bg-white relative"
-                            >
-                                {/* Product Image */}
-                                <div className="w-20 h-20 flex-shrink-0 rounded overflow-hidden">
-                                    <img
-                                        src={product.imageUrl}
-                                        alt={product.name}
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
+                            return (
+                                <CartItem product={product} quantity={item.quantity} key={item.productId} />
+                            );
+                        })}
+                    </div>
 
-                                {/* Product Info */}
-                                <div className="flex flex-col flex-grow">
-                                    <p className="font-semibold text-sm truncate">{product.name}</p>
-                                    <div className="flex justify-between text-sm mt-2">
+                    {/* Total and Checkout */}
+                    <div className="mt-auto border-t pt-4 flex justify-between items-center">
+                        <span className="text-lg font-semibold">Total:</span>
+                        <span className="text-lg font-bold">{order.totalPrice.toFixed(2)} DKK</span>
+                    </div>
 
-                                        <div className="flex items-center gap-1">
-                                            <label htmlFor={`qty-${item.productId}`} className="text-gray-600">
-                                                Qty:
-                                            </label>
-                                            <select
-                                                id={`qty-${item.productId}`}
-                                                value={item.quantity}
-                                                onChange={(e) =>
-                                                    handleQuantityChange(item.productId, parseInt(e.target.value))
-                                                }
-                                                className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring focus:ring-amber-500"
-                                            >
-
-                                                {[...Array(product.inventoryCount)].map((_, i) => (
-                                                    <option key={i + 1} value={i + 1}>
-                                                        {i + 1}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-
-
-                                        <span className="font-medium text-black">
-                                            {(product.price * item.quantity).toFixed(2)} DKK
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {/* Remove Button */}
-                                <button
-                                    onClick={() => dispatch(removeProductFromOrder(item.productId))}
-                                    className="absolute top-2 right-2 text-gray-400 cursor-pointer hover:text-red-500 text-xl leading-none"
-                                    aria-label="Remove item"
-                                >
-                                    ×
-                                </button>
-                            </div>
-                        );
-                    })}
-                </div>
+                    <button
+                        onClick={() => router.push('/checkout')}
+                        className="mt-4 bg-amber-500 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-amber-600 transition text-sm font-semibold"
+                    >
+                        Proceed to Checkout
+                    </button>
+                </>
             )}
         </div>
     );
