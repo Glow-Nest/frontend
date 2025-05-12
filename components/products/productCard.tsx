@@ -36,7 +36,7 @@ function ProductCard({ name, price, imageUrl, id, onAddToCart }: ProductCardProp
             <div className="p-4 flex justify-between items-start">
                 <div>
                     <h3 className="text-base font-medium text-gray-800 mb-1 max-w-30 ">{name}</h3>
-                    <p className="text-amber-600 font-semibold text-sm">{price.toFixed(2)} kr.</p>
+                    <p className="text-amber-600 font-semibold text-sm">${typeof price === 'number' ? price.toFixed(2) : 'N/A'}kr.</p>
                 </div>
 
                 <div className="flex flex-col items-end gap-2">
