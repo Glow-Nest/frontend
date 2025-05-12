@@ -9,7 +9,7 @@ import {
 export const productApi = createApi({
   reducerPath: "productApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL,
     prepareHeaders: (headers) => {
       const token = GetFromCookies("token");
       if (token) {
