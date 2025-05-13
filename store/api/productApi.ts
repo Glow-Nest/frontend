@@ -86,7 +86,7 @@ export const productApi = createApi({
       { Id: string; ImageUrl: string }
     >({
       query: (body) => ({
-        url: `owner/product/update/mediaUurl`,
+        url: `owner/product/update/mediaUrl`,
         method: "POST",
         body,
       }),
