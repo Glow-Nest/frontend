@@ -9,7 +9,7 @@ import {
 export const productApi = createApi({
   reducerPath: "productApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
     prepareHeaders: (headers) => {
       const token = GetFromCookies("token");
       if (token) {
@@ -62,6 +62,66 @@ export const productApi = createApi({
       }),
     }),
 
+    updateProductName: builder.mutation<void, { Id: string; Name: string }>({
+      query: (body) => ({
+        url: `owner/product/update/name`,
+        method: "POST",
+        body,
+      }),
+    }),
+
+    updateProductDescription: builder.mutation<
+      void,
+      { Id: string; Description: string }
+    >({
+      query: (body) => ({
+        url: `owner/product/update/description`,
+        method: "POST",
+        body,
+      }),
+    }),
+
+    updateProductImageUrl: builder.mutation<
+      void,
+      { Id: string; ImageUrl: string }
+    >({
+      query: (body) => ({
+        url: `owner/product/update/mediaUrl`,
+        method: "POST",
+        body,
+      }),
+    }),
+
+    updateProductInventoryCount: builder.mutation<
+      void,
+      { Id: string; InventoryCount: number }
+    >({
+      query: (body) => ({
+        url: `owner/product/update/inventoryCount`,
+        method: "POST",
+        body,
+      }),
+    }),
+
+    updateProductPrice: builder.mutation<
+      void,
+      { productId: string; Price: number }
+    >({
+      query: (body) => ({
+        url: `owner/product/update/price`,
+        method: "POST",
+        body,
+      }),
+    }),
+
+    deleteProduct: builder.mutation<void, { Id: string }>({
+      query: (body) => ({
+        url: `owner/product/delete`,
+        method: "POST",
+        body,
+      }),
+    }),
+
     getProductById: builder.query<ProductWithId, { productId: string }>({
       query: ({ productId }) => ({
         url: `products/${productId}`,
@@ -79,4 +139,10 @@ export const {
   useLazyGetProductsByNameQuery,
   useLazyGetProductByIdQuery,
   useLazyGetAllProductsQuery,
+  useUpdateProductNameMutation,
+  useUpdateProductDescriptionMutation,
+  useUpdateProductImageUrlMutation,
+  useUpdateProductInventoryCountMutation,
+  useUpdateProductPriceMutation,
+  useDeleteProductMutation,
 } = productApi;
