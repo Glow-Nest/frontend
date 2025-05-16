@@ -6,27 +6,20 @@ import { useAppSelector } from '@/store/hook';
 import { RootState } from '@/store';
 import CartItem from './cartItem';
 import { useRouter } from 'next/navigation';
-import { useCreateOrderMutation } from '@/store/api/orderApi';
-import toast from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
-import { addClientIdToOrder } from '@/store/slices/order/orderSlice';
 
 function Cart() {
     const order = useAppSelector((state: RootState) => state.order);
     const products = useAppSelector((state: RootState) => state.product);
 
-    const dispatch = useDispatch();
     const router = useRouter();
-
-    const [createOrder, { isLoading, isSuccess, error }] = useCreateOrderMutation();
 
 
     const handleCheckoutClick = async () => {
-            router.push('/checkout');
+        router.push('/checkout');
     };
 
     return (
-        <div className="bg-white h-full rounded-xl shadow p-4 flex flex-col border border-gray-200 overflow-y-auto">
+        <div className="bg-white rounded-xl shadow p-4 flex flex-col border border-gray-200 max-h-[80vh] overflow-y-auto">
             {/* Header */}
             <div className="flex items-center gap-2 border-b pb-4 mb-4">
                 <ShoppingCart className="w-6 h-6 text-amber-500" />
