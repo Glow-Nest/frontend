@@ -4,7 +4,8 @@ import { Order, OrderItem } from "libs/types/OrderTypes";
 const initialState: Order = {
     clientId: "",
     totalPrice: 0,
-    orderItems: []
+    orderItems: [],
+    pickupDate: ""
 }
 
 const calculateTotalPrice = (items: OrderItem[]) =>
@@ -46,9 +47,13 @@ const OrderSlice = createSlice({
                 item.quantity = action.payload.quantity;
                 state.totalPrice = calculateTotalPrice(state.orderItems);
             }
+        },
+
+        addPickupDate(state, action: PayloadAction<string>){
+            state.pickupDate = action.payload;
         }
     }
 });
 
-export const { addClientIdToOrder, addProductToOrder, removeProductFromOrder, updateProductQuantity } = OrderSlice.actions;
+export const { addClientIdToOrder, addProductToOrder, removeProductFromOrder, updateProductQuantity, addPickupDate } = OrderSlice.actions;
 export default OrderSlice.reducer;

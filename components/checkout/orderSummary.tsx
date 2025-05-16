@@ -5,7 +5,7 @@ import { useAppSelector } from '@/store/hook';
 import React from 'react';
 import CartItem from '../products/cartItem';
 
-function OrderSummary() {
+function OrderSummary({ readOnly = false }: { readOnly?: boolean }) {
     const order = useAppSelector((state: RootState) => state.order);
     const products = useAppSelector((state: RootState) => state.product);
 
@@ -27,7 +27,12 @@ function OrderSummary() {
                     if (!product) return null;
 
                     return (
-                        <CartItem product={product} quantity={item.quantity} key={item.productId} />
+                        <CartItem
+                            product={product}
+                            quantity={item.quantity}
+                            readonly={readOnly}
+                            key={item.productId}
+                        />
                     );
                 })}
             </div>

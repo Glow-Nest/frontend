@@ -14,6 +14,7 @@ import serviceCategoryReducer from "./slices/serviceCategory/ServiceCategorySlic
 import productReducer from "./slices/product/productSlice";
 import scheduleReducer from "./slices/schedules/ScheduleSlice";
 import orderReducer from "./slices/order/orderSlice";
+import { orderApi } from "./api/orderApi";
 
 const persistAppointmentConfig = {
   key: "appointment",
@@ -32,6 +33,7 @@ const reducer = combineReducers({
   [serviceApi.reducerPath]: serviceApi.reducer,
   [scheduleApi.reducerPath]: scheduleApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
+  [orderApi.reducerPath]: orderApi.reducer,
   appointment: appointmentReducer,
   user: userReducer,
   blockedTimes: blockedTimeReducer,
@@ -58,7 +60,8 @@ export const store = configureStore({
       clientApi.middleware,
       serviceApi.middleware,
       scheduleApi.middleware,
-      productApi.middleware
+      productApi.middleware,
+      orderApi.middleware
     ),
 });
 

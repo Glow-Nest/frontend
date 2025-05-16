@@ -2,6 +2,7 @@
 export type Order = {
     clientId: string;
     totalPrice: number;
+    pickupDate: string;
     orderItems: OrderItem[];
 }
 

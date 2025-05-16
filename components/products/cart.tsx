@@ -6,11 +6,24 @@ import { useAppSelector } from '@/store/hook';
 import { RootState } from '@/store';
 import CartItem from './cartItem';
 import { useRouter } from 'next/navigation';
+import { useCreateOrderMutation } from '@/store/api/orderApi';
+import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { addClientIdToOrder } from '@/store/slices/order/orderSlice';
 
 function Cart() {
     const order = useAppSelector((state: RootState) => state.order);
     const products = useAppSelector((state: RootState) => state.product);
+
+    const dispatch = useDispatch();
     const router = useRouter();
+
+    const [createOrder, { isLoading, isSuccess, error }] = useCreateOrderMutation();
+
+
+    const handleCheckoutClick = async () => {
+            router.push('/checkout');
+    };
 
     return (
         <div className="bg-white h-full rounded-xl shadow p-4 flex flex-col border border-gray-200 overflow-y-auto">
@@ -44,12 +57,19 @@ function Cart() {
                         <span className="text-lg font-bold">{order.totalPrice.toFixed(2)} DKK</span>
                     </div>
 
-                    <button
-                        onClick={() => router.push('/checkout')}
-                        className="mt-4 bg-amber-500 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-amber-600 transition text-sm font-semibold"
-                    >
-                        Proceed to Checkout
-                    </button>
+                    <div className="relative group w-full">
+                        <button
+                            onClick={handleCheckoutClick}
+                            className={`w-full mt-4 px-4 py-2 rounded-lg text-sm font-semibold transition bg-amber-500 hover:bg-amber-600 text-white
+                                }`}
+                        >
+                            Proceed to Checkout
+                        </button>
+                    </div>
+
+
+
+
                 </>
             )}
         </div>

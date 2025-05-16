@@ -8,11 +8,9 @@ import { useRouter } from 'next/navigation';
 
 function UserDetails() {
     const router = useRouter();
-    const dispatch = useDispatch();
 
     const user = useSelector((state: RootState) => state.user);
 
-    const note = useSelector((state: RootState) => state.appointment.appointmentNote);
     const phone = user.phoneNumber || "";
     const firstName = user.firstName || "";
     const lastName = user.lastName || "";
@@ -29,7 +27,7 @@ function UserDetails() {
                 <h2 className="text-xl font-bold text-gray-900">Billing Information</h2>
 
                 {!user.email && <p className="hoverUnderline text-sm font-medium text-amber-500 uppercase cursor-pointer relative inline-block" onClick={handleSignInClick}>
-                    Click here to login?
+                    Click here to login to proceed
                 </p>}
             </div>
 
