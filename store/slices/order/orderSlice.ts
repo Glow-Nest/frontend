@@ -49,11 +49,17 @@ const OrderSlice = createSlice({
             }
         },
 
-        addPickupDate(state, action: PayloadAction<string>){
+        addPickupDate(state, action: PayloadAction<string>) {
             state.pickupDate = action.payload;
-        }
+        },
+
+        clearOrder: (state) => {
+            state.orderItems = [];
+            state.totalPrice = 0;
+            state.pickupDate = "";
+        },
     }
 });
 
-export const { addClientIdToOrder, addProductToOrder, removeProductFromOrder, updateProductQuantity, addPickupDate } = OrderSlice.actions;
+export const { addClientIdToOrder, addProductToOrder, removeProductFromOrder, updateProductQuantity, addPickupDate, clearOrder } = OrderSlice.actions;
 export default OrderSlice.reducer;
