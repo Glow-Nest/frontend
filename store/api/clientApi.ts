@@ -6,6 +6,12 @@ export type UpdateFullNameRequest = {
   LastName: string;
 };
 
+export interface ClientDetails {
+  clientId: string;
+  firstName: string;
+  lastName: string;
+}
+
 export type UpdatePhoneNumberRequest = {
   Id: string;
   PhoneNumber: string;
@@ -20,7 +26,7 @@ export type UpdatePasswordRequest = {
 export const clientApi = createApi({
   reducerPath: "clientApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL,
   }),
   endpoints: (builder) => ({
     createClient: builder.mutation({
@@ -28,6 +34,14 @@ export const clientApi = createApi({
         url: "clients/create",
         method: "POST",
         body: user,
+      }),
+    }),
+
+    getFullNameByClientId: builder.query<ClientDetails, string>({
+      query: (clientId) => ({
+        url: `clients/${clientId}`,
+        method: "POST",
+        body: { ClientId: clientId },
       }),
     }),
 
@@ -120,4 +134,5 @@ export const {
   useUpdateFullNameMutation,
   useUpdatePhoneNumberMutation,
   useUpdatePasswordMutation,
+  useGetFullNameByClientIdQuery,
 } = clientApi;

@@ -12,7 +12,7 @@ export function ProductHeader({
       <div className="flex gap-2">
         <button
           onClick={onAddProduct}
-          className="flex items-center gap-2 bg-[#dba052] text-white px-5 py-3 rounded shadow hover:bg-[#c48a3a]">
+          className="flex items-center gap-2 bg-[#dba052] text-white px-5 py-3 rounded shadow hover:bg-[#c48a3a] cursor-pointer">
           <PlusIcon size={16} />
           <span>Add Product</span>
         </button>

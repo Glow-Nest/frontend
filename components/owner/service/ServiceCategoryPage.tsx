@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Plus, ChevronDown, Pencil, Trash2 } from "lucide-react";
+import { Plus, ChevronDown, Pencil, Trash2, Edit } from "lucide-react";
 import {
   useAddServiceToCategoryMutation,
   useCreateCategoryMutation,
@@ -250,14 +250,14 @@ export default function ServiceCategoryPage() {
                       <div className="flex gap-1">
                         <button 
                           onClick={() => handleEditCategory(cat)}
-                          className="p-1 text-gray-500 hover:text-[#dba052] focus:outline-none"
+                          className="p-1 text-gray-500 hover:text-[#dba052] focus:outline-none cursor-pointer"
                           aria-label="Edit category"
                         >
-                          <Pencil size={16} />
+                          <Edit className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={() => handleDeleteCategory(cat)}
-                          className="p-1 text-gray-500 hover:text-[#dba052] focus:outline-none"
+                          className="p-1 text-gray-500 hover:text-red-500 focus:outline-none cursor-pointer"
                           aria-label="Delete category"
                         >
                           <Trash2 size={16} />
@@ -305,14 +305,14 @@ export default function ServiceCategoryPage() {
                                 <div className="flex gap-1">
                                   <button 
                                     onClick={() => handleEditService(service, cat.categoryId)}
-                                    className="p-1 text-gray-500 hover:text-[#dba052] focus:outline-none"
+                                    className="p-1 text-gray-500 hover:text-[#dba052] focus:outline-none cursor-pointer"
                                     aria-label="Edit service"
                                   >
-                                    <Pencil size={14} />
+                                    <Edit className="w-4 h-4" />
                                   </button>
                                   <button 
                                     onClick={() => handleDeleteService(service, cat.categoryId)}
-                                    className="p-1 text-gray-500 hover:text-red-500 focus:outline-none"
+                                    className="p-1 text-gray-500 hover:text-red-500 focus:outline-none cursor-pointer"
                                     aria-label="Delete service"
                                   >
                                     <Trash2 size={14} />

@@ -45,7 +45,6 @@ export const formatHHMMDurationToReadable = (duration: string): string => {
   return `${minutes} min`;
 };
 
-
 // Converts "X hours Y min" to total minutes
 export const parseReadableDurationToMinutes = (durationStr: string): number => {
   let totalMinutes = 0;
@@ -70,8 +69,8 @@ export const formatMinutesToReadableDuration = (minutes: number): string => {
   const hours = Math.floor(minutes / 60);
   const min = minutes % 60;
 
-  if (hours && min) return `${hours} hour${hours > 1 ? 's' : ''} ${min} min`;
-  if (hours) return `${hours} hour${hours > 1 ? 's' : ''}`;
+  if (hours && min) return `${hours} hour${hours > 1 ? "s" : ""} ${min} min`;
+  if (hours) return `${hours} hour${hours > 1 ? "s" : ""}`;
   return `${min} min`;
 };
 
@@ -89,3 +88,12 @@ export function extractFirstErrorMessage(error: unknown, fallback = "Something w
   const backendErrors = (error as { data?: BackendError[] })?.data;
   return backendErrors?.[0]?.message ?? fallback;
 }
+
+export const convertMinutesToHHMMSS = (minutes: number): string => {
+  const hrs = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  const secs = 0;
+  return [hrs, mins, secs]
+    .map((unit) => unit.toString().padStart(2, "0"))
+    .join(":");
+};
