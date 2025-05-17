@@ -53,8 +53,6 @@ export default function CreateServiceForm({
     setDuration("");
   };
 
-  const isValid = categoryId && name.trim() && price && duration.trim();
-
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
@@ -108,11 +106,8 @@ export default function CreateServiceForm({
             </button>
             <button
               onClick={handleSubmit}
-              disabled={!isValid}
               className={`px-4 py-2 rounded-md text-sm font-medium transition ${
-                isValid
-                  ? "bg-[#dba052] text-white hover:bg-[#c58e41]"
-                  : "bg-gray-300 text-white cursor-not-allowed"
+                "bg-[#dba052] text-white hover:bg-[#c58e41]"
               }`}
             >
               Save
