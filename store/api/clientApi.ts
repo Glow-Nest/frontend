@@ -26,7 +26,7 @@ export type UpdatePasswordRequest = {
 export const clientApi = createApi({
   reducerPath: "clientApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
   }),
   endpoints: (builder) => ({
     createClient: builder.mutation({

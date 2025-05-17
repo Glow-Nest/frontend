@@ -23,7 +23,7 @@ export type CreateServiceReviewRequest = {
 export const serviceReviewApi = createApi({
   reducerPath: "serviceReviewApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL,
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
     prepareHeaders: (headers) => {
       const token = GetFromCookies("token");
 
