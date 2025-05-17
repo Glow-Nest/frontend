@@ -1,11 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { format } from "date-fns";
 import { Order, OrderItem } from "libs/types/OrderTypes";
+
+const formattedDate = format(new Date(), "yyyy-MM-dd");
 
 const initialState: Order = {
     clientId: "",
     totalPrice: 0,
     orderItems: [],
-    pickupDate: ""
+    pickupDate: formattedDate
 }
 
 const calculateTotalPrice = (items: OrderItem[]) =>
@@ -16,6 +19,7 @@ const OrderSlice = createSlice({
     initialState,
     reducers: {
         addClientIdToOrder(state, action: PayloadAction<string>) {
+            console.log("Called add client id: " + action.payload);
             state.clientId = action.payload;
         },
 
@@ -56,7 +60,7 @@ const OrderSlice = createSlice({
         clearOrder: (state) => {
             state.orderItems = [];
             state.totalPrice = 0;
-            state.pickupDate = "";
+            state.pickupDate = formattedDate;
         },
     }
 });

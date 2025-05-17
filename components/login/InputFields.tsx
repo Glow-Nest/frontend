@@ -9,6 +9,7 @@ import { useAppDispatch } from '@/store/hook';
 import { setCredentials } from '@/store/slices/user/UserSlice';
 
 import Cookies from 'js-cookie';
+import { addClientIdToOrder } from '@/store/slices/order/orderSlice';
 
 function InputFields() {
     const [login, { isLoading }] = useLoginClientMutation();
@@ -54,6 +55,8 @@ function InputFields() {
                 phoneNumber: res.phoneNumber,
                 id: res.id
             }));
+
+            dispatch(addClientIdToOrder(res.id));
 
             Cookies.set("token", res.token, { secure: true, sameSite: "Lax" });
 

@@ -9,69 +9,68 @@ import { useAppSelector } from '@/store/hook';
 import { addClientIdToOrder, addPickupDate } from '@/store/slices/order/orderSlice';
 import { loadStripe } from '@stripe/stripe-js';
 import { format } from 'date-fns';
+import { extractFirstErrorMessage } from 'libs/helpers';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "");
 
 function CheckoutPage() {
-    const [selectedDate, setSelectedDate] = useState(new Date());
 
     const dispatch = useDispatch();
     const router = useRouter();
 
     const user = useAppSelector((state: RootState) => state.user);
     const order = useAppSelector((state: RootState) => state.order);
+    const selectedDate = useAppSelector((state: RootState) => state.order.pickupDate);
 
     const [createOrder, { isLoading, isError }] = useCreateOrderMutation();
     const [createCheckoutSession] = useCreateCheckoutSessionMutation();
 
     if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
-        console.warn("⚠️ Stripe public key is missing. Check your .env file.");
+        console.warn("Stripe public key is missing. Check your .env file.");
     }
 
     const handleSelectedDate = (date: Date) => {
-        setSelectedDate(date);
         const formattedDate = format(date, "yyyy-MM-dd");
         dispatch(addPickupDate(formattedDate));
     };
 
 
     const handleContinue = async () => {
-        if (user.id) {
-            dispatch(addClientIdToOrder(user.id));
-
-            const toastId = toast.loading("Creating your order...");
-
-            try {
-                const orderResponse = await createOrder(order).unwrap();
-                toast.success("Order created!", { id: toastId });
-
-                const stripe = await stripePromise;
-                console.log("stripe " + stripe);
-
-
-                const sessionResponse = await createCheckoutSession(orderResponse.orderId).unwrap();
-
-                console.log("sessionResponse: " + sessionResponse);
-
-                if (stripe) {
-                    await stripe.redirectToCheckout({ sessionId: sessionResponse.sessionId });
-                } else {
-                    router.push("/checkout/failure");
-                }
-
-            } catch (error) {
-                toast.error("Failed to create order. Please try again." + error, { id: toastId });
-            }
-
-        } else {
+        if (!user.id) {
             toast.error("User is null. Cannot proceed.");
+            return;
+        }
+
+        const toastId = toast.loading("Creating your order...");
+
+        const payload = {
+            ...order,
+            clientId: user.id,
+        };
+
+        try {
+            //create order
+            const orderResponse = await createOrder(payload).unwrap();
+            toast.success("Order created!", { id: toastId });
+
+            //initiate stripe checkout
+            const stripe = await stripePromise;
+            const sessionResponse = await createCheckoutSession(orderResponse.orderId).unwrap();
+
+            if (stripe) {
+                await stripe.redirectToCheckout({ sessionId: sessionResponse.sessionId });
+            } else {
+                router.push("/checkout/failure");
+            }
+        } catch (error: unknown) {
+            const msg = extractFirstErrorMessage(error, "Failed to create order.");
+            toast.error(msg, { id: toastId });
         }
     };
-
 
     return (
         <div>
@@ -82,12 +81,12 @@ function CheckoutPage() {
 
                     <h2 className="text-xl font-bold text-gray-900">Pickup Date
                         <span className="font-medium text-sm text-gray-900">
-                            ( {selectedDate.toLocaleDateString()})
+                            ( {selectedDate})
                         </span>
                     </h2>
 
                     <div className=' p-4 space-y-8 mb-4'>
-                        <DatePicker onSelect={handleSelectedDate} initialDate={selectedDate} />
+                        <DatePicker onSelect={handleSelectedDate} />
                     </div>
 
                     <div className="w-full max-w-xl mx-auto px-4 mt-1 mb-1">

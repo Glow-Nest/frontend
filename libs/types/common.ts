@@ -12,3 +12,5 @@ export interface AppointmentBookingState {
     endTime?: string | null;
 }
 
+export type BackendError = { errorId: string; message: string };
+
