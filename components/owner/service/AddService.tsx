@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { Plus } from "lucide-react";
+import { convertMinutesToHHMMSS } from "libs/helpers";
 
 interface CreateServiceFormProps {
   isOpen: boolean;
@@ -24,7 +25,9 @@ export default function CreateServiceForm({
 
   const handleSubmit = () => {
     if (!categoryId || !name.trim() || !price || !duration.trim()) return;
-    onSubmit({ categoryId, name, price: Number(price), duration });
+    const durationInMinutes = parseInt(duration);
+    const formattedDuration = convertMinutesToHHMMSS(durationInMinutes);
+    onSubmit({ categoryId, name, price: Number(price), duration: formattedDuration });
     resetForm();
     onClose();
   };
@@ -88,13 +91,13 @@ export default function CreateServiceForm({
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1 text-gray-700">Duration *</label>
+              <label className="block text-sm font-medium mb-1 text-gray-700">Duration (in minutes) *</label>
               <input
-                type="text"
+                type="number"
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
                 className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#dba052]"
-                placeholder="e.g. hh:mm:ss"
+                placeholder="e.g. 30"
               />
             </div>
           </div>
