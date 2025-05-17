@@ -6,7 +6,7 @@ import UserDetails from '@/components/checkout/userDetails';
 import { RootState } from '@/store';
 import { useCreateCheckoutSessionMutation, useCreateOrderMutation } from '@/store/api/orderApi';
 import { useAppSelector } from '@/store/hook';
-import { addClientIdToOrder, addPickupDate } from '@/store/slices/order/orderSlice';
+import { addClientIdToOrder, addPickupDate, clearOrder } from '@/store/slices/order/orderSlice';
 import { loadStripe } from '@stripe/stripe-js';
 import { format } from 'date-fns';
 import { extractFirstErrorMessage } from 'libs/helpers';
@@ -56,6 +56,8 @@ function CheckoutPage() {
             //create order
             const orderResponse = await createOrder(payload).unwrap();
             toast.success("Order created!", { id: toastId });
+
+            dispatch(clearOrder());
 
             //initiate stripe checkout
             const stripe = await stripePromise;
