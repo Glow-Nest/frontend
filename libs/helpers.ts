@@ -1,3 +1,5 @@
+import { BackendError } from "./types/common";
+
 export function calculateEndTime(startTime: string, duration: number): string {
   const [time, meridiem] = startTime.split(" ");
   let [hour, minute] = time.split(":").map(Number);
@@ -77,7 +79,14 @@ export function formatTimeStringTo12HourClock(t: string) {
   const [hours, minutes] = t.split(":");
   const date = new Date();
   date.setHours(parseInt(hours), parseInt(minutes));
-  return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+}
+
+
+// Extract error message
+export function extractFirstErrorMessage(error: unknown, fallback = "Something went wrong"): string {
+  const backendErrors = (error as { data?: BackendError[] })?.data;
+  return backendErrors?.[0]?.message ?? fallback;
 }
 
 export const convertMinutesToHHMMSS = (minutes: number): string => {

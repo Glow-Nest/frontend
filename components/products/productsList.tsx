@@ -78,7 +78,6 @@ function ProductsList() {
             {/* Responsive Header Controls */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
                 <h2 className="text-2xl font-bold">Products</h2>
-
                 <div className="flex-grow sm:max-w-xs mt-4">
                     <SearchBar onSearch={handleSearch} />
                  </div>

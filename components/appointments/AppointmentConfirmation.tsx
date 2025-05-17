@@ -150,4 +150,5 @@ function FloatingInput({ label, value, type = "text", id }: FloatingInputProps) 
 
 
 
+export { FloatingInput };
 export default AppointmentConfirmation;

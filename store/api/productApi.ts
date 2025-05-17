@@ -131,6 +131,7 @@ export const productApi = createApi({
   }),
 });
 
+
 export const {
   useCreateProductMutation,
   useGetAllProductsQuery,
