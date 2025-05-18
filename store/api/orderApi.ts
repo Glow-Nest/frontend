@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { url } from "inspector";
 import { GetFromCookies } from "libs/cookies";
-import { Order } from "libs/types/OrderTypes";
+import { Order, OrderResponseDto } from "libs/types/OrderTypes";
 
 
 
@@ -27,16 +27,29 @@ export const orderApi = createApi({
             }),
         }),
 
-        createCheckoutSession: builder.mutation<{ sessionId: string}, string>({
+        createCheckoutSession: builder.mutation<{ sessionId: string }, string>({
             query: (orderId) => ({
                 url: `order/stripe/checkout-session/${orderId}`,
                 method: "POST",
                 body: {}
             })
-        })
+        }),
 
-
+        getAllOrders: builder.query<OrderResponseDto[], { status: string }>({
+            query: ({ status }) => {
+                // const queryString = status ? `?status=${status}` : "";
+                return {
+                    url: "owner/orders",
+                    method: "POST",
+                    body: {
+                        Status: status,
+                    }
+                };
+            },
+            transformResponse: (response: { orderResponseDtos: OrderResponseDto[] }) =>
+                response.orderResponseDtos,
+        }),
     }),
 });
 
-export const { useCreateOrderMutation, useCreateCheckoutSessionMutation } = orderApi;
+export const { useCreateOrderMutation, useCreateCheckoutSessionMutation, useGetAllOrdersQuery } = orderApi;

@@ -10,6 +10,7 @@ import {
     LogOut,
     Menu,
     X,
+    ShoppingCart,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -18,6 +19,7 @@ const navItems = [
     { label: "Schedule", href: "/owner/schedule", icon: Calendar },
     { label: "Services", href: "/owner/services", icon: Scissors },
     { label: "Products", href: "/owner/products", icon: ShoppingBag },
+    { label: "Orders", href: "/owner/orders", icon: ShoppingCart},
     { label: "Settings", href: "/owner/settings", icon: Settings },
 ];
 
