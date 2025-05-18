@@ -35,20 +35,28 @@ export const orderApi = createApi({
             })
         }),
 
-        getAllOrders: builder.query<OrderResponseDto[], { status: string }>({
-            query: ({ status }) => {
-                // const queryString = status ? `?status=${status}` : "";
-                return {
-                    url: "owner/orders",
-                    method: "POST",
-                    body: {
-                        Status: status,
-                    }
-                };
-            },
-            transformResponse: (response: { orderResponseDtos: OrderResponseDto[] }) =>
-                response.orderResponseDtos,
+        getAllOrders: builder.query<
+            { orders: OrderResponseDto[]; totalCount: number },
+            { status: string; page: number; pageSize: number }
+        >({
+            query: ({ status, page, pageSize }) => ({
+                url: "owner/orders",
+                method: "POST",
+                body: {
+                    Status: status,
+                    Page: page,
+                    PageSize: pageSize,
+                },
+            }),
+            transformResponse: (response: {
+                orderResponseDtos: OrderResponseDto[];
+                totalCount: number;
+            }) => ({
+                orders: response.orderResponseDtos,
+                totalCount: response.totalCount,
+            }),
         }),
+
     }),
 });
 

@@ -3,10 +3,12 @@ import { OrderResponseDto } from "libs/types/OrderTypes";
 
 interface OrdersState {
     orders: OrderResponseDto[];
+    totalCount: number;
 }
 
 const initialState: OrdersState = {
     orders: [],
+    totalCount: 0
 };
 
 const OrderResponseSlice = createSlice({

@@ -1,15 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from 'react';
-import {
-    BadgeCheck,
-    Calendar,
-    CalendarDays,
-    DollarSign,
-    MoreHorizontal,
-    User,
-    X,
-} from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { OrderResponseDto } from 'libs/types/OrderTypes';
 import { useGetAllOrdersQuery } from '@/store/api/orderApi';
 import toast from 'react-hot-toast';
@@ -20,45 +11,99 @@ import { OrderCard } from './OrderCard';
 
 const statusTabs = ['All', 'Created', 'Paid', 'ReadyForPickup', 'Completed'] as const;
 
-const statusColors: Record<string, string> = {
-    Created: 'bg-gray-100 text-gray-700',
-    Paid: 'bg-green-100 text-green-700',
-    ReadyForPickup: 'bg-yellow-100 text-yellow-700',
-    Completed: 'bg-blue-100 text-blue-700',
-};
-
 function OrderDescription() {
+    const itemsPerPage = 6;
+
+    const [currentPage, setCurrentPage] = useState(1);
     const [activeTab, setActiveTab] = useState<string>('All');
     const [selectedOrder, setSelectedOrder] = useState<OrderResponseDto | null>(null);
-    const { data: fetchedOrders = [], isLoading, isError } = useGetAllOrdersQuery({
-        status: activeTab !== 'All' ? activeTab : 'All',
+    const { data, isLoading, isError } = useGetAllOrdersQuery({
+        status: activeTab !== 'All' ? activeTab : '',
+        page: currentPage,
+        pageSize: itemsPerPage,
     });
+
+    const orders = data?.orders ?? [];
+    const totalPages = Math.ceil((data?.totalCount ?? 0) / itemsPerPage);
+
+    useEffect(() => {
+        console.log('orders', data?.orders);
+        console.log('totalCount', data?.totalCount);
+    }, [data]);
+
 
     useEffect(() => {
         if (isLoading) toast.loading('Fetching orders...', { id: 'fetchOrders' });
         else toast.dismiss('fetchOrders');
 
-        if (isError) toast.error(extractFirstErrorMessage(fetchedOrders));
+        if (isError) toast.error(extractFirstErrorMessage(orders));
+
     }, [isLoading, isError]);
 
-    const filteredOrders = useMemo(() => {
-        return activeTab === 'All' ? fetchedOrders : fetchedOrders.filter(o => o.status === activeTab);
-    }, [fetchedOrders, activeTab]);
-
     return (
-        <div className="bg-white rounded-2xl shadow-md flex flex-col h-full overflow-hidden">
+        <div>
             {/* Tabs */}
-            <div className="flex flex-wrap gap-3 mb-6 px-4 pt-6 sm:px-6">
-                {statusTabs.map(tab => (
+            <div className="flex flex-wrap gap-3 mb-6 px-4 pt-6 sm:px-6 justify-between">
+                <div className='flex gap-3'>
+                    {statusTabs.map(tab => (
+                        <button
+                            key={tab}
+                            onClick={() => {
+                                setCurrentPage(1);
+                                setActiveTab(tab);
+                            }}
+                            className={`px-4 py-2 text-sm font-medium rounded-xl transition-all ${activeTab === tab ? 'bg-amber-400 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                }`}
+                        >
+                            {tab}
+                        </button>
+                    ))}
+
+                </div>
+                {/* Pagination Bar */}
+                {totalPages > 1 && <div className="flex justify-center flex-wrap items-center gap-1 mt-2">
+                    {/* Previous */}
                     <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={`px-4 py-2 text-sm font-medium rounded-xl transition-all ${activeTab === tab ? 'bg-amber-400 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                            }`}
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                        className="px-2 py-1 rounded disabled:opacity-50 hover:bg-gray-200"
                     >
-                        {tab}
+                        &lt;
                     </button>
-                ))}
+
+                    {/* First pages */}
+                    {currentPage > 2 && (
+                        <>
+                            <PageButton page={1} currentPage={currentPage} onPageChange={setCurrentPage} />
+                            {currentPage > 3 && <span className="px-1">…</span>}
+                        </>
+                    )}
+
+                    {/* Surrounding current */}
+                    {Array.from({ length: 3 }, (_, i) => currentPage - 1 + i)
+                        .filter(p => p > 0 && p <= totalPages)
+                        .map(p => (
+                            <PageButton key={p} page={p} currentPage={currentPage} onPageChange={setCurrentPage} />
+                        ))}
+
+                    {/* Last page */}
+                    {currentPage < totalPages - 1 && (
+                        <>
+                            {currentPage < totalPages - 2 && <span className="px-1">…</span>}
+                            <PageButton page={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />
+                        </>
+                    )}
+
+                    {/* Next */}
+                    <button
+                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                        className="px-2 py-1 rounded disabled:opacity-50 hover:bg-gray-200"
+                    >
+                        &gt;
+                    </button>
+                </div>}
+
             </div>
 
             {/* Loading / Error */}
@@ -67,7 +112,7 @@ function OrderDescription() {
 
             {/* Mobile View */}
             <div className="flex flex-col sm:hidden gap-4 px-4 pb-6">
-                {filteredOrders.map(order => (
+                {orders.map(order => (
                     <OrderCard key={order.orderId} order={order} onClick={() => setSelectedOrder(order)} />
                 ))}
             </div>
@@ -77,13 +122,13 @@ function OrderDescription() {
                 <table className="min-w-full text-sm">
                     <thead className="text-gray-500 border-b">
                         <tr>
-                            {['Order Number', 'Order Date', 'Pickup Date', 'Customer', 'Status', 'Cost', 'Action'].map(header => (
+                            {['Order Number', 'Order Date', 'Pickup Date', 'Customer', 'Status', 'Total Price', 'Action'].map(header => (
                                 <th key={header} className="text-left font-medium py-3 px-4">{header}</th>
                             ))}
                         </tr>
                     </thead>
                     <tbody className="divide-y">
-                        {filteredOrders.map(order => (
+                        {orders.map(order => (
                             <OrderTableRow key={order.orderId} order={order} onClick={() => setSelectedOrder(order)} />
                         ))}
                     </tbody>
@@ -94,5 +139,28 @@ function OrderDescription() {
         </div>
     );
 }
+
+function PageButton({
+    page,
+    currentPage,
+    onPageChange,
+}: {
+    page: number;
+    currentPage: number;
+    onPageChange: (page: number) => void;
+}) {
+    const isActive = currentPage === page;
+    return (
+        <button
+            onClick={() => onPageChange(page)}
+            className={`w-8 h-8 rounded-md text-sm font-medium flex items-center justify-center transition-all
+        ${isActive ? 'bg-amber-400 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}
+      `}
+        >
+            {page}
+        </button>
+    );
+}
+
 
 export default OrderDescription;
