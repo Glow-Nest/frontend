@@ -17,6 +17,7 @@ export const orderApi = createApi({
             return headers;
         },
     }),
+    tagTypes: ['Orders'],
 
     endpoints: (builder) => ({
         createOrder: builder.mutation<{ orderId: string }, Order>({
@@ -48,6 +49,7 @@ export const orderApi = createApi({
                     PageSize: pageSize,
                 },
             }),
+            providesTags: ['Orders'],
             transformResponse: (response: {
                 orderResponseDtos: OrderResponseDto[];
                 totalCount: number;
@@ -57,7 +59,40 @@ export const orderApi = createApi({
             }),
         }),
 
+        markOrderAsReadyForPickup: builder.mutation<void, string>({
+            query: (orderId) => ({
+                url: `owner/orders/${orderId}/mark-as-ready`,
+                method: "POST",
+                body: {},
+            }),
+            invalidatesTags: ['Orders'],
+        }),
+
+        markOrderAsCompleted: builder.mutation<void, string>({
+            query: (orderId) => ({
+                url: `owner/orders/${orderId}/mark-as-completed`,
+                method: "POST",
+                body: {},
+            }),
+            invalidatesTags: ['Orders'],
+        }),
+
+        markOrderAsCancelled: builder.mutation<void, string>({
+            query: (orderId) => ({
+                url: `owner/orders/${orderId}/mark-as-cancelled`,
+                method: "POST",
+                body: {},
+            }),
+            invalidatesTags: ['Orders'],
+        })
     }),
 });
 
-export const { useCreateOrderMutation, useCreateCheckoutSessionMutation, useGetAllOrdersQuery } = orderApi;
+export const {
+    useCreateOrderMutation,
+    useCreateCheckoutSessionMutation,
+    useGetAllOrdersQuery,
+    useMarkOrderAsCompletedMutation,
+    useMarkOrderAsReadyForPickupMutation,
+    useMarkOrderAsCancelledMutation
+    } = orderApi;

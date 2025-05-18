@@ -9,7 +9,7 @@ import { OrderTableRow } from './OrderTableRow';
 import { OrderDetailsModal } from './OrderDetailsModel';
 import { OrderCard } from './OrderCard';
 
-const statusTabs = ['All', 'Created', 'Paid', 'ReadyForPickup', 'Completed'] as const;
+const statusTabs = ['All', 'Created', 'Paid', 'ReadyForPickup', 'Completed', 'Cancelled'] as const;
 
 function OrderDescription() {
     const itemsPerPage = 6;
@@ -122,7 +122,7 @@ function OrderDescription() {
                 <table className="min-w-full text-sm">
                     <thead className="text-gray-500 border-b">
                         <tr>
-                            {['Order Number', 'Order Date', 'Pickup Date', 'Customer', 'Status', 'Total Price', 'Action'].map(header => (
+                            {['Order Number', 'Order Date', 'Pickup Date', 'Customer', 'Status', 'Total Price'].map(header => (
                                 <th key={header} className="text-left font-medium py-3 px-4">{header}</th>
                             ))}
                         </tr>

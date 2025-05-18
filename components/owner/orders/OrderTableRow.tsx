@@ -13,12 +13,7 @@ export function OrderTableRow({ order, onClick }: { order: OrderResponseDto; onC
             <td className="py-3 px-4">
                 <StatusBadge status={order.status} />
             </td>
-            <td className="py-3 px-4 font-medium">{order.totalPrice}</td>
-            <td className="py-3 px-4">
-                <button className="p-2 hover:bg-gray-200 rounded-full transition">
-                    <MoreHorizontal size={18} />
-                </button>
-            </td>
+            <td className="py-3 px-4 font-medium">{order.totalPrice} kr.</td>
         </tr>
     );
 }
