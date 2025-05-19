@@ -14,6 +14,7 @@ import serviceCategoryReducer from "./slices/serviceCategory/ServiceCategorySlic
 import productReducer from "./slices/product/productSlice";
 import scheduleReducer from "./slices/schedules/ScheduleSlice";
 import orderReducer from "./slices/order/orderSlice";
+import orderResponseReducer from "./slices/order/orderResponseSlice";
 import { orderApi } from "./api/orderApi";
 import { serviceReviewApi } from "./api/serviceReviewApi";
 import serviceReviewReducer from "./slices/serviceReview/ServiceReviewSlice";
@@ -43,8 +44,9 @@ const reducer = combineReducers({
   schedules: scheduleReducer,
   serviceCategory: serviceCategoryReducer,
   product: productReducer,
-  order: orderReducer
+  order: orderReducer,
   serviceReview: serviceReviewReducer,
+  orderResponse: orderResponseReducer,
 });
 
 const persistedReducer = persistReducer<ReturnType<typeof reducer>>(
@@ -65,7 +67,7 @@ export const store = configureStore({
       serviceApi.middleware,
       scheduleApi.middleware,
       productApi.middleware,
-      orderApi.middleware
+      orderApi.middleware,
       serviceReviewApi.middleware
     ),
 });
