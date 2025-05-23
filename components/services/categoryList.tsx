@@ -99,7 +99,7 @@ export function CategoryServiceSection() {
                 onClick={() => toggleCategory(categoryId)}
                 className="p-2 text-[#de6412] hover:text-[#a04e12] focus:outline-none"
               >
-                <div className={`${isOpen ? "rotate-180" : ""} transition-transform duration-300`}>
+                <div className={`${isOpen ? "rotate-180" : ""} transition-transform duration-300 cursor-pointer`}>
                   <ChevronDown size={30} />
                 </div>
               </button>

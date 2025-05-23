@@ -150,10 +150,11 @@ export default function Navbar() {
                 className={`absolute left-0 w-full bg-white shadow-lg transition-transform duration-500 ease-in-out ${isOpen ? "translate-y-[100%] top-0" : "translate-y-[-150%] top-0"
                     } flex flex-col gap-6 p-5 z-40 text-lg`}
             >
-                <div onClick={() => setIsOpen(false)} className="hoverUnderline cursor-pointer">HOME</div>
-                <div onClick={() => setIsOpen(false)} className="hoverUnderline cursor-pointer">SERVICES</div>
-                <div onClick={() => setIsOpen(false)} className="hoverUnderline cursor-pointer">PRODUCTS</div>
-                <div onClick={() => setIsOpen(false)} className="hoverUnderline cursor-pointer">BOOK APPOINTMENT</div>
+
+                <div onClick={() => { router.push("/"); setIsOpen(false); }} className="hoverUnderline cursor-pointer">HOME</div>
+                <div onClick={() => { router.push("/services"); setIsOpen(false); }} className="hoverUnderline cursor-pointer">SERVICES</div>
+                <div onClick={() => { router.push("/products"); setIsOpen(false); }} className="hoverUnderline cursor-pointer">PRODUCTS</div>
+                <div onClick={() => { router.push("/appointments"); setIsOpen(false); }} className="hoverUnderline cursor-pointer">BOOK APPOINTMENT</div>
                 <div className="flex gap-5 mt-2">
                     <FontAwesomeIcon icon={faUser} className="w-[16px] h-[16px]" />
                     <FontAwesomeIcon icon={faCartShopping} className="w-[16px] h-[16px]" />

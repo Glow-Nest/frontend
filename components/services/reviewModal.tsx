@@ -80,10 +80,10 @@ export default function ReviewModal({
           {/* Tabs */}
           <div className="flex space-x-4 mb-4 border-b">
             <button
-              className={`pb-2 ${
+              className={`pb-2 cursor-pointer${
                 activeTab === "read"
-                  ? "border-b-2 border-[#dba052] text-[#dba052]"
-                  : "text-gray-600"
+                  ? "border-b-2 border-[#dba052] text-[#dba052] cursor-pointer"
+                  : "text-gray-600 cursor-pointer"
               }`}
               onClick={() => {
                 setActiveTab("read");
@@ -93,10 +93,10 @@ export default function ReviewModal({
               Read Reviews
             </button>
             <button
-              className={`pb-2 ${
+              className={`pb-2 cursor-pointer${
                 activeTab === "write"
-                  ? "border-b-2 border-[#dba052] text-[#dba052]"
-                  : "text-gray-600"
+                  ? "border-b-2 border-[#dba052] text-[#dba052] cursor-pointer"
+                  : "text-gray-600 cursor-pointer"
               }`}
               onClick={() => setActiveTab("write")}
             >
@@ -135,7 +135,7 @@ export default function ReviewModal({
               <div className="flex justify-end space-x-2">
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 rounded-md bg-gray-100 text-sm font-medium hover:bg-gray-200 border border-gray-300"
+                  className="px-4 py-2 rounded-md bg-gray-100 text-sm font-medium hover:bg-gray-200 border border-gray-300 cursor-pointer"
                 >
                   Cancel
                 </button>
